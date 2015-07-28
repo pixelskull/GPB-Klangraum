@@ -13,6 +13,7 @@
 		5084EB5D1B67DA9800066257 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB5C1B67DA9800066257 /* Images.xcassets */; };
 		5084EB601B67DA9800066257 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB5E1B67DA9800066257 /* LaunchScreen.xib */; };
 		5084EB6C1B67DA9800066257 /* GPB_KlangraumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5084EB6B1B67DA9800066257 /* GPB_KlangraumTests.swift */; };
+		5084EB771B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		5084EB651B67DA9800066257 /* GPB-KlangraumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GPB-KlangraumTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5084EB6A1B67DA9800066257 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5084EB6B1B67DA9800066257 /* GPB_KlangraumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPB_KlangraumTests.swift; sourceTree = "<group>"; };
+		5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "YellowNintendoHero-Muciojad.mp3"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +61,7 @@
 		5084EB471B67DA9800066257 = {
 			isa = PBXGroup;
 			children = (
+				5084EB751B67DBCD00066257 /* Misc */,
 				5084EB521B67DA9800066257 /* GPB-Klangraum */,
 				5084EB681B67DA9800066257 /* GPB-KlangraumTests */,
 				5084EB511B67DA9800066257 /* Products */,
@@ -110,6 +113,14 @@
 				5084EB6A1B67DA9800066257 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5084EB751B67DBCD00066257 /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */,
+			);
+			name = Misc;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,6 +206,7 @@
 				5084EB5B1B67DA9800066257 /* Main.storyboard in Resources */,
 				5084EB601B67DA9800066257 /* LaunchScreen.xib in Resources */,
 				5084EB5D1B67DA9800066257 /* Images.xcassets in Resources */,
+				5084EB771B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,6 +423,7 @@
 				5084EB711B67DA9800066257 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5084EB721B67DA9800066257 /* Build configuration list for PBXNativeTarget "GPB-KlangraumTests" */ = {
 			isa = XCConfigurationList;
@@ -419,6 +432,7 @@
 				5084EB741B67DA9800066257 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
