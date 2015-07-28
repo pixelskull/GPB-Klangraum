@@ -1,0 +1,426 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5084EB561B67DA9800066257 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5084EB551B67DA9800066257 /* AppDelegate.swift */; };
+		5084EB581B67DA9800066257 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5084EB571B67DA9800066257 /* ViewController.swift */; };
+		5084EB5B1B67DA9800066257 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB591B67DA9800066257 /* Main.storyboard */; };
+		5084EB5D1B67DA9800066257 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB5C1B67DA9800066257 /* Images.xcassets */; };
+		5084EB601B67DA9800066257 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB5E1B67DA9800066257 /* LaunchScreen.xib */; };
+		5084EB6C1B67DA9800066257 /* GPB_KlangraumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5084EB6B1B67DA9800066257 /* GPB_KlangraumTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5084EB661B67DA9800066257 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5084EB481B67DA9800066257 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5084EB4F1B67DA9800066257;
+			remoteInfo = "GPB-Klangraum";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5084EB501B67DA9800066257 /* GPB-Klangraum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GPB-Klangraum.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5084EB541B67DA9800066257 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5084EB551B67DA9800066257 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		5084EB571B67DA9800066257 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5084EB5A1B67DA9800066257 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		5084EB5C1B67DA9800066257 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		5084EB5F1B67DA9800066257 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		5084EB651B67DA9800066257 /* GPB-KlangraumTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "GPB-KlangraumTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5084EB6A1B67DA9800066257 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		5084EB6B1B67DA9800066257 /* GPB_KlangraumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPB_KlangraumTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5084EB4D1B67DA9800066257 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5084EB621B67DA9800066257 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5084EB471B67DA9800066257 = {
+			isa = PBXGroup;
+			children = (
+				5084EB521B67DA9800066257 /* GPB-Klangraum */,
+				5084EB681B67DA9800066257 /* GPB-KlangraumTests */,
+				5084EB511B67DA9800066257 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5084EB511B67DA9800066257 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5084EB501B67DA9800066257 /* GPB-Klangraum.app */,
+				5084EB651B67DA9800066257 /* GPB-KlangraumTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5084EB521B67DA9800066257 /* GPB-Klangraum */ = {
+			isa = PBXGroup;
+			children = (
+				5084EB551B67DA9800066257 /* AppDelegate.swift */,
+				5084EB571B67DA9800066257 /* ViewController.swift */,
+				5084EB591B67DA9800066257 /* Main.storyboard */,
+				5084EB5C1B67DA9800066257 /* Images.xcassets */,
+				5084EB5E1B67DA9800066257 /* LaunchScreen.xib */,
+				5084EB531B67DA9800066257 /* Supporting Files */,
+			);
+			path = "GPB-Klangraum";
+			sourceTree = "<group>";
+		};
+		5084EB531B67DA9800066257 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5084EB541B67DA9800066257 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5084EB681B67DA9800066257 /* GPB-KlangraumTests */ = {
+			isa = PBXGroup;
+			children = (
+				5084EB6B1B67DA9800066257 /* GPB_KlangraumTests.swift */,
+				5084EB691B67DA9800066257 /* Supporting Files */,
+			);
+			path = "GPB-KlangraumTests";
+			sourceTree = "<group>";
+		};
+		5084EB691B67DA9800066257 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5084EB6A1B67DA9800066257 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5084EB4F1B67DA9800066257 /* GPB-Klangraum */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5084EB6F1B67DA9800066257 /* Build configuration list for PBXNativeTarget "GPB-Klangraum" */;
+			buildPhases = (
+				5084EB4C1B67DA9800066257 /* Sources */,
+				5084EB4D1B67DA9800066257 /* Frameworks */,
+				5084EB4E1B67DA9800066257 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "GPB-Klangraum";
+			productName = "GPB-Klangraum";
+			productReference = 5084EB501B67DA9800066257 /* GPB-Klangraum.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5084EB641B67DA9800066257 /* GPB-KlangraumTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5084EB721B67DA9800066257 /* Build configuration list for PBXNativeTarget "GPB-KlangraumTests" */;
+			buildPhases = (
+				5084EB611B67DA9800066257 /* Sources */,
+				5084EB621B67DA9800066257 /* Frameworks */,
+				5084EB631B67DA9800066257 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5084EB671B67DA9800066257 /* PBXTargetDependency */,
+			);
+			name = "GPB-KlangraumTests";
+			productName = "GPB-KlangraumTests";
+			productReference = 5084EB651B67DA9800066257 /* GPB-KlangraumTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5084EB481B67DA9800066257 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = "Pascal Schönthier";
+				TargetAttributes = {
+					5084EB4F1B67DA9800066257 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					5084EB641B67DA9800066257 = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = 5084EB4F1B67DA9800066257;
+					};
+				};
+			};
+			buildConfigurationList = 5084EB4B1B67DA9800066257 /* Build configuration list for PBXProject "GPB-Klangraum" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 5084EB471B67DA9800066257;
+			productRefGroup = 5084EB511B67DA9800066257 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5084EB4F1B67DA9800066257 /* GPB-Klangraum */,
+				5084EB641B67DA9800066257 /* GPB-KlangraumTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5084EB4E1B67DA9800066257 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5084EB5B1B67DA9800066257 /* Main.storyboard in Resources */,
+				5084EB601B67DA9800066257 /* LaunchScreen.xib in Resources */,
+				5084EB5D1B67DA9800066257 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5084EB631B67DA9800066257 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5084EB4C1B67DA9800066257 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5084EB581B67DA9800066257 /* ViewController.swift in Sources */,
+				5084EB561B67DA9800066257 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5084EB611B67DA9800066257 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5084EB6C1B67DA9800066257 /* GPB_KlangraumTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5084EB671B67DA9800066257 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5084EB4F1B67DA9800066257 /* GPB-Klangraum */;
+			targetProxy = 5084EB661B67DA9800066257 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		5084EB591B67DA9800066257 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5084EB5A1B67DA9800066257 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		5084EB5E1B67DA9800066257 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5084EB5F1B67DA9800066257 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5084EB6D1B67DA9800066257 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5084EB6E1B67DA9800066257 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		5084EB701B67DA9800066257 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "GPB-Klangraum/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5084EB711B67DA9800066257 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = "GPB-Klangraum/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		5084EB731B67DA9800066257 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "GPB-KlangraumTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GPB-Klangraum.app/GPB-Klangraum";
+			};
+			name = Debug;
+		};
+		5084EB741B67DA9800066257 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "GPB-KlangraumTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GPB-Klangraum.app/GPB-Klangraum";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5084EB4B1B67DA9800066257 /* Build configuration list for PBXProject "GPB-Klangraum" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5084EB6D1B67DA9800066257 /* Debug */,
+				5084EB6E1B67DA9800066257 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5084EB6F1B67DA9800066257 /* Build configuration list for PBXNativeTarget "GPB-Klangraum" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5084EB701B67DA9800066257 /* Debug */,
+				5084EB711B67DA9800066257 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		5084EB721B67DA9800066257 /* Build configuration list for PBXNativeTarget "GPB-KlangraumTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5084EB731B67DA9800066257 /* Debug */,
+				5084EB741B67DA9800066257 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5084EB481B67DA9800066257 /* Project object */;
+}
