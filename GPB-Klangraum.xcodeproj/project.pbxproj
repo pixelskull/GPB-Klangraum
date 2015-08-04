@@ -14,6 +14,9 @@
 		5084EB601B67DA9800066257 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB5E1B67DA9800066257 /* LaunchScreen.xib */; };
 		5084EB6C1B67DA9800066257 /* GPB_KlangraumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5084EB6B1B67DA9800066257 /* GPB_KlangraumTests.swift */; };
 		5084EB771B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */; };
+		5084EB791B67E1ED00066257 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5084EB781B67E1ED00066257 /* AudioToolbox.framework */; };
+		5084EB7B1B67E1F600066257 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5084EB7A1B67E1F600066257 /* CoreAudio.framework */; };
+		5097BD681B69039E00066257 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5097BD671B69039E00066257 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +41,9 @@
 		5084EB6A1B67DA9800066257 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5084EB6B1B67DA9800066257 /* GPB_KlangraumTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPB_KlangraumTests.swift; sourceTree = "<group>"; };
 		5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "YellowNintendoHero-Muciojad.mp3"; sourceTree = "<group>"; };
+		5084EB781B67E1ED00066257 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		5084EB7A1B67E1F600066257 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		5097BD671B69039E00066257 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +51,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5097BD681B69039E00066257 /* AVFoundation.framework in Frameworks */,
+				5084EB7B1B67E1F600066257 /* CoreAudio.framework in Frameworks */,
+				5084EB791B67E1ED00066257 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,6 +70,7 @@
 		5084EB471B67DA9800066257 = {
 			isa = PBXGroup;
 			children = (
+				5084EB7C1B67E22000066257 /* Frameworks */,
 				5084EB751B67DBCD00066257 /* Misc */,
 				5084EB521B67DA9800066257 /* GPB-Klangraum */,
 				5084EB681B67DA9800066257 /* GPB-KlangraumTests */,
@@ -121,6 +131,16 @@
 				5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */,
 			);
 			name = Misc;
+			sourceTree = "<group>";
+		};
+		5084EB7C1B67E22000066257 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5097BD671B69039E00066257 /* AVFoundation.framework */,
+				5084EB7A1B67E1F600066257 /* CoreAudio.framework */,
+				5084EB781B67E1ED00066257 /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
