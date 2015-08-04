@@ -86,6 +86,7 @@
 		FA4A90701B70F2FE00512B2A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FA4A90711B70F2FE00512B2A /* KlangraumKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlangraumKitTests.swift; sourceTree = "<group>"; };
 		FA4A907E1B70F30F00512B2A /* FFT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFT.swift; sourceTree = "<group>"; };
+		FA4A90801B70F4A500512B2A /* TestingPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = TestingPlayground.playground; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +126,7 @@
 		5084EB471B67DA9800066257 = {
 			isa = PBXGroup;
 			children = (
+				FA4A90801B70F4A500512B2A /* TestingPlayground.playground */,
 				5084EB751B67DBCD00066257 /* Misc */,
 				5084EB521B67DA9800066257 /* GPB-Klangraum */,
 				5084EB681B67DA9800066257 /* GPB-KlangraumTests */,
