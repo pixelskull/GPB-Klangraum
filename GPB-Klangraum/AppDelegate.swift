@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
-        /*
+       /*
             ExtAudioFile
         */
         println("start reading file")
@@ -117,7 +117,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate {
             println("error: \(err)")
         }
 
-        return true
+        return true 
     }
 
     func applicationWillResignActive(application: UIApplication) {
