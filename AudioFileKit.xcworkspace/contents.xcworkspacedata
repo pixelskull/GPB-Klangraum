@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "container:GPB-Klangraum.xcodeproj">
+   </FileRef>
+   <Group
+      location = "group:KlangraumKitTests/../AudioFileKit"
+      name = "AudioFileKit">
+      <FileRef
+         location = "group:AudioFileKit/AudioFileKit.h">
+      </FileRef>
+      <Group
+         location = "group:AudioFileKit"
+         name = "Supporting Files">
+         <FileRef
+            location = "group:AudioFileKit/Info.plist">
+         </FileRef>
+      </Group>
+   </Group>
+   <Group
+      location = "group:KlangraumKitTests/../AudioFileKitTests"
+      name = "AudioFileKitTests">
+      <FileRef
+         location = "group:AudioFileKitTests/AudioFileKitTests.m">
+      </FileRef>
+      <Group
+         location = "group:AudioFileKitTests"
+         name = "Supporting Files">
+         <FileRef
+            location = "group:AudioFileKitTests/Info.plist">
+         </FileRef>
+      </Group>
+   </Group>
+</Workspace>

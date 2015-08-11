@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5027058D1B79FD0500066257 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5084EB781B67E1ED00066257 /* AudioToolbox.framework */; };
 		5080B0CE1B789DB500066257 /* KlangraumKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5080B0CD1B789DB500066257 /* KlangraumKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5080B0D41B789DB500066257 /* KlangraumKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; };
 		5080B0DD1B789DB500066257 /* KlangraumKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0DC1B789DB500066257 /* KlangraumKitTests.swift */; };
 		5080B0E01B789DB500066257 /* KlangraumKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; };
 		5080B0E11B789DB500066257 /* KlangraumKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		5080B0EA1B789DD100066257 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0E91B789DD100066257 /* File.swift */; };
 		5080B0ED1B789F3D00066257 /* FFT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0EB1B789F3D00066257 /* FFT.swift */; };
 		5080B0EE1B789F3D00066257 /* FFT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0EB1B789F3D00066257 /* FFT.swift */; };
 		5080B0EF1B789F3D00066257 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0EC1B789F3D00066257 /* Math.swift */; };
@@ -24,7 +24,6 @@
 		5084EB601B67DA9800066257 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB5E1B67DA9800066257 /* LaunchScreen.xib */; };
 		5084EB6C1B67DA9800066257 /* GPB_KlangraumTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5084EB6B1B67DA9800066257 /* GPB_KlangraumTests.swift */; };
 		5084EB771B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */; };
-		5084EB791B67E1ED00066257 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5084EB781B67E1ED00066257 /* AudioToolbox.framework */; };
 		5084EB7B1B67E1F600066257 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5084EB7A1B67E1F600066257 /* CoreAudio.framework */; };
 		5097BD681B69039E00066257 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5097BD671B69039E00066257 /* AVFoundation.framework */; };
 /* End PBXBuildFile section */
@@ -81,7 +80,6 @@
 		5080B0D31B789DB500066257 /* KlangraumKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KlangraumKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		5080B0DB1B789DB500066257 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5080B0DC1B789DB500066257 /* KlangraumKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlangraumKitTests.swift; sourceTree = "<group>"; };
-		5080B0E91B789DD100066257 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		5080B0EB1B789F3D00066257 /* FFT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFT.swift; sourceTree = "<group>"; };
 		5080B0EC1B789F3D00066257 /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		5080B0F11B789FB600066257 /* TestingPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = TestingPlayground.playground; sourceTree = "<group>"; };
@@ -121,10 +119,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5027058D1B79FD0500066257 /* AudioToolbox.framework in Frameworks */,
 				5080B0E01B789DB500066257 /* KlangraumKit.framework in Frameworks */,
 				5097BD681B69039E00066257 /* AVFoundation.framework in Frameworks */,
 				5084EB7B1B67E1F600066257 /* CoreAudio.framework in Frameworks */,
-				5084EB791B67E1ED00066257 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,7 +143,6 @@
 				5080B0EC1B789F3D00066257 /* Math.swift */,
 				5080B0CD1B789DB500066257 /* KlangraumKit.h */,
 				5080B0CB1B789DB500066257 /* Supporting Files */,
-				5080B0E91B789DD100066257 /* File.swift */,
 			);
 			path = KlangraumKit;
 			sourceTree = "<group>";
@@ -179,13 +176,13 @@
 			isa = PBXGroup;
 			children = (
 				5080B0F11B789FB600066257 /* TestingPlayground.playground */,
-				5080B0CA1B789DB500066257 /* KlangraumKit */,
-				5080B0D91B789DB500066257 /* KlangraumKitTests */,
 				5084EB7C1B67E22000066257 /* Frameworks */,
 				5084EB751B67DBCD00066257 /* Misc */,
 				5084EB521B67DA9800066257 /* GPB-Klangraum */,
 				5084EB681B67DA9800066257 /* GPB-KlangraumTests */,
 				5084EB511B67DA9800066257 /* Products */,
+				5080B0CA1B789DB500066257 /* KlangraumKit */,
+				5080B0D91B789DB500066257 /* KlangraumKitTests */,
 			);
 			sourceTree = "<group>";
 		};
@@ -431,7 +428,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5080B0ED1B789F3D00066257 /* FFT.swift in Sources */,
-				5080B0EA1B789DD100066257 /* File.swift in Sources */,
 				5080B0EF1B789F3D00066257 /* Math.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -554,6 +550,7 @@
 		5080B0E41B789DB500066257 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -572,6 +569,7 @@
 		5080B0E51B789DB500066257 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEFINES_MODULE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -670,6 +668,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEFINES_MODULE = NO;
 				INFOPLIST_FILE = "GPB-Klangraum/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -680,6 +679,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEFINES_MODULE = NO;
 				INFOPLIST_FILE = "GPB-Klangraum/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -730,6 +730,7 @@
 				5080B0E31B789DB500066257 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5080B0E81B789DB500066257 /* Build configuration list for PBXNativeTarget "KlangraumKitTests" */ = {
 			isa = XCConfigurationList;
@@ -738,6 +739,7 @@
 				5080B0E51B789DB500066257 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5084EB4B1B67DA9800066257 /* Build configuration list for PBXProject "GPB-Klangraum" */ = {
 			isa = XCConfigurationList;

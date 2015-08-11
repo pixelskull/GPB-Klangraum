@@ -23,3 +23,4 @@ let x = map(0..<count){ 2.0 * M_PI / Double(count) * Double($0) * frequency }
 plot(sin(x), "Sine Wave")
 plot(surgeForward(sin(x)), "FFT Forward")
 plot(surgeInverse(surgeForward(sin(x))), "FFT Inverse")
+
