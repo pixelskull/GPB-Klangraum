@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5027058D1B79FD0500066257 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5084EB781B67E1ED00066257 /* AudioToolbox.framework */; };
+		502705B71B7A2B8B00066257 /* AudioFileServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 502705B61B7A2B8B00066257 /* AudioFileServices.swift */; };
 		5080B0CE1B789DB500066257 /* KlangraumKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5080B0CD1B789DB500066257 /* KlangraumKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5080B0D41B789DB500066257 /* KlangraumKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; };
 		5080B0DD1B789DB500066257 /* KlangraumKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0DC1B789DB500066257 /* KlangraumKitTests.swift */; };
@@ -74,6 +75,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		502705B61B7A2B8B00066257 /* AudioFileServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioFileServices.swift; sourceTree = "<group>"; };
 		5080B0C91B789DB500066257 /* KlangraumKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KlangraumKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5080B0CC1B789DB500066257 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5080B0CD1B789DB500066257 /* KlangraumKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlangraumKit.h; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 				5080B0EC1B789F3D00066257 /* Math.swift */,
 				5080B0CD1B789DB500066257 /* KlangraumKit.h */,
 				5080B0CB1B789DB500066257 /* Supporting Files */,
+				502705B61B7A2B8B00066257 /* AudioFileServices.swift */,
 			);
 			path = KlangraumKit;
 			sourceTree = "<group>";
@@ -347,6 +350,7 @@
 		5084EB481B67DA9800066257 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Pascal Schönthier";
 				TargetAttributes = {
@@ -427,6 +431,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				502705B71B7A2B8B00066257 /* AudioFileServices.swift in Sources */,
 				5080B0ED1B789F3D00066257 /* FFT.swift in Sources */,
 				5080B0EF1B789F3D00066257 /* Math.swift in Sources */,
 			);
