@@ -23,6 +23,22 @@ public func sin(x: [Double]) -> [Double] {
     return results
 }
 
+// MARK: Cosine
+
+public func cos(x: [Float]) -> [Float] {
+    var results = [Float](count: x.count, repeatedValue: 0.0)
+    vvcosf(&results, x, [Int32(x.count)])
+    
+    return results
+}
+
+public func cos(x: [Double]) -> [Double] {
+    var results = [Double](count: x.count, repeatedValue: 0.0)
+    vvcos(&results, x, [Int32(x.count)])
+    
+    return results
+}
+
 // MARK: Square Root
 public func sqrt(x: [Float]) -> [Float] {
     var results = [Float](count: x.count, repeatedValue: 0.0)

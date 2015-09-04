@@ -26,6 +26,12 @@
 		5084EB771B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */; };
 		5084EB7B1B67E1F600066257 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5084EB7A1B67E1F600066257 /* CoreAudio.framework */; };
 		5097BD681B69039E00066257 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5097BD671B69039E00066257 /* AVFoundation.framework */; };
+		FA02298D1B95CCE800D0AF0F /* ComplexVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0229871B95CCE800D0AF0F /* ComplexVector.swift */; };
+		FA02298E1B95CCE800D0AF0F /* ComplexVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0229881B95CCE800D0AF0F /* ComplexVectorOperations.swift */; };
+		FA02298F1B95CCE800D0AF0F /* FFTOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0229891B95CCE800D0AF0F /* FFTOperations.swift */; };
+		FA0229901B95CCE800D0AF0F /* RealVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA02298A1B95CCE800D0AF0F /* RealVectorOperations.swift */; };
+		FA0229911B95CCE800D0AF0F /* Unsafeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA02298B1B95CCE800D0AF0F /* Unsafeable.swift */; };
+		FA0229921B95CCE800D0AF0F /* Windowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA02298C1B95CCE800D0AF0F /* Windowing.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +103,12 @@
 		5084EB781B67E1ED00066257 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		5084EB7A1B67E1F600066257 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		5097BD671B69039E00066257 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		FA0229871B95CCE800D0AF0F /* ComplexVector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplexVector.swift; sourceTree = "<group>"; };
+		FA0229881B95CCE800D0AF0F /* ComplexVectorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplexVectorOperations.swift; sourceTree = "<group>"; };
+		FA0229891B95CCE800D0AF0F /* FFTOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFTOperations.swift; sourceTree = "<group>"; };
+		FA02298A1B95CCE800D0AF0F /* RealVectorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealVectorOperations.swift; sourceTree = "<group>"; };
+		FA02298B1B95CCE800D0AF0F /* Unsafeable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unsafeable.swift; sourceTree = "<group>"; };
+		FA02298C1B95CCE800D0AF0F /* Windowing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windowing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -139,6 +151,12 @@
 		5080B0CA1B789DB500066257 /* KlangraumKit */ = {
 			isa = PBXGroup;
 			children = (
+				FA0229871B95CCE800D0AF0F /* ComplexVector.swift */,
+				FA0229881B95CCE800D0AF0F /* ComplexVectorOperations.swift */,
+				FA0229891B95CCE800D0AF0F /* FFTOperations.swift */,
+				FA02298A1B95CCE800D0AF0F /* RealVectorOperations.swift */,
+				FA02298B1B95CCE800D0AF0F /* Unsafeable.swift */,
+				FA02298C1B95CCE800D0AF0F /* Windowing.swift */,
 				5080B0EB1B789F3D00066257 /* FFT.swift */,
 				5080B0EC1B789F3D00066257 /* Math.swift */,
 				5080B0CD1B789DB500066257 /* KlangraumKit.h */,
@@ -427,8 +445,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA0229921B95CCE800D0AF0F /* Windowing.swift in Sources */,
 				5080B0ED1B789F3D00066257 /* FFT.swift in Sources */,
 				5080B0EF1B789F3D00066257 /* Math.swift in Sources */,
+				FA02298F1B95CCE800D0AF0F /* FFTOperations.swift in Sources */,
+				FA0229911B95CCE800D0AF0F /* Unsafeable.swift in Sources */,
+				FA02298D1B95CCE800D0AF0F /* ComplexVector.swift in Sources */,
+				FA0229901B95CCE800D0AF0F /* RealVectorOperations.swift in Sources */,
+				FA02298E1B95CCE800D0AF0F /* ComplexVectorOperations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
