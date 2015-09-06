@@ -11,66 +11,253 @@ import AudioToolbox
 import AVFoundation
 
 
+
 public class AudioFile {
 
-    public var fileProperty:[NSObject:AnyObject] = [NSObject:AnyObject]()
+    var audioPath:String = ""
+    var dstFormat:AudioStreamBasicDescription = AudioStreamBasicDescription()
 
-    public var audioFileData:NSData = NSData()
-    public var dataSize:Int{
-        get{
-            return audioFileData.length
-        }
-    }
-
-    public var audioBufferList:AudioBufferList = AudioBufferList()
-    public var audioBufferSize:Int = 0
-
-    public var player:AVAudioPlayer = AVAudioPlayer()
-
-    public var sampleRate:Int{
-        get{
-            return self.fileProperty[AVSampleRateKey]!.integerValue
-        }
-    }
-
-    public var audioPath:String = ""
-    public var audioURL:NSURL{
-        get{
-            return NSURL(fileURLWithPath: audioPath)!
-        }
-    }
-
-    public var audioDuration:NSTimeInterval = NSTimeInterval()
-
-    /**
-    initializer 
-    
-    :param: path:String -> path to audiofile
-    */
-    public init(path:String){ setupAudioFile(path) }
 
     public init() {
         let path = createDummyFile()
         if let p = path.dematerialize() {
             setupAudioFile(p)
         }
+        setupDestinationFormat()
     }
 
-    /**
-    helpermethod for initializers
-    
-    :param: path:String -> path to audiofile
-    */
-    func setupAudioFile(path: String) {
-        audioPath = path
-        player = AVAudioPlayer(contentsOfURL: audioURL, error: nil)
-        fileProperty = readAudioFileProperties()
-        if let ab = readAudioFileToAudioBufferList(path).dematerialize() {
-            audioBufferList = ab
-        }
-//        audioFileData = readAudioFileData()
-        audioDuration = readAudioFileDuration()
+    public init(path:String) {
+        setupAudioFile(path)
+        setupDestinationFormat()
     }
+
+
+    public func setupAudioFile(path:String) {
+        self.audioPath = path
+    }
+
+
+    func setupDestinationFormat() {
+        self.dstFormat.mSampleRate = Double(44100.0)
+        self.dstFormat.mFormatID = AudioFormatID(kAudioFormatLinearPCM)
+        self.dstFormat.mFormatFlags = AudioFormatFlags(kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked | kAudioFormatFlagIsFloat | kAudioFormatFlagIsNonInterleaved)
+        self.dstFormat.mBitsPerChannel = UInt32(sizeof(Float32)) * 8
+        self.dstFormat.mChannelsPerFrame = 1
+        self.dstFormat.mBytesPerFrame = dstFormat.mChannelsPerFrame * UInt32(sizeof(Float32))
+        self.dstFormat.mFramesPerPacket = 1
+        self.dstFormat.mBytesPerPacket = dstFormat.mFramesPerPacket * dstFormat.mBytesPerFrame
+    }
+
+
+    public func openAudioFile(path:String) -> Failable<ExtAudioFileRef>{
+        if let audioFileURL:NSURL = NSURL(fileURLWithPath: path) {
+
+            var osError:OSStatus = noErr
+            var audioFileRef:ExtAudioFileRef = nil
+
+            osError = ExtAudioFileOpenURL(audioFileURL, &audioFileRef)
+            if osError == noErr {
+                return Failable.Success(Box(audioFileRef))
+            } else {
+                return Failable.Failure("openAudioFile()::: audioFile could not opend (Filepath: \(path))")
+            }
+        } else {
+            return Failable.Failure("openAudioFile()::: audioFileURL could not find URL for File \(path)")
+        }
+    }
+
+
+//    public func readAudioFileFloatSamples() -> [Float]? {
+//        if let floats = (openAudioFile(self.audioPath) --> convertToLinearPCM --> readAudioFile --> convertToFloatSamples).dematerialize() {
+//            return floats
+//        } else {
+//            return nil
+//        }
+//    }
+
+
+    public func readAudioFileWithAVAsset(assetPath:String) -> Failable<AudioBufferList> {
+        let assetURL:NSURL = NSURL(fileURLWithPath: assetPath)!
+        let asset:AVAsset = AVAsset.assetWithURL(assetURL) as! AVAsset
+
+        let reader:AVAssetReader = AVAssetReader(asset: asset, error: nil)
+        let track:AVAssetTrack = asset.tracksWithMediaType(AVMediaTypeAudio).first as! AVAssetTrack
+
+        var audioResultSettings = [String:Int]()
+        audioResultSettings["AVFormatIDKey"] = kAudioFormatLinearPCM
+
+        let readerOutput:AVAssetReaderTrackOutput = AVAssetReaderTrackOutput(track: track, outputSettings: audioResultSettings)
+
+        reader.addOutput(readerOutput)
+        reader.startReading()
+
+        var sample:CMSampleBufferRef? //= readerOutput.copyNextSampleBuffer()
+        var sampleArray = [Int8]()
+
+        var lengthAtOffset:size_t = 0
+        var totalLength:size_t = 0
+        var data:UnsafeMutablePointer<Int8> = UnsafeMutablePointer<Int8>()
+        while reader.status == .Reading {
+
+            sample = readerOutput.copyNextSampleBuffer()
+            if sample === nil {
+                println("End of Buffer")
+                continue
+            }
+            var buffer:CMBlockBufferRef = CMSampleBufferGetDataBuffer( sample )
+
+
+//            var data:CMutablePointer<UnsafePointer<CChar>> = CMutablePointer<UnsafePointer<CChar>>()
+            if (CMBlockBufferGetDataPointer(buffer, 0, &lengthAtOffset, &totalLength, &data) == noErr) {
+
+                println("Data>\( data.memory )      | \(lengthAtOffset)         | \(totalLength)")
+                sampleArray.append(data.memory)
+            } else {
+                return Failable.Failure("readAudioFileWithAsset()::: Error generating samples as Float")
+            }
+        }
+        println(sampleArray.count)
+        return Failable.Failure("readAudioFile()::: not implemented")
+    }
+
+    
+    public func readAudioFile(path:String) -> Failable<[Float]> {
+
+        let url = NSURL(fileURLWithPath: path)
+        let audioFile = AVAudioFile(forReading: url, error: nil)
+        let audioFileFormat = audioFile.processingFormat
+        let audioFileFrameCount = UInt32(audioFile.length)
+        let pcmBuffer = AVAudioPCMBuffer(PCMFormat: audioFileFormat, frameCapacity: audioFileFrameCount)
+
+        var error:NSError?
+        audioFile.readIntoBuffer(pcmBuffer, error: &error)
+
+        let channels = UnsafeBufferPointer<Float>(start: pcmBuffer.floatChannelData.memory, count: Int(pcmBuffer.format.channelCount))
+
+
+        var samples:[Float] = Array<Float>(count: Int(pcmBuffer.frameLength), repeatedValue: 0.0) //= UnsafeBufferPointer<Float>(start: channels[0], count: Int(pcmBuffer.frameLength))
+        for i in 0 ..< Int(pcmBuffer.frameLength) {
+            samples[i] = pcmBuffer.floatChannelData.memory[i]
+        }
+
+        println(samples.count)
+        if (error == nil) {
+            return Failable.Success(Box(samples))
+        } else {
+            return Failable.Failure("is build to fail")
+        }
+    }
+
+
+
+
+//    public func readAudioFile(var audioFileRef:ExtAudioFileRef) -> Failable<AudioBufferList> {
+//
+//        var audioFileURL = NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!)
+//        var osError:OSStatus = noErr
+//
+//        osError = ExtAudioFileOpenURL(audioFileURL, &audioFileRef)
+//
+//        if osError == noErr {
+//            var numberOfFrames:UInt32 = 5536
+////            var data:NSMutableData = NSMutableData(length: Int(numberOfFrames) * sizeof(Float))!
+//
+//            var data = [Float32](count: Int(numberOfFrames), repeatedValue: 0)
+//
+////            var audioBuffer:AudioBuffer = AudioBuffer()
+//            var audioBuffer:AudioBuffer = AudioBuffer(mNumberChannels: 1,
+//                mDataByteSize: numberOfFrames * UInt32(sizeof(Float32)),
+//                mData: &data)
+//
+////            audioBuffer.mData = &data
+////            audioBuffer.mNumberChannels = self.dstFormat.mChannelsPerFrame
+//            var audioBufferList: AudioBufferList = AudioBufferList(mNumberBuffers: 1, mBuffers: audioBuffer)
+//
+////            audioBufferList.dynamicType
+////            var floatArray:UnsafeMutablePointer<Float>
+//
+//            var samples = [Float32]()
+//            do {
+//                withUnsafeMutablePointer(&audioBufferList) {
+//                    osError = ExtAudioFileRead(audioFileRef, &numberOfFrames, $0)
+//                }
+//                var pcmBuffer = AVAudioPCMBuffer()
+//                pcmBuffer = audioBufferList.mBuffers as AVAudioPCMBuffer
+//
+//                let floatBuffer = UnsafeMutablePointer<Float32>(audioBufferList.mBuffers.mData)
+//                let newSamples = (0..<numberOfFrames).map {floatBuffer[Int($0)]}
+//                for newSample in newSamples {
+//                    samples.append( newSample )
+//                }
+////                floatArray = UnsafeMutablePointer<Float>(audioBufferList.mBuffers.mData)
+//            } while numberOfFrames > 0
+//
+//            println(samples)
+//            println(samples.count)
+//
+//            if osError == noErr {
+//                return Failable.Success(Box(audioBufferList))
+//            } else {
+//                return Failable.Failure("readAudioFile()::: audioFile could not read (OSStatus: \(osError))")
+//            }
+//        } else {
+//            return Failable.Failure("readAudioFile()::: audioFile could not opend (OSStatus: \(osError))")
+//        }
+//    }
+
+
+    func readAudioFileBufferSize(path:String) -> Failable<UInt32> {
+
+        if let audioFileURL:NSURL = NSURL(fileURLWithPath: path){
+
+            var osError:OSStatus = noErr
+            var audioFileID:AudioFileID = nil
+            var audioFileType:AudioFileTypeID = 0
+            osError = AudioFileOpenURL(audioFileURL, Int8(kAudioFileReadPermission), audioFileType, &audioFileID)
+
+            if osError == noErr {
+                var outDataSize:UInt32 = 0
+                var audioBufferSizeBytes:UInt32 = 0
+                osError = ExtAudioFileGetProperty(audioFileID, UInt32(kExtAudioFileProperty_IOBufferSizeBytes), &outDataSize, &audioBufferSizeBytes)
+                if osError == noErr {
+                    return Failable.Success(Box(audioBufferSizeBytes))
+                } else {
+                    return Failable.Failure("readAudioFileBufferSize()::: could not read Buffersize (OSStatus: \(osError))")
+                }
+            } else {
+                return Failable.Failure("readAudioFileBufferSize()::: audioFile could not opend (OSStatus: \(osError))")
+            }
+        } else {
+            return Failable.Failure("readAudioFileBufferSize()::: audioFileURL could not created)")
+        }
+    }
+
+
+    public func readAudioFileData(properties: UInt32) -> Failable<AudioBufferList> {
+        return Failable.Failure("readAudioFileData() not implemented")
+    }
+
+
+    public func convertToLinearPCM(audioFileRef:ExtAudioFileRef) -> Failable<ExtAudioFileRef> {
+        var osError:OSStatus = noErr
+        osError = ExtAudioFileSetProperty(audioFileRef,
+            ExtAudioFilePropertyID(kExtAudioFileProperty_ClientDataFormat),
+            UInt32(sizeof(AudioStreamBasicDescription)),
+            &self.dstFormat)
+
+        if osError == noErr {
+            return Failable.Success(Box(audioFileRef))
+        } else {
+            return Failable.Failure("convertToLinearPCM()::: could not convert to linearPCM Format")
+        }
+    }
+
+
+    public func convertToFloatSamples(buffer:AudioBufferList) -> Failable<[Float]> {
+        println(Array(UnsafeBufferPointer(start: buffer.mBuffers.mData, count: Int(buffer.mBuffers.mDataByteSize))))
+        return Failable.Failure("convertToFloatSamples() not implemented")
+    }
+
 
     /**
     Creates dummy audio with sinoid signal in linearPCM format
@@ -84,7 +271,8 @@ public class AudioFile {
         let amplitude:Float = 3.0
 
         // generates Pointer to Float-array
-        var x:UnsafeMutablePointer<Void> = UnsafeMutablePointer<Void>(sin(map(0..<count){ 2.0 * Float(M_PI) / Float(count) * Float($0) * frequency }))
+        var x:UnsafeMutablePointer<Void> = UnsafeMutablePointer<Void>(sin(map(0..<count){ (2.0 * Float(M_PI) / Float(count) * Float($0) * frequency) * 100 }))
+
         // create AudioBufferList with the Array-Pointer as Data
         var buffer:AudioBufferList = AudioBufferList()
         buffer.mNumberBuffers = 1
@@ -113,193 +301,16 @@ public class AudioFile {
         // write data to the empty Audio-file
         var wErr = noErr
         wErr = ExtAudioFileWrite(extAudio, UInt32(count), &buffer)
-
+        // if no error return the value with Result-Pattern, if not return Failure
         if wErr == noErr {
             return Failable.Success(Box(newFilePath))
         } else {
-            return Failable.Failure("dummyFile not created")
+            return Failable.Failure("createDummyFile()::: File not created")
         }
     }
 
-    /**
-    get Audio in NSData-Format 
-    
-    :returns: data:NSData -> AudioData
-    */
-    func readAudioFileData() -> NSData { return player.data }
-
-    /**
-    get Audio Properties 
-    
-    :returns: Property Dictionary
-    */
-    func readAudioFileProperties() -> [NSObject:AnyObject] { return player.settings }
-
-    /**
-    reads duration of audio-file 
-    
-    :returns: duration:NSTimeInterval -> duration of Audio
-    */
-    func readAudioFileDuration() -> NSTimeInterval { return player.duration }
-
-    /**
-    Reads samples from audiofile and return an AudioBufferList
-
-    :param: path:String -> Path to audiofile
-
-    :returns: AudioBufferList? with samples or nil if file not readable
-    */
-    public func readAudioFileToAudioBufferList(audioFilePath:String) -> Failable<AudioBufferList> {
-        var err:OSStatus = noErr
-        let audioURL: NSURL = NSURL(string: audioFilePath)! // make URL from path
-        // create an empty fileID
-        var audioFile: AudioFileID = nil
-        var hint: AudioFileTypeID = 0
-        err = AudioFileOpenURL(audioURL, Int8(kAudioFileReadWritePermission), hint, &audioFile)
-
-        if (err == noErr) {
-            // reading file-properties
-            var outDataSize: UInt32 = 0
-            var isWritable: UInt32 = 0
-            err = AudioFileGetPropertyInfo(audioFile, UInt32(kAudioFilePropertyInfoDictionary), &outDataSize, &isWritable)
-
-            var dict:NSDictionary?
-            //        var key:AudioChannelLayout = AudioChannelLayout()
-            err = noErr
-            err = AudioFileGetProperty(audioFile , UInt32(kAudioFilePropertyInfoDictionary), &outDataSize, &dict)
-            err = ExtAudioFileGetProperty(audioFile, UInt32(kExtAudioFileProperty_IOBufferSizeBytes), &outDataSize, &audioBufferSize)
-
-            // open audiofile
-            var audioFileRef: ExtAudioFileRef = ExtAudioFileRef()
-            err = noErr
-            err = ExtAudioFileOpenURL(audioURL, &audioFileRef)
-
-            // optional set Audio Encoding to linearPCM dual-channel with Float-values
-            //            var dstForm:AudioStreamBasicDescription = AudioStreamBasicDescription()
-            //            dstForm.mSampleRate = 44100
-            //            dstForm.mFormatID = AudioFormatID(kAudioFormatLinearPCM)
-            //            dstForm.mFormatFlags = AudioFormatFlags(kAudioFormatFlagIsFloat)
-            //            dstForm.mBitsPerChannel = 32
-            //            dstForm.mChannelsPerFrame = 2
-            //            dstForm.mBytesPerFrame = dstForm.mChannelsPerFrame * 2
-            //            dstForm.mFramesPerPacket = 1
-            //            dstForm.mBytesPerPacket = dstForm.mFramesPerPacket * dstForm.mBytesPerFrame
-            //
-            //            err = noErr
-            //            err = ExtAudioFileSetProperty(audioFileRef, ExtAudioFilePropertyID(kExtAudioFileProperty_ClientDataFormat), UInt32(sizeof(AudioStreamBasicDescription)), &dstForm)
-
-            var numberOfFrames:UInt32 = UInt32(512) // 512
-            var data:NSMutableData = NSMutableData(length: Int(numberOfFrames)*sizeof(Float32))!
-
-            // prepare AudioBufferlist
-            var audioBufferList: AudioBufferList = AudioBufferList()
-            audioBufferList.mNumberBuffers = 1
-            audioBufferList.mBuffers.mData = data.mutableBytes
-            audioBufferList.mBuffers.mDataByteSize = UInt32(data.length)
-            audioBufferList.mBuffers.mNumberChannels = 2
-
-            // read File
-            do {
-//                if numberOfFrames < UInt32(data.length / sizeof(Float32)) {
-//                    println("numberOfFrames < \(data.length / sizeof(Float32)) \(numberOfFrames)")
-//                } else {
-//                    println("do something with Readdata ....")
-//                }
-                err = ExtAudioFileRead(audioFileRef, &numberOfFrames, &audioBufferList)
-                if err != noErr {
-                    break
-                }
-            } while numberOfFrames != 0
-            return Failable.Success(Box(audioBufferList))
-        } else {
-            return Failable.Failure("no BufferList created")
-        }
-    }
-
-    /**
-    converts data in an optional AudioBufferList to optional Array of Floats
-    
-    :param: bufferList:AudioBufferList? -> Optional-Value for AudioBufferList
-    
-    :param: length:Int -> length of the Data to read
-    
-    :returns: optional Array of Floats
-    */
-    public func convertAudioBufferListToFloatArray(bufferList:AudioBufferList) -> Failable<[Float32]> {
-        if (self.sampleRate > 0) {
-            if self.audioDuration > 0.0 {
-                var data:NSData = NSData(bytes: bufferList.mBuffers.mData, length: self.sampleRate * Int(self.audioDuration))
-                //        var count = 44100*3
-                var array = [Float](count: self.sampleRate * Int(self.audioDuration), repeatedValue: 0.0)
-                data.getBytes(&array, length: self.sampleRate * Int(self.audioDuration))
-
-                return Failable.Success(Box(array))
-            } else {
-                return Failable.Failure("audio duration was zero")
-            }
-        } else {
-            return Failable.Failure("sample rate was zero")
-        }
-    }
-
-    /**
-    reads audio samples from self.audioPath as array of Floats
-    
-    :retruns: Failable<[Float32]> -> Failable Enum with sample array
-    */
-    public func readAudioFileAsFloatArray() -> Failable<[Float32]>{
-        return self.readAudioFileToAudioBufferList(self.audioPath) -->  convertAudioBufferListToFloatArray
-    }
-
-    /**
-    converts audiofile in any Format to linear PCM 
-    
-    :param: path:String -> Path to the Audiofile you want to convert
-    
-    :returns: converted Audio-File as NSData
-    */
-//    public func convertToLinearPCM(path:String) -> NSData {
-//        //TODO: implement
-//        return self.convertToLinearPCM( self.readAudioFileToAudioBufferList(path) )
+//    public func createFile(buffer:AudioBufferList, name:String) -> Failable {
+//
 //    }
-
-    /**
-    converts audiofile in any Format to linear PCM
-
-    :param: data:NSData -> NSData representing the Audiofile you want to convert
-
-    :returns: converted Audio-File as NSData
-    */
-    public func convertToLinearPCM(audioBufferList:AudioBufferList) -> Failable<NSData> {
-        //TODO: implement
-        // optional set Audio Encoding to linearPCM dual-channel with Float-values
-        var dstForm:AudioStreamBasicDescription = AudioStreamBasicDescription()
-        dstForm.mSampleRate = Float64(self.sampleRate)
-        dstForm.mFormatID = AudioFormatID(kAudioFormatLinearPCM)
-        dstForm.mFormatFlags = AudioFormatFlags(kAudioFormatFlagIsFloat)
-        dstForm.mBitsPerChannel = 32
-        dstForm.mChannelsPerFrame = 1
-//        dstForm.mBytesPerFrame = dstForm.mChannelsPerFrame 
-//        dstForm.mFramesPerPacket = 1
-//        dstForm.mBytesPerPacket = dstForm.mFramesPerPacket * dstForm.mBytesPerFrame
-
-        var err:OSStatus = noErr
-        var audioFileRef:ExtAudioFileRef = ExtAudioFileRef()
-        err = ExtAudioFileSetProperty(audioFileRef, ExtAudioFilePropertyID(kExtAudioFileProperty_ClientDataFormat), UInt32(sizeof(AudioStreamBasicDescription)), &dstForm)
-        if err == noErr {
-            //TODO: Implement
-            return Failable.Success(Box(NSData()))
-        } else {
-            return Failable.Failure("No linearPCM conversion")
-        }
-    }
-
-    /**
-    import Audio in diffrent formats so the App can work with the data
-    */
-    public func importAudio() {
-        //TODO: implement
-    }
-
 }
 

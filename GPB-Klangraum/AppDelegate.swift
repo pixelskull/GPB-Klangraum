@@ -9,6 +9,8 @@
 import UIKit
 import KlangraumKit
 
+import AudioToolbox
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -25,11 +27,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        case .Failure(let errorMessage):
 //            println(errorMessage)
 //        }
-        
-        let result:Failable<[Float32]> = AudioFile().readAudioFileAsFloatArray()
-        if let floats = result.dematerialize() {
-            println(floats)
+
+//        let audioPath = NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")
+
+        var audioFile:AudioFile = AudioFile()
+        let audioPath:String = audioFile.createDummyFile().dematerialize()!
+
+//        let audioPath:String = NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!
+        let result:Failable<[Float]> = /*audioFile.openAudioFile(audioPath) --> audioFile.convertToLinearPCM -->*/ audioFile.readAudioFile(audioPath)
+        if let r = result.dematerialize() {
+            println(r)
         }
+//        let result = audioFile.readAudioFileWithAVAsset(audioPath)
+//        println(result.dematerialize())
+
 
 
         return true 
