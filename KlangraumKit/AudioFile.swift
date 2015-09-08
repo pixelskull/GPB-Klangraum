@@ -89,29 +89,6 @@ public class AudioFile {
 
 
     /**
-    takes a ExtAudioFileRef and converts the existing audio format of this AudioFile to linear PCM format
-    
-    :param: audioFile:ExtAudioFileRef -> reference to audiofile 
-    
-    :retruns: Failable<ExtAudioFileRef> -> reference to audiofile with format changes or error String
-    */
-    func convertToLinearPCM(audioFileRef:ExtAudioFileRef) -> Failable<ExtAudioFileRef> {
-        var osError:OSStatus = noErr
-        var dstFormat = self.createBasicPCMDescription()
-        // set property of audiofile
-        osError = ExtAudioFileSetProperty(audioFileRef,
-            ExtAudioFilePropertyID(kExtAudioFileProperty_ClientDataFormat),
-            UInt32(sizeof(AudioStreamBasicDescription)),
-            &dstFormat)
-        if osError == noErr {
-            return Failable.Success(Box(audioFileRef))
-        } else {
-            return Failable.Failure("convertToLinearPCM()::: could not convert to linearPCM Format")
-        }
-    }
-
-
-    /**
     Creates dummy audio with sinoid signal in linearPCM format
 
     :returns: Failable<String> -> path to new file or nil if file is not creatable or error String
