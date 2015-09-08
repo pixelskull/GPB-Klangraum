@@ -7,50 +7,38 @@
 //
 
 import UIKit
-
-import AudioToolbox
-import CoreAudio
-
-import AVFoundation
-
 import KlangraumKit
 
+import AudioToolbox
+
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, AVAudioPlayerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
-        var audioFileService = AudioFileService()
 
-        var dummyPath:String? = audioFileService.createDummyFile()
-        println(dummyPath)
+        var audioFile:AudioFile = AudioFile()
 
+        let aPath:String = audioFile.createDummyFile().dematerialize()!
+//        println(aPath)
 
+        let convertPath = audioFile.convertFileToLinearPCMFormat(NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!)
 
-//        var asset:AVURLAsset = AVURLAsset(URL: NSURL(string: dummyPath!), options: nil)
-////        var tracks:Array = asset.tracks
-//        var duration = asset.duration
-//        println("duration: \(CMTimeGetSeconds(duration))")
+        println("-----")
 
-        var buffer = audioFileService.readAudioFileToAudioBufferList(dummyPath!)
+        
+        let audioPath:String = NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!
 
-        let array = audioFileService.convertAudioBufferListToFloatArray(buffer!, length: 44100*3)
+        /*audioFile.openAudioFile(audioPath) --> audioFile.convertToLinearPCM -->*/
+        let path = audioFile.safeSamples([0.0], ToPath: NSBundle.mainBundle().resourcePath! + "/dummy2.caf")
 
-        var result = array!.filter{ i in !i.isNaN && i != 0.0 }
-        println(array)
-
-//        println(result)
-
-//            println(data)
-
-            /**
-                Converting Data to Float Array
-            **/
-//            println(array)
-            // remove zero-values
-
+        let result:[String:[Float]]? = audioFile.readAudioFileToSplitFloatArray(audioPath)
+        if let r = result {
+            println(r["left"]!.count)
+            println(r["right"]!.count)
+        }
 
         return true 
     }

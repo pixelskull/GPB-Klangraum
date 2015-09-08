@@ -24,3 +24,4 @@ plot(sin(x), "Sine Wave")
 plot(surgeForward(sin(x)), "FFT Forward")
 plot(surgeInverse(surgeForward(sin(x))), "FFT Inverse")
 
+Float(1.0001).hashValue
