@@ -18,30 +18,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
-//        var path = ""
-//        var result:Failable<String> = AudioFile.createDummyFile()
-//        switch result {
-//        case .Success(let box):
-//            path = box.value
-//            println(path)
-//        case .Failure(let errorMessage):
-//            println(errorMessage)
-//        }
-
-//        let audioPath = NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")
 
         var audioFile:AudioFile = AudioFile()
-        let audioPath:String = audioFile.createDummyFile().dematerialize()!
 
-//        let audioPath:String = NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!
-        let result:Failable<[Float]> = /*audioFile.openAudioFile(audioPath) --> audioFile.convertToLinearPCM -->*/ audioFile.readAudioFile(audioPath)
-        if let r = result.dematerialize() {
-            println(r)
+        let aPath:String = audioFile.createDummyFile().dematerialize()!
+//        println(aPath)
+
+        let convertPath = audioFile.convertFileToLinearPCMFormat(NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!)
+
+        println("-----")
+
+        
+        let audioPath:String = NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!
+
+        /*audioFile.openAudioFile(audioPath) --> audioFile.convertToLinearPCM -->*/
+        let path = audioFile.safeSamples([0.0], ToPath: NSBundle.mainBundle().resourcePath! + "/dummy2.caf")
+
+        let result:[String:[Float]]? = audioFile.readAudioFileToSplitFloatArray(audioPath)
+        if let r = result {
+            println(r["left"]!.count)
+            println(r["right"]!.count)
         }
-//        let result = audioFile.readAudioFileWithAVAsset(audioPath)
-//        println(result.dematerialize())
-
-
 
         return true 
     }
