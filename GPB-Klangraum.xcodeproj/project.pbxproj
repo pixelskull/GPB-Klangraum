@@ -28,6 +28,12 @@
 		50D5C0DD1B84D3A200066257 /* AudioFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D5C0DC1B84D3A200066257 /* AudioFile.swift */; };
 		50D5C0DE1B84DAED00066257 /* KlangraumKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50F007B11B8C8B3D00066257 /* Failable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F007B01B8C8B3D00066257 /* Failable.swift */; };
+		FA05779F1BA0314800DBEC49 /* ComplexVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0577991BA0314800DBEC49 /* ComplexVector.swift */; };
+		FA0577A01BA0314800DBEC49 /* ComplexVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779A1BA0314800DBEC49 /* ComplexVectorOperations.swift */; };
+		FA0577A11BA0314800DBEC49 /* FFTOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779B1BA0314800DBEC49 /* FFTOperations.swift */; };
+		FA0577A21BA0314800DBEC49 /* RealVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779C1BA0314800DBEC49 /* RealVectorOperations.swift */; };
+		FA0577A31BA0314800DBEC49 /* Unsafeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779D1BA0314800DBEC49 /* Unsafeable.swift */; };
+		FA0577A41BA0314800DBEC49 /* Windowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779E1BA0314800DBEC49 /* Windowing.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +107,12 @@
 		5097BD671B69039E00066257 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		50D5C0DC1B84D3A200066257 /* AudioFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioFile.swift; sourceTree = "<group>"; };
 		50F007B01B8C8B3D00066257 /* Failable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Failable.swift; sourceTree = "<group>"; };
+		FA0577991BA0314800DBEC49 /* ComplexVector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplexVector.swift; sourceTree = "<group>"; };
+		FA05779A1BA0314800DBEC49 /* ComplexVectorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplexVectorOperations.swift; sourceTree = "<group>"; };
+		FA05779B1BA0314800DBEC49 /* FFTOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFTOperations.swift; sourceTree = "<group>"; };
+		FA05779C1BA0314800DBEC49 /* RealVectorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealVectorOperations.swift; sourceTree = "<group>"; };
+		FA05779D1BA0314800DBEC49 /* Unsafeable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unsafeable.swift; sourceTree = "<group>"; };
+		FA05779E1BA0314800DBEC49 /* Windowing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windowing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +155,12 @@
 		5080B0CA1B789DB500066257 /* KlangraumKit */ = {
 			isa = PBXGroup;
 			children = (
+				FA0577991BA0314800DBEC49 /* ComplexVector.swift */,
+				FA05779A1BA0314800DBEC49 /* ComplexVectorOperations.swift */,
+				FA05779B1BA0314800DBEC49 /* FFTOperations.swift */,
+				FA05779C1BA0314800DBEC49 /* RealVectorOperations.swift */,
+				FA05779D1BA0314800DBEC49 /* Unsafeable.swift */,
+				FA05779E1BA0314800DBEC49 /* Windowing.swift */,
 				50F007B01B8C8B3D00066257 /* Failable.swift */,
 				50D5C0DC1B84D3A200066257 /* AudioFile.swift */,
 				5080B0EB1B789F3D00066257 /* FFT.swift */,
@@ -434,10 +452,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA0577A21BA0314800DBEC49 /* RealVectorOperations.swift in Sources */,
+				FA05779F1BA0314800DBEC49 /* ComplexVector.swift in Sources */,
 				50D5C0DD1B84D3A200066257 /* AudioFile.swift in Sources */,
 				50F007B11B8C8B3D00066257 /* Failable.swift in Sources */,
+				FA0577A41BA0314800DBEC49 /* Windowing.swift in Sources */,
+				FA0577A11BA0314800DBEC49 /* FFTOperations.swift in Sources */,
 				5080B0ED1B789F3D00066257 /* FFT.swift in Sources */,
 				5080B0EF1B789F3D00066257 /* Math.swift in Sources */,
+				FA0577A31BA0314800DBEC49 /* Unsafeable.swift in Sources */,
+				FA0577A01BA0314800DBEC49 /* ComplexVectorOperations.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
