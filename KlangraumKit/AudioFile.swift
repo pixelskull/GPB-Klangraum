@@ -52,10 +52,7 @@ public class AudioFile {
     */
     func convertToFloatSamples(pcmBuffer:AVAudioPCMBuffer) -> Failable<[Float]> {
         // generate
-        var samples:[Float] = Array<Float>(count: Int(pcmBuffer.frameLength), repeatedValue: 0.0)
-
-        for i in 0 ..< Int(pcmBuffer.frameLength) { samples[i] = pcmBuffer.floatChannelData.memory[i] }
-
+        var samples:[Float] = (0 ..< Int(pcmBuffer.frameLength)).map{ pcmBuffer.floatChannelData.memory[$0] }
         if samples.isEmpty {
             return Failable.Failure("convertToFloatSamples()::: Error while converting to float samples")
         } else {
@@ -72,14 +69,10 @@ public class AudioFile {
     :returns: Failable<[String:[Float]]> -> dictionary with the left and right channel seperated or error String
     */
     func splitToInterleaved(samples1D:[Float]) -> Failable<[String:[Float]]> {
-        // initialize two arrays for left and right audiosamples
-        var left:[Float] = []
-        var right:[Float] = []
-        // append left an right samples to arrays (scheme left, right)
-        for i in 0 ..< samples1D.count {
-            if (i % 2 == 1) { left.append(samples1D[i]) }
-            else { right.append(samples1D[i]) }
-        }
+        // initialize two arrays for left and right audiosamples append left an right samples to arrays (scheme left, right)
+        var left:[Float] = map(stride(from: 0, through: samples1D.count-1, by: 2), { samples1D[$0] })
+        var right:[Float] = map(stride(from: 1, through: samples1D.count-1, by: 2), { samples1D[$0] })
+
         if left.isEmpty || right.isEmpty {
             return Failable.Failure("splitToInterleaved():::could not seperate left and right Samples")
         } else {
