@@ -10,173 +10,150 @@ import Accelerate
 
 // MARK: Fast Fourier Transform
 
-protocol Transformation {
+struct Semaphore {
     
-    func forward()
+    let semaphore: dispatch_semaphore_t
     
-    func inverse()
+    init(value: Int = 0) {
+        semaphore = dispatch_semaphore_create(value)
+    }
+    
+    // Blocks the thread until the semaphore is free and returns true
+    // or until the timeout passes and returns false
+    func wait(nanosecondTimeout: Int64) -> Bool {
+        return dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, nanosecondTimeout)) != 0
+    }
+    
+    // Blocks the thread until the semaphore is free
+    func wait() {
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
+    }
+    
+    // Alerts the semaphore that it is no longer being held by the current thread
+    // and returns a boolean indicating whether another thread was woken
+    func signal() -> Bool {
+        return dispatch_semaphore_signal(semaphore) != 0
+    }
 }
 
-public class FFT: Transformation {
+protocol Transformation {
     
-    private let fftSetup: FFTSetupD
-    private let length: UInt
-    private let samples: [Double]
+    func forward() -> SplitComplexVector<Float>
     
-    public var normalizedMagnitudes: [Double]?
-    private var complex: [Double]?
+    func inverse(x: SplitComplexVector<Float>) -> [Float]
     
-    public init(initWithSamples samples: [Double]) {
+    func full() -> [Float]
+}
+
+public class FFT: Transformation, FFTAltering {
+    
+    public var strategy: [FFTStrategy]
+
+    private let setup: FFTSetup
+    private let length: Int
+    private let samples: [Float]
+
+    public init(initWithSamples samples: [Float], andStrategy strategy: [FFTStrategy]) {
         self.samples = samples
-        self.length = vDSP_Length(floor(log2(Float(samples.count))))
-        self.fftSetup = vDSP_create_fftsetupD(length, FFTRadix(kFFTRadix2))
+        self.strategy = strategy
+        self.length = samples.count
+        self.setup = vDSP_create_fftsetup(vDSP_Length(log2(CDouble(length))), FFTRadix(kFFTRadix2))
     }
     
     public func destroyFFTSetup() {
-        vDSP_destroy_fftsetupD(fftSetup)
+        vDSP_destroy_fftsetup(setup)
     }
     
-    public func forward() {
-        var real = [Double](samples)
-        var imaginary = [Double](count: samples.count, repeatedValue: 0.0)
-        var splitComplex = DSPDoubleSplitComplex(realp: &real, imagp: &imaginary)
+    public func forward() -> SplitComplexVector<Float> {
+        var splitComplex = SplitComplexVector<Float>(count: length / 2, repeatedValue: Complex<Float>(real: 0, imag: 0))
+        var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
         
-        vDSP_fft_zipD(fftSetup, &splitComplex, 1, length, FFTDirection(FFT_FORWARD))
-        
-        var magnitudes = [Double](count: samples.count / 2, repeatedValue: 0.0)
-        vDSP_zvmagsD(&splitComplex, 1, &magnitudes, 1, vDSP_Length(samples.count / 2))
-        
-        var normalizedMagnitudes = [Double](count: samples.count / 2, repeatedValue: 0.0)
-        vDSP_vsmulD(sqrt(magnitudes), 1, [2.0 / Double(samples.count)], &normalizedMagnitudes, 1, vDSP_Length(samples.count / 2))
-        
-        self.normalizedMagnitudes = normalizedMagnitudes
-    }
-    
-    public func full() {
-        var real = [Double](samples)
-        var imaginary = [Double](count: samples.count, repeatedValue: 0.0)
-        var splitComplex = DSPDoubleSplitComplex(realp: &real, imagp: &imaginary)
-        
-        vDSP_fft_zipD(fftSetup, &splitComplex, 1, length, FFTDirection(FFT_FORWARD))
-        
-        vDSP_fft_zipD(fftSetup, &splitComplex, 1, length, FFTDirection(FFT_INVERSE))
-        
-        let half = samples.count / 2
-        var magnitudes = [Double](count: half, repeatedValue: 0.0)
-        vDSP_zvmagsD(&splitComplex, 1, &magnitudes, 1, vDSP_Length(half))
-        
-        // vDSP_zvmagsD returns squares of the FFT magnitudes, so take the root here
-        var normalizedMagnitudes = [Double](count: half, repeatedValue: 0.0)
-        vDSP_vsmulD(sqrt(magnitudes), 1, [2.0 / Double(samples.count)], &normalizedMagnitudes, 1, vDSP_Length(half))
-        
-        self.normalizedMagnitudes = normalizedMagnitudes
-    }
-    
-    public func inverse() {
-        if let nm = normalizedMagnitudes {
-            var real = [Double](nm)
-            var imaginary = [Double](count: nm.count, repeatedValue: 0.0)
-            var splitComplex = DSPDoubleSplitComplex(realp: &real, imagp: &imaginary)
-            
-            vDSP_fft_zipD(fftSetup, &splitComplex, 1, length, FFTDirection(FFT_INVERSE))
-            
-            var magnitudes = [Double](count: nm.count, repeatedValue: 0.0)
-            vDSP_zvmagsD(&splitComplex, 1, &magnitudes, 1, vDSP_Length(nm.count))
-            
-            var normalizedMagnitudes = [Double](count: nm.count, repeatedValue: 0.0)
-            vDSP_vsmulD(sqrt(magnitudes), 1, [2.0 / Double(nm.count)], &normalizedMagnitudes, 1, vDSP_Length(nm.count))
-            
-            self.normalizedMagnitudes = normalizedMagnitudes
+        // FORWARD FROM REAL TO COMPLEX
+        samples.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
+            var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
+            vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
+            vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(length))), FFTDirection(FFT_FORWARD))
         }
+
+        return splitComplex
     }
-}
+    
+    public func full() -> [Float] {
+        var splitComplex = SplitComplexVector<Float>(count: length / 2, repeatedValue: Complex<Float>(real: 0, imag: 0))
+        var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
+        var result = [Float](count: length, repeatedValue: 0)
+        
+        // FORWARD FROM REAL TO COMPLEX
+        samples.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
+            var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
+            vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
+            vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(length))), FFTDirection(FFT_FORWARD))
+        }
+        
+        // MANIPULATE MAGNITUDES, PHASE DOES NOT WORK YET
+        var magnitudes = [Float](count: splitComplex.count, repeatedValue: 0.0)
+        
+        // complex -> real
+        magnitudes.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
+            var xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
+            vDSP_ztoc(&dspSplitComplex, 1, xAsComplex, 2, vDSP_Length(splitComplex.count))
+        }
+        
+        // operate on real
+        magnitudes = strategy.first!.apply(magnitudes)
+        
+        // real to complex
+        magnitudes.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
+            var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
+            vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
+        }
+        
+        // INVERSE FROM COMPLEX TO REAL
+        result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
+            var xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
+            vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(length))), FFTDirection(FFT_INVERSE))
+            vDSP_ztoc(&dspSplitComplex, 1, xAsComplex, 2, vDSP_Length(splitComplex.count))
+        }
+        
+        // FLATTEN
+        vDSP_vsmul(result, 1, [0.5/Float(length)], &result, 1, vDSP_Length(length))
+        
+        return result
+    }
+    
+    public func inverse(x: SplitComplexVector<Float>) -> [Float] {
+        var splitComplex = x
+        var result = [Float](count: length, repeatedValue: 0)
+        var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
+        
+        result.withUnsafeBufferPointer { (resultPointer: UnsafeBufferPointer<Float>) -> Void in
+            var resultAsComplex = UnsafeMutablePointer<DSPComplex>( resultPointer.baseAddress )
+            vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(length))), FFTDirection(kFFTDirection_Inverse))
+            vDSP_ztoc(&dspSplitComplex, 1, resultAsComplex, 2, vDSP_Length(splitComplex.count))
+        }
+        
+        vDSP_vsmul(result, 1, [0.5/Float(length)], &result, 1, vDSP_Length(length))
 
-// MARK: Fast Fourier Transform
+        return result
+    }
+    
+    public func doShit(x: SplitComplexVector<Float>) -> SplitComplexVector<Float> {
+        var splitComplex = x
+        var result = [Float](count: length, repeatedValue: 0)
+        var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
+        
+        result.withUnsafeBufferPointer { (resultPointer: UnsafeBufferPointer<Float>) -> Void in
+            var resultAsComplex = UnsafeMutablePointer<DSPComplex>( resultPointer.baseAddress )
+            vDSP_ztoc(&dspSplitComplex, 1, resultAsComplex, 2, vDSP_Length(splitComplex.count))
+        }
+        
+        result = strategy.first!.apply(result)
+        
+        result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
+            var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
+            vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
+        }
 
-public func surgeForward(input: [Double]) -> [Double] {
-    var real = [Double](input)
-    var imaginary = [Double](count: input.count, repeatedValue: 0.0)
-    var splitComplex = DSPDoubleSplitComplex(realp: &real, imagp: &imaginary)
-    
-    let length = vDSP_Length(floor(log2(Float(input.count))))
-    let radix = FFTRadix(kFFTRadix2)
-    let weights = vDSP_create_fftsetupD(length, radix)
-    
-    vDSP_fft_zipD(weights, &splitComplex, 1, length, FFTDirection(FFT_FORWARD))
-    
-    var magnitudes = [Double](count: input.count, repeatedValue: 0.0)
-    vDSP_zvmagsD(&splitComplex, 1, &magnitudes, 1, vDSP_Length(input.count))
-    
-    var normalizedMagnitudes = [Double](count: input.count, repeatedValue: 0.0)
-    vDSP_vsmulD(sqrt(magnitudes), 1, [2.0 / Double(input.count)], &normalizedMagnitudes, 1, vDSP_Length(input.count))
-    
-    vDSP_destroy_fftsetupD(weights)
-    
-    return normalizedMagnitudes
-}
-
-public func surgeInverse(input: [Double]) -> [Double] {
-    var real = [Double](input)
-    var imaginary = [Double](count: input.count, repeatedValue: 0.0)
-    var splitComplex = DSPDoubleSplitComplex(realp: &real, imagp: &imaginary)
-    
-    let length = vDSP_Length(floor(log2(Float(input.count))))
-    let radix = FFTRadix(kFFTRadix2)
-    let weights = vDSP_create_fftsetupD(length, radix)
-    
-    vDSP_fft_zipD(weights, &splitComplex, 1, length, FFTDirection(FFT_INVERSE))
-    
-    var magnitudes = [Double](count: input.count, repeatedValue: 0.0)
-    vDSP_zvmagsD(&splitComplex, 1, &magnitudes, 1, vDSP_Length(input.count))
-    
-    var normalizedMagnitudes = [Double](count: input.count, repeatedValue: 0.0)
-    vDSP_vsmulD(sqrt(magnitudes), 1, [2.0 / Double(input.count)], &normalizedMagnitudes, 1, vDSP_Length(input.count))
-    
-    vDSP_destroy_fftsetupD(weights)
-    
-    return normalizedMagnitudes
-}
-
-public func singleForward(input: [Float]) -> [Float] {
-    var real = [Float](input)
-    var imaginary = [Float](count: input.count, repeatedValue: 0.0)
-    var splitComplex = DSPSplitComplex(realp: &real, imagp: &imaginary)
-    
-    let length = vDSP_Length(floor(log2(Float(input.count))))
-    let radix = FFTRadix(kFFTRadix2)
-    let weights = vDSP_create_fftsetup(length, radix)
-    
-    vDSP_fft_zip(weights, &splitComplex, 1, length, FFTDirection(FFT_FORWARD))
-    
-    var magnitudes = [Float](count: input.count, repeatedValue: 0.0)
-    vDSP_zvmags(&splitComplex, 1, &magnitudes, 1, vDSP_Length(input.count))
-    
-    var normalizedMagnitudes = [Float](count: input.count, repeatedValue: 0.0)
-    vDSP_vsmul(sqrt(magnitudes), 1, [2.0 / Float(input.count)], &normalizedMagnitudes, 1, vDSP_Length(input.count))
-    
-    vDSP_destroy_fftsetup(weights)
-    
-    return normalizedMagnitudes
-}
-
-public func singleInverse(input: [Float]) -> [Float] {
-    var real = [Float](input)
-    var imaginary = [Float](count: input.count, repeatedValue: 0.0)
-    var splitComplex = DSPSplitComplex(realp: &real, imagp: &imaginary)
-    
-    let length = vDSP_Length(floor(log2(Float(input.count))))
-    let radix = FFTRadix(kFFTRadix2)
-    let weights = vDSP_create_fftsetup(length, radix)
-    
-    vDSP_fft_zip(weights, &splitComplex, 1, length, FFTDirection(FFT_INVERSE))
-    
-    var magnitudes = [Float](count: input.count, repeatedValue: 0.0)
-    vDSP_zvmags(&splitComplex, 1, &magnitudes, 1, vDSP_Length(input.count))
-    
-    var normalizedMagnitudes = [Float](count: input.count, repeatedValue: 0.0)
-    vDSP_vsmul(sqrt(magnitudes), 1, [2.0 / Float(input.count)], &normalizedMagnitudes, 1, vDSP_Length(input.count))
-    
-    vDSP_destroy_fftsetup(weights)
-    
-    return normalizedMagnitudes
+        return splitComplex
+    }
 }

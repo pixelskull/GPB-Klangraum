@@ -149,52 +149,6 @@ public func full(setup: FFTSetup, x: [Float], fft_length: Int) -> [Float] {
     return result
 }
 
-/* 
-public func full(setup: FFTSetup, x: [Float], fft_length: Int, f: [Float] -> [Float]) -> [Float] {
-var splitComplex = SplitComplexVector<Float>(count: count(x) / 2, repeatedValue: Complex<Float>(real: 0, imag: 0))
-var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
-var result = [Float](count: fft_length, repeatedValue: 0)
-
-// FORWARD FROM REAL TO COMPLEX
-x.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
-vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
-vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(fft_length))), FFTDirection(FFT_FORWARD))
-}
-
-// MANIPULATE MAGNITUDES, PHASE DOES NOT WORK YET
-var magnitudes = [Float](count: splitComplex.count, repeatedValue: 0.0)
-
-// complex -> real
-magnitudes.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-var xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
-vDSP_ztoc(&dspSplitComplex, 1, xAsComplex, 2, vDSP_Length(splitComplex.count))
-}
-
-// operate on real
-var altered = [Float](count: splitComplex.count, repeatedValue: 0.0)
-altered = f(magnitudes)
-
-// real to complex
-altered.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-var xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
-vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
-}
-
-// INVERSE FROM COMPLEX TO REAL
-result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-var xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
-vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(fft_length))), FFTDirection(FFT_INVERSE))
-vDSP_ztoc(&dspSplitComplex, 1, xAsComplex, 2, vDSP_Length(splitComplex.count))
-}
-
-// FLATTEN
-vDSP_vsmul(result, 1, [0.5/Float(count(x))], &result, 1, vDSP_Length(fft_length))
-
-return result
-}
-*/
-
 internal func ifft(setup: FFTSetup, var X: SplitComplexVector<Float>, fft_length: Int) -> [Float] {
     var result = [Float](count: fft_length, repeatedValue: 0)
     var dspSplitComplex = DSPSplitComplex( realp: &X.real, imagp: &X.imag )

@@ -34,6 +34,7 @@
 		FA0577A21BA0314800DBEC49 /* RealVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779C1BA0314800DBEC49 /* RealVectorOperations.swift */; };
 		FA0577A31BA0314800DBEC49 /* Unsafeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779D1BA0314800DBEC49 /* Unsafeable.swift */; };
 		FA0577A41BA0314800DBEC49 /* Windowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779E1BA0314800DBEC49 /* Windowing.swift */; };
+		FA0577A61BA04F1C00DBEC49 /* FFTStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0577A51BA04F1C00DBEC49 /* FFTStrategies.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,7 @@
 		FA05779C1BA0314800DBEC49 /* RealVectorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealVectorOperations.swift; sourceTree = "<group>"; };
 		FA05779D1BA0314800DBEC49 /* Unsafeable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unsafeable.swift; sourceTree = "<group>"; };
 		FA05779E1BA0314800DBEC49 /* Windowing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windowing.swift; sourceTree = "<group>"; };
+		FA0577A51BA04F1C00DBEC49 /* FFTStrategies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFTStrategies.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +165,7 @@
 				FA05779E1BA0314800DBEC49 /* Windowing.swift */,
 				50F007B01B8C8B3D00066257 /* Failable.swift */,
 				50D5C0DC1B84D3A200066257 /* AudioFile.swift */,
+				FA0577A51BA04F1C00DBEC49 /* FFTStrategies.swift */,
 				5080B0EB1B789F3D00066257 /* FFT.swift */,
 				5080B0EC1B789F3D00066257 /* Math.swift */,
 				5080B0CD1B789DB500066257 /* KlangraumKit.h */,
@@ -453,6 +456,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FA0577A21BA0314800DBEC49 /* RealVectorOperations.swift in Sources */,
+				FA0577A61BA04F1C00DBEC49 /* FFTStrategies.swift in Sources */,
 				FA05779F1BA0314800DBEC49 /* ComplexVector.swift in Sources */,
 				50D5C0DD1B84D3A200066257 /* AudioFile.swift in Sources */,
 				50F007B11B8C8B3D00066257 /* Failable.swift in Sources */,
