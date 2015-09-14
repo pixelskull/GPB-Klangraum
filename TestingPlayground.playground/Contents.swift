@@ -18,36 +18,96 @@ let x = map(0..<c) { 2.0 * M_PI / Double(c) * Double($0) * f }
 
 //plot(sin(x), "Sine Wave")
 //plot(surgeForward(sin(x)), "FFT Forward")
-
+*/
 // MARK: - OWN FFT
 
-let count = 64
+/*let count = 64
 let frequency: Float = 4.0
 let amplitude: Float = 3.0
 
 let samples = map(0..<count) { Float(2.0 * M_PI) / Float(count) * Float($0) * frequency }
 let values: [Float] = sin(samples)
 
+plot(values, "c")
+*/
+
+var audioFile = AudioFile()
+if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alex.m4a")) {
+    shit(data, 44100)
+    
+    let divide = data.count / 3
+    let a = Array(data[0...divide])
+    let b = Array(data[divide+1...2*divide])
+    let c = Array(data[2*divide+1...data.count - 1])
+    
+    println((a.count + b.count + c.count) == data.count)
+    
+    let fa = FFT(initWithSamples: a, andStrategy: [MappingStrategy()])
+    let fb = FFT(initWithSamples: b, andStrategy: [MappingStrategy()])
+    let fc = FFT(initWithSamples: c, andStrategy: [MappingStrategy()])
+    
+    let x1 = fa.forward()
+    let y1 = fa.doShit(x1)
+    let z1 = fa.inverse(y1)
+    
+    let x2 = fb.forward()
+    let y2 = fb.doShit(x2)
+    let z2 = fb.inverse(y2)
+    
+    let x3 = fc.forward()
+    let y3 = fc.doShit(x3)
+    let z3 = fc.inverse(y3)
+    
+    let aa = z1 + z2 + z3
+    
+    let path = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("aa.caf")
+    audioFile.safeSamples(aa, ToPath: path)
+    
+    shit(aa, 44100)
+}
+
+/*var audioFile = AudioFile()
+if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alex.m4a")) {
+    
+    plot(map(stride(from: 0, through: data.count, by: 44100 / 100)) { data[$0] } , "B")
+    shit(data, 44100)
+    
+    let fftImpl = FFT(initWithSamples: data, andStrategy: [HalveStrategy()])
+    let forward = fftImpl.forward()
+    let a = fftImpl.doShit(forward)
+    let inverse = fftImpl.inverse(a)
+    shit(inverse, 44100)
+
+    let path = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("shit.caf")
+    audioFile.safeSamples(inverse, ToPath: path)
+}
+*/
+/*
 let fftImpl = FFT(initWithSamples: values, andStrategy: [MappingStrategy(), HalveStrategy()])
 let result = fftImpl.full()
 plot(result, "full")
 fftImpl.destroyFFTSetup()*/
 
-var audioFile = AudioFile()
+/*var audioFile = AudioFile()
 
 if let samples = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("YellowNintendoHero-Muciojad.mp3")) {
-    plot(map(stride(from: 0, through: samples.count, by: 44100)) { samples[$0] } , "A")
 
-    //let x = map(stride(from: 0, through: convertPath!.count, by: 44100)) { convertPath![$0] }
-    let fftImpl = FFT(initWithSamples: samples, andStrategy: [LowStrategy()])
+    let window: [Float] = hamming(samples.count)
+    let windowedSamples = window * samples
+
+    plot(map(stride(from: 0, through: windowedSamples.count, by: 44100)) { windowedSamples[$0] } , "B")
+    
+    let fftImpl = FFT(initWithSamples: windowedSamples, andStrategy: [MappingStrategy()])
     let forward = fftImpl.forward()
+    println(fftImpl.shit())
+
     let shit = fftImpl.doShit(forward)
     let inverse = fftImpl.inverse(shit)
     
-    //fftImpl.destroyFFTSetup()
+    fftImpl.destroyFFTSetup()
     plot(map(stride(from: 0, through: inverse.count, by: 44100)) { inverse[$0] } , "full")
-    
     
     let path = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("shit.caf")
     audioFile.safeSamples(inverse, ToPath: path)
 }
+*/

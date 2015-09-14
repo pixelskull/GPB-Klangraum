@@ -11,7 +11,20 @@ import Accelerate
 
 // MARK: Utilities
 
-public func operateOn<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( x: C, y: C, operation: (UnsafePointer<Float>, UnsafePointer<Float>, inout [Float], vDSP_Length) -> Void ) -> [Float] {
+/*public func operateOn<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( x: C, y: C, operation: (UnsafePointer<Float>, UnsafePointer<Float>, inout [Float], vDSP_Length) -> Void ) -> [Float] {
+    assert( count(x) == count(y) )
+    var result = [Float](count: count(x), repeatedValue: 0)
+    
+    x.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
+        y.withUnsafeBufferPointer { (yPointer: UnsafeBufferPointer<Float>) -> Void in
+            operation(xPointer.baseAddress, yPointer.baseAddress, &result, vDSP_Length(count(result)))
+        }
+    }
+    
+    return result
+}*/
+
+public func operateOn( x: [Float], y: [Float], operation: (UnsafePointer<Float>, UnsafePointer<Float>, inout [Float], vDSP_Length) -> Void ) -> [Float] {
     assert( count(x) == count(y) )
     var result = [Float](count: count(x), repeatedValue: 0)
     
@@ -39,7 +52,14 @@ public func operateOn<C: Unsafeable where C.Generator.Element == Double, C.Index
 
 // MARK: Multiplication
 
-public func mul<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
+/*public func mul<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
+    return operateOn(x, y) {
+        vDSP_vmul($0, 1, $1, 1, &$2, 1, $3)
+        return
+    }
+}*/
+
+public func mul( var x: [Float], y: [Float] ) -> [Float] {
     return operateOn(x, y) {
         vDSP_vmul($0, 1, $1, 1, &$2, 1, $3)
         return
@@ -53,7 +73,11 @@ public func mul<C: Unsafeable where C.Generator.Element == Double, C.Index == In
     }
 }
 
-public func *<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
+/*public func *<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
+    return mul( x, y )
+}*/
+
+public func *( var x: [Float], y: [Float] ) -> [Float] {
     return mul( x, y )
 }
 
@@ -63,13 +87,13 @@ public func *<C: Unsafeable where C.Generator.Element == Double, C.Index == Int>
 
 // MARK: Division
 
-public func div<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
+/*public func div<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
     return operateOn(x, y) {
         // Note: Operands flipped because vdiv does 2nd param / 1st param
         vDSP_vdiv($1, 1, $0, 1, &$2, 1, $3)
         return
     }
-}
+}*/
 
 public func div<C: Unsafeable where C.Generator.Element == Double, C.Index == Int>( var x: C, y: C ) -> [Double] {
     return operateOn(x, y) {
@@ -79,9 +103,9 @@ public func div<C: Unsafeable where C.Generator.Element == Double, C.Index == In
     }
 }
 
-public func /<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
+/*public func /<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
     return div(x, y)
-}
+}*/
 
 public func /<C: Unsafeable where C.Generator.Element == Double, C.Index == Int>( var x: C, y: C ) -> [Double] {
     return div(x, y)
@@ -89,12 +113,12 @@ public func /<C: Unsafeable where C.Generator.Element == Double, C.Index == Int>
 
 // MARK: Addition
 
-public func add<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
+/*public func add<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
     return operateOn(x, y) {
         vDSP_vadd($0, 1, $1, 1, &$2, 1, $3)
         return
     }
-}
+}*/
 
 public func add<C: Unsafeable where C.Generator.Element == Double, C.Index == Int>( var x: C, y: C ) -> [Double] {
     return operateOn(x, y) {

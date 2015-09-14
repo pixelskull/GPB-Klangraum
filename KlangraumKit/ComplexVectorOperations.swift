@@ -27,6 +27,20 @@ public func abs( var x: SplitComplexVector<Double> ) -> [Double] {
     return result
 }
 
+public func bla( var x: SplitComplexVector<Float> ) -> [Float] {
+    var result = [Double]( count:x.count, repeatedValue: 0 )
+    
+    var dspSplitComplex = DSPSplitComplex( realp: &x.real, imagp: &x.imag )
+    
+    var amp = [Float](count: x.count, repeatedValue: 0)
+    amp[0] = dspSplitComplex.realp[0] / Float((x.count * 2))
+    for i in 1..<x.count{
+        amp[i] = dspSplitComplex.realp[i] * dspSplitComplex.realp[i] + dspSplitComplex.imagp[i] * dspSplitComplex.imagp[i]
+    }
+    
+    return amp
+}
+
 /* Calculates the squared magnitudes of complex vector A. Since vDSP_zvmagsD returns squares of the FFT magnitudes, we have to take the root
 */
 public func normalizedMagnitudes( var x: SplitComplexVector<Double>) -> [Double] {
