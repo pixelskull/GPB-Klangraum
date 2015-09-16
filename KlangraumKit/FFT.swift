@@ -41,8 +41,6 @@ protocol Transformation {
     func forward() -> SplitComplexVector<Float>
     
     func inverse(x: SplitComplexVector<Float>) -> [Float]
-    
-    func full() -> [Float]
 }
 
 public class FFT: Transformation, FFTAltering {
@@ -137,11 +135,11 @@ public class FFT: Transformation, FFTAltering {
         return result
     }
     
-    public func doShit(x: SplitComplexVector<Float>) -> SplitComplexVector<Float> {
+    public func applyStrategy(x: SplitComplexVector<Float>) -> SplitComplexVector<Float> {
         var splitComplex = x
         var result = [Float](count: length, repeatedValue: 0)
         var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
-        
+
         result.withUnsafeBufferPointer { (resultPointer: UnsafeBufferPointer<Float>) -> Void in
             var resultAsComplex = UnsafeMutablePointer<DSPComplex>( resultPointer.baseAddress )
             vDSP_ztoc(&dspSplitComplex, 1, resultAsComplex, 2, vDSP_Length(splitComplex.count))
@@ -156,16 +154,4 @@ public class FFT: Transformation, FFTAltering {
 
         return splitComplex
     }
-}
-
-public func shit(samples: [Float], rate: Int) -> Float {
-    let length = samples.count / 2
-    
-    var max: Float = 0.0
-    var maxIndex = vDSP_Length(0)
-    vDSP_maxvi(samples, 1, &max, &maxIndex, vDSP_Length(length));
-    
-    let hz: Float = (Float(maxIndex) / Float(length)) * (Float(rate) / 2)
-    
-    return hz
 }

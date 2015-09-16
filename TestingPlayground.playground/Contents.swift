@@ -6,7 +6,7 @@ import KlangraumKit
 import AVFoundation
 
 private func plot<T>(values: [T], title: String) {
-    values.map{ XCPCaptureValue(title, $0) }
+    values.map{ XCPCaptureValue(title.isEmpty ? "foo" : title, $0) }
 }
 
 // MARK: - FFT
@@ -27,14 +27,53 @@ let amplitude: Float = 3.0
 
 let samples = map(0..<count) { Float(2.0 * M_PI) / Float(count) * Float($0) * frequency }
 let values: [Float] = sin(samples)
+let window: [Float] = hanning(values.count)
+let wv = values * window
 
-plot(values, "c")
-*/
+let ft = FFT(initWithSamples: wv, andStrategy: [NoStrategy()])
+let a = ft.forward()
+let b = ft.inverse(a)
 
+let c = b / window
+let d = c.map { $0.isNaN ? 0 : $0 }
+
+plot(values, "wv")
+plot(d, "a")*/
+
+let samplingRate = 44100
+let n = 1024
 var audioFile = AudioFile()
+
 if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alex.m4a")) {
-    shit(data, 44100)
+
+    let max = 13000
+    let min = 300
     
+    let maxIndex = (n) * min / (samplingRate / 2) // n / 2
+    let minIndex = (n) * max / (samplingRate / 2) // n / 2
+    
+    let length = data.count/n
+    var j = 0
+    var full = [[Float]](count: length, repeatedValue: [0.0])
+    
+    for i in 0..<length {
+        let first = j*n
+        let last = (j+1) * n
+        full[i] = Array(data[first..<last])
+        j++
+    }
+    
+    let a = FFT(initWithSamples: full[0], andStrategy: [MappingStrategy(minIndex: minIndex, and: maxIndex)])
+    let b = a.forward()
+    let c = a.applyStrategy(b)
+    plot(magnitudes(c), "")
+
+    /*for i in 0..<full.count {
+        let a = FFT(initWithSamples: full[i], andStrategy: [NoStrategy()])
+        let b = a.forward()
+    }*/
+    
+    /*
     let divide = data.count / 3
     let a = Array(data[0...divide])
     let b = Array(data[divide+1...2*divide])
@@ -62,10 +101,10 @@ if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePa
     
     let path = NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("aa.caf")
     audioFile.safeSamples(aa, ToPath: path)
-    
-    shit(aa, 44100)
-}
 
+    shit(aa, 44100)
+}*/
+}
 /*var audioFile = AudioFile()
 if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("alex.m4a")) {
     

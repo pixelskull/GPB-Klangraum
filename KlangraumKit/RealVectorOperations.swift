@@ -87,13 +87,13 @@ public func *<C: Unsafeable where C.Generator.Element == Double, C.Index == Int>
 
 // MARK: Division
 
-/*public func div<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
+public func div( var x: [Float], y: [Float] ) -> [Float] {
     return operateOn(x, y) {
         // Note: Operands flipped because vdiv does 2nd param / 1st param
         vDSP_vdiv($1, 1, $0, 1, &$2, 1, $3)
         return
     }
-}*/
+}
 
 public func div<C: Unsafeable where C.Generator.Element == Double, C.Index == Int>( var x: C, y: C ) -> [Double] {
     return operateOn(x, y) {
@@ -103,9 +103,9 @@ public func div<C: Unsafeable where C.Generator.Element == Double, C.Index == In
     }
 }
 
-/*public func /<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>( var x: C, y: C ) -> [Float] {
+public func /( var x: [Float], y: [Float] ) -> [Float] {
     return div(x, y)
-}*/
+}
 
 public func /<C: Unsafeable where C.Generator.Element == Double, C.Index == Int>( var x: C, y: C ) -> [Double] {
     return div(x, y)
