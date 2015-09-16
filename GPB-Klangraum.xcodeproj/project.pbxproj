@@ -8,12 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		5027058D1B79FD0500066257 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5084EB781B67E1ED00066257 /* AudioToolbox.framework */; };
+		504DCBDE1BA8591900066257 /* FFT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0EB1B789F3D00066257 /* FFT.swift */; };
+		504DCBDF1BA8591B00066257 /* FFTStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0577A51BA04F1C00DBEC49 /* FFTStrategies.swift */; };
+		504DCBE01BA8591F00066257 /* AudioFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D5C0DC1B84D3A200066257 /* AudioFile.swift */; };
+		504DCBE11BA8592100066257 /* Failable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F007B01B8C8B3D00066257 /* Failable.swift */; };
+		504DCBE21BA8592400066257 /* Windowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779E1BA0314800DBEC49 /* Windowing.swift */; };
+		504DCBE31BA8592600066257 /* Unsafeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779D1BA0314800DBEC49 /* Unsafeable.swift */; };
+		504DCBE41BA8592A00066257 /* RealVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779C1BA0314800DBEC49 /* RealVectorOperations.swift */; };
+		504DCBE51BA8592C00066257 /* FFTOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779B1BA0314800DBEC49 /* FFTOperations.swift */; };
+		504DCBE61BA8592F00066257 /* ComplexVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779A1BA0314800DBEC49 /* ComplexVectorOperations.swift */; };
+		504DCBE71BA8593200066257 /* ComplexVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0577991BA0314800DBEC49 /* ComplexVector.swift */; };
 		5080B0CE1B789DB500066257 /* KlangraumKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5080B0CD1B789DB500066257 /* KlangraumKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5080B0D41B789DB500066257 /* KlangraumKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; };
 		5080B0DD1B789DB500066257 /* KlangraumKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0DC1B789DB500066257 /* KlangraumKitTests.swift */; };
 		5080B0E01B789DB500066257 /* KlangraumKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; };
 		5080B0ED1B789F3D00066257 /* FFT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0EB1B789F3D00066257 /* FFT.swift */; };
-		5080B0EE1B789F3D00066257 /* FFT.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0EB1B789F3D00066257 /* FFT.swift */; };
 		5080B0EF1B789F3D00066257 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0EC1B789F3D00066257 /* Math.swift */; };
 		5080B0F01B789F3D00066257 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0EC1B789F3D00066257 /* Math.swift */; };
 		5084EB561B67DA9800066257 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5084EB551B67DA9800066257 /* AppDelegate.swift */; };
@@ -473,9 +482,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5080B0EE1B789F3D00066257 /* FFT.swift in Sources */,
 				5080B0DD1B789DB500066257 /* KlangraumKitTests.swift in Sources */,
+				504DCBE41BA8592A00066257 /* RealVectorOperations.swift in Sources */,
+				504DCBE51BA8592C00066257 /* FFTOperations.swift in Sources */,
+				504DCBE31BA8592600066257 /* Unsafeable.swift in Sources */,
+				504DCBDF1BA8591B00066257 /* FFTStrategies.swift in Sources */,
+				504DCBE71BA8593200066257 /* ComplexVector.swift in Sources */,
+				504DCBE61BA8592F00066257 /* ComplexVectorOperations.swift in Sources */,
+				504DCBE21BA8592400066257 /* Windowing.swift in Sources */,
 				5080B0F01B789F3D00066257 /* Math.swift in Sources */,
+				504DCBE11BA8592100066257 /* Failable.swift in Sources */,
+				504DCBDE1BA8591900066257 /* FFT.swift in Sources */,
+				504DCBE01BA8591F00066257 /* AudioFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
