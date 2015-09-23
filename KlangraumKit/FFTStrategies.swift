@@ -9,27 +9,27 @@
 import Foundation
 import Accelerate
 
-public protocol FFTAltering {
+public protocol Filterable {
     
-    var strategy: [FFTStrategy] { get set }
+    var strategy: [FilterStrategy] { get }
 }
 
-public protocol FFTStrategy {
+public protocol FilterStrategy {
     
-     func use(x:[Float]) -> [Float]
+     func apply(x:[Float]) -> [Float]
 }
 
-public class MappingStrategy: FFTStrategy {
-    let minIndex: Int // 6
-    let maxIndex: Int // 301
+public protocol MappingStrategy: FilterStrategy {
     
-    public init(minIndex: Int, and maxIndex: Int) {
-        self.minIndex = minIndex
-        self.maxIndex = maxIndex
-    }
+    var minIndex: Int { get }
+    var maxIndex: Int { get }
+    
+    func conflictResolver(x: [Float]) -> Float
+}
 
-    func interpolate(values:[Float], upsamplingSize lcm:Int) -> [Float] {
-        print("interpolate")
+extension MappingStrategy {
+    
+    private func interpolate(values:[Float], upsamplingSize lcm:Int) -> [Float] {
         var result = [Float](count: lcm, repeatedValue: 0.0)
         let stepSize = lcm / values.count
         var f:Float = 1.1
@@ -54,22 +54,16 @@ public class MappingStrategy: FFTStrategy {
         return result
     }
 
-    func desample(var a:[Float], decimationFactor factor:Int) -> [Float] {
+    private func desample(var a:[Float], decimationFactor factor:Int) -> [Float] {
 
         let resultSize = a.count / factor
         var result = [Float](count: resultSize, repeatedValue: 0.0)
 
         var j = 0
         for i in 0.stride(through: a.count-factor, by: factor) {
-//            result[j] = average(Array(a[i..<i+factor]))
-//            j++
-            let maxElement = a[i..<i+factor].maxElement()
-            if let m = maxElement {
-                result[j] = m
-                j++
-            }
-            
+            result[j++] = conflictResolver(Array(a[i..<i+factor]))
         }
+        
         return result
     }
 
@@ -77,7 +71,7 @@ public class MappingStrategy: FFTStrategy {
         return sum(input) / Float(input.count)
     }
     
-    public func use(x:[Float]) -> [Float] {
+    public func apply(x: [Float]) -> [Float] {
         var result:[Float] = [Float](count: x.count, repeatedValue: 0.0)
         print(result.count)
         print("upsamplingFactor...")
@@ -111,23 +105,42 @@ public class MappingStrategy: FFTStrategy {
     }
 }
 
-public class NoStrategy: FFTStrategy {
+public class MaxMappingStrategy: MappingStrategy {
+    
+    public let minIndex: Int
+    public let maxIndex: Int
+    
+    public init(minIndex: Int, and maxIndex: Int) {
+        self.minIndex = minIndex
+        self.maxIndex = maxIndex
+    }
+    
+    public func conflictResolver(x: [Float]) -> Float {
+        return x.maxElement()!
+    }
+    
+}
+
+public class AverageMappingStrategy: MappingStrategy {
+    
+    public let minIndex: Int
+    public let maxIndex: Int
+    
+    public init(minIndex: Int, and maxIndex: Int) {
+        self.minIndex = minIndex
+        self.maxIndex = maxIndex
+    }
+    
+    public func conflictResolver(x: [Float]) -> Float {
+        return sum(x) / Float(x.count)
+    }
+    
+}
+public class NoStrategy: FilterStrategy {
     
     public init() {}
     
-    public func use(x:[Float]) -> [Float] {
+    public func apply(x:[Float]) -> [Float] {
         return x
     }
 }
-
-//public func max(x: [Float], range: Range<Int>) -> Float {
-//    var max: Float = 0.0
-//    
-//    for i in range {
-//        if max < x[i] {
-//            max = x[i]
-//        }
-//    }
-//    
-//    return max
-//}

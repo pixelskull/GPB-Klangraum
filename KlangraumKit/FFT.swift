@@ -10,32 +10,6 @@ import Accelerate
 
 // MARK: Fast Fourier Transform
 
-struct Semaphore {
-    
-    let semaphore: dispatch_semaphore_t
-    
-    init(value: Int = 0) {
-        semaphore = dispatch_semaphore_create(value)
-    }
-    
-    // Blocks the thread until the semaphore is free and returns true
-    // or until the timeout passes and returns false
-    func wait(nanosecondTimeout: Int64) -> Bool {
-        return dispatch_semaphore_wait(semaphore, dispatch_time(DISPATCH_TIME_NOW, nanosecondTimeout)) != 0
-    }
-    
-    // Blocks the thread until the semaphore is free
-    func wait() {
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
-    }
-    
-    // Alerts the semaphore that it is no longer being held by the current thread
-    // and returns a boolean indicating whether another thread was woken
-    func signal() -> Bool {
-        return dispatch_semaphore_signal(semaphore) != 0
-    }
-}
-
 protocol Transformation {
     
     func forward() -> SplitComplexVector<Float>
@@ -43,15 +17,15 @@ protocol Transformation {
     func inverse(x: SplitComplexVector<Float>) -> [Float]
 }
 
-public class FFT: Transformation, FFTAltering {
+public class FFT: Transformation, Filterable {
     
-    public var strategy: [FFTStrategy]
+    public var strategy: [FilterStrategy]
 
     private let setup: FFTSetup
     private let length: Int
     private let samples: [Float]
 
-    public init(initWithSamples samples: [Float], andStrategy strategy: [FFTStrategy]) {
+    public init(initWithSamples samples: [Float], andStrategy strategy: [FilterStrategy]) {
         self.samples = samples
         self.strategy = strategy
         self.length = samples.count
@@ -145,7 +119,7 @@ public class FFT: Transformation, FFTAltering {
             vDSP_ztoc(&dspSplitComplex, 1, resultAsComplex, 2, vDSP_Length(splitComplex.count))
         }
         
-        result = strategy.first!.use(result)
+        result = strategy.first!.apply(result)
         
         result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
             var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )

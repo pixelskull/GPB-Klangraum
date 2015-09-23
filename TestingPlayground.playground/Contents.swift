@@ -6,7 +6,7 @@ import KlangraumKit
 import AVFoundation
 
 private func plot<T>(values: [T], title: String) {
-    values.map{ XCPCaptureValue(title.isEmpty ? "foo" : title, $0) }
+    values.map{ XCPCaptureValue(title.isEmpty ? "foo" : title, value: $0) }
 }
 
 // MARK: - FFT
@@ -44,16 +44,16 @@ let samplingRate = 44100
 let n = 1024
 var audioFile = AudioFile()
 
-if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePath.stringByAppendingPathComponent("YellowNintendoHero-Muciojad.mp3")) {
-
-    let max = 400
-    let min = 100
+if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePath.stringByAppendingString("/alex.m4a")) {
     
-    let maxIndex = /*(n) * min / (samplingRate / 2)*/  max / 30
-    let minIndex = /*(n) * max / (samplingRate / 2)*/  min / 2
+    let max = 13000
+    let min = 200
     
     let length = n / 2
-    var j = 0
+    
+    let maxIndex = (length * max) / (samplingRate / 2 )
+    let minIndex = (length * min) / (samplingRate / 2 )
+    
     var full = [[Float]](count: length, repeatedValue: [0.0])
     
 //    for i in 0..<length {
@@ -64,15 +64,16 @@ if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePa
 //    }
     
     full[0] = Array(data[0*n..<(0+1)*n])
+    full[0].count
 
-
-    let a = FFT(initWithSamples: full[0], andStrategy: [MappingStrategy(minIndex: minIndex, and: maxIndex)])
+    let a = FFT(initWithSamples: full[0], andStrategy: [AverageMappingStrategy(minIndex: minIndex, and: maxIndex)])
     let b = a.forward()
-    plot(magnitudes(b), "original")
+    
+    plot(magnitudes(b), title: "original")
 
     let c = a.applyStrategy(b)
-    plot(magnitudes(c), "strategy")
-    
+    plot(magnitudes(c), title: "strategy")
+
 }
 
 
