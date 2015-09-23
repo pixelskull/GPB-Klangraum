@@ -25,11 +25,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let url = NSBundle.mainBundle().bundleURL
         if let data = audioFile.readAudioFileToFloatArray(String(url.URLByAppendingPathComponent("YellowNintendoHero-Muciojad.mp3"))) {
 
-            let max = 400
+            let max = 800
             let min = 100
 
-            let maxIndex = /*(n) * min / (samplingRate / 2)*/  max / 30
-            let minIndex = /*(n) * max / (samplingRate / 2)*/  min / 2
+//            let maxIndex = /*(n) * min / (samplingRate / 2)*/  max / 2 
+//            let minIndex = /*(n) * max / (samplingRate / 2)*/  min / 2
 
             let length = n / 2
 //            var j = 0
@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             full[0] = Array(data[0*n..<(0+1)*n])
 
 
-            let a = FFT(initWithSamples: full[0], andStrategy: [MappingStrategy(minIndex: minIndex, and: maxIndex)])
+            let a = FFT(initWithSamples: full[0], andStrategy: [MappingStrategy(minIndex: min, and: max)])
             let b = a.forward()
 //            plot(magnitudes(b), "original")
             print(magnitudes(b))

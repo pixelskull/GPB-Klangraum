@@ -79,6 +79,7 @@ public class MappingStrategy: FFTStrategy {
     
     public func use(x:[Float]) -> [Float] {
         var result:[Float] = [Float](count: x.count, repeatedValue: 0.0)
+        print(result.count)
         print("upsamplingFactor...")
         let upsamplingFactor = lcm(x.count, b: (self.maxIndex - self.minIndex))
         print("upsampling...")
@@ -89,7 +90,7 @@ public class MappingStrategy: FFTStrategy {
         let downsampled = self.desample(upsampling, decimationFactor: abs(decimationFactor))
         print("----------------------------")
         print("\(maxIndex) und \(minIndex)")
-        result.replaceRange(minIndex..<maxIndex, with: downsampled)
+        result.replaceRange(self.minIndex..<self.maxIndex, with: downsampled)
         print("replaced....")
         print(result.count)
 
