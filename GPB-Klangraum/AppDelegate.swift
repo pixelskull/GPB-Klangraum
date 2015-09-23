@@ -18,27 +18,65 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
+        let samplingRate = 44100
+        let n = 1024
+        let audioFile = AudioFile()
 
-        var audioFile:AudioFile = AudioFile()
+        let url = NSBundle.mainBundle().bundleURL
+        if let data = audioFile.readAudioFileToFloatArray(String(url.URLByAppendingPathComponent("YellowNintendoHero-Muciojad.mp3"))) {
 
-        let aPath:String = audioFile.createDummyFile().dematerialize()!
-//        println(aPath)
+            let max = 400
+            let min = 100
 
-        let convertPath = audioFile.convertFileToLinearPCMFormat(NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!)
+            let maxIndex = /*(n) * min / (samplingRate / 2)*/  max / 30
+            let minIndex = /*(n) * max / (samplingRate / 2)*/  min / 2
 
-        println("-----")
+            let length = n / 2
+//            var j = 0
+            var full = [[Float]](count: length, repeatedValue: [0.0])
 
-        
-        let audioPath:String = NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!
+            //    for i in 0..<length {
+            //        let first = j*n
+            //        let last = (j+1) * n
+            //        full[i] = Array(data[first..<last])
+            //        j++
+            //    }
 
-        /*audioFile.openAudioFile(audioPath) --> audioFile.convertToLinearPCM -->*/
-        let path = audioFile.safeSamples([0.0], ToPath: NSBundle.mainBundle().resourcePath! + "/dummy2.caf")
+            full[0] = Array(data[0*n..<(0+1)*n])
 
-        let result:[String:[Float]]? = audioFile.readAudioFileToSplitFloatArray(audioPath)
-        if let r = result {
-            println(r["left"]!.count)
-            println(r["right"]!.count)
+
+            let a = FFT(initWithSamples: full[0], andStrategy: [MappingStrategy(minIndex: minIndex, and: maxIndex)])
+            let b = a.forward()
+//            plot(magnitudes(b), "original")
+            print(magnitudes(b))
+
+            let c = a.applyStrategy(b)
+            print(magnitudes(c))
+//            plot(magnitudes(c), "strategy")
+
         }
+
+
+//        var audioFile:AudioFile = AudioFile()
+//
+//        let aPath:String = audioFile.createDummyFile().dematerialize()!
+////        println(aPath)
+//
+//        let convertPath = audioFile.convertFileToLinearPCMFormat(NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!)
+//
+//        println("-----")
+//
+//        
+//        let audioPath:String = NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!
+//
+//        /*audioFile.openAudioFile(audioPath) --> audioFile.convertToLinearPCM -->*/
+//        let path = audioFile.safeSamples([0.0], ToPath: NSBundle.mainBundle().resourcePath! + "/dummy2.caf")
+//
+//        let result:[String:[Float]]? = audioFile.readAudioFileToSplitFloatArray(audioPath)
+//        if let r = result {
+//            println(r["left"]!.count)
+//            println(r["right"]!.count)
+//        }
 
         return true 
     }

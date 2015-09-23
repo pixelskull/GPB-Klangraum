@@ -27,19 +27,18 @@ public class AudioFile {
     func readAudioFile(path:String) -> Failable<AVAudioPCMBuffer> {
         // setup variables
         let url = NSURL(fileURLWithPath: path)
-        let audioFile = AVAudioFile(forReading: url, error: nil)
+        let audioFile = try! AVAudioFile(forReading: url)
         let audioFileFormat = audioFile.processingFormat
         let audioFileFrameCount = UInt32(audioFile.length)
         let pcmBuffer = AVAudioPCMBuffer(PCMFormat: audioFileFormat, frameCapacity: audioFileFrameCount)
-        var error:NSError?
+//        var error:NSError?
         // read audiofiles in buffer
-        audioFile.readIntoBuffer(pcmBuffer, error: &error)
-
-        if error == nil {
-            return Failable.Success(Box(pcmBuffer))
-        } else {
+        do {
+            try audioFile.readIntoBuffer(pcmBuffer) //.readIntoBuffer(pcmBuffer)
+        } catch let error as NSError {
             return Failable.Failure("readAudioFile()::: Error while read File to Buffer (Error: \(error))")
         }
+        return Failable.Success(Box(pcmBuffer))
     }
 
 
@@ -52,7 +51,7 @@ public class AudioFile {
     */
     func convertToFloatSamples(pcmBuffer:AVAudioPCMBuffer) -> Failable<[Float]> {
         // generate
-        var samples:[Float] = (0 ..< Int(pcmBuffer.frameLength)).map{ pcmBuffer.floatChannelData.memory[$0] }
+        let samples:[Float] = (0 ..< Int(pcmBuffer.frameLength)).map{ pcmBuffer.floatChannelData.memory[$0] }
         if samples.isEmpty {
             return Failable.Failure("convertToFloatSamples()::: Error while converting to float samples")
         } else {
@@ -70,8 +69,8 @@ public class AudioFile {
     */
     func splitToInterleaved(samples1D:[Float]) -> Failable<[String:[Float]]> {
         // initialize two arrays for left and right audiosamples append left an right samples to arrays (scheme left, right)
-        var left:[Float] = map(stride(from: 0, through: samples1D.count-1, by: 2), { samples1D[$0] })
-        var right:[Float] = map(stride(from: 1, through: samples1D.count-1, by: 2), { samples1D[$0] })
+        let left:[Float] = 0.stride(through: samples1D.count-1, by: 2).map { samples1D[$0] }
+        let right:[Float] = 1.stride(through: samples1D.count-1, by: 2).map { samples1D[$0] }
 
         if left.isEmpty || right.isEmpty {
             return Failable.Failure("splitToInterleaved():::could not seperate left and right Samples")
@@ -88,12 +87,12 @@ public class AudioFile {
     */
     public func createDummyFile() -> Failable<String> {
         let count:Int = 44100 * 3 // samplerate * seconds?!
-        var dataSize = count
+//        let dataSize = count
         let frequency:Float = 4.0
-        let amplitude:Float = 3.0
+//        let amplitude:Float = 3.0
 
         // generates Pointer to Float-array
-        var x:UnsafeMutablePointer<Void> = UnsafeMutablePointer<Void>(sin(map(0..<count){ (2.0 * Float(M_PI) / Float(count) * Float($0) * frequency)  }))
+        let x:UnsafeMutablePointer<Void> = UnsafeMutablePointer<Void>(sin((0..<count).map { (2.0 * Float(M_PI) / Float(count) * Float($0) * frequency)  }))
 
         // create AudioBufferList with the Array-Pointer as Data
         var buffer:AudioBufferList = AudioBufferList()
@@ -106,10 +105,10 @@ public class AudioFile {
         let newFilePath: String = NSBundle.mainBundle().resourcePath! + "/"
 
         // make URL out of path
-        var urlRef:NSURL = NSURL(string: newFilePath)!
+//        let urlRef:NSURL = NSURL(string: newFilePath)!
 
         //create Basic description for the new AudioFile
-        var newFileDesc = self.createBasicPCMDescription()
+        let newFileDesc = self.createBasicPCMDescription()
 
         return self.saveFileAtPath(newFilePath, withName: "dummy.caf", Content: buffer, andDescription: newFileDesc)
     }
@@ -156,7 +155,7 @@ public class AudioFile {
         if let urlRef = url {
             // create new AudioFile with Reference
             var extAudio: ExtAudioFileRef = ExtAudioFileRef()
-            ExtAudioFileCreateWithURL(urlRef, AudioFileTypeID(kAudioFileCAFType), &description, nil, UInt32(kAudioFileFlags_EraseFile), &extAudio)
+            ExtAudioFileCreateWithURL(urlRef, AudioFileTypeID(kAudioFileCAFType), &description, nil, AudioFileFlags.EraseFile.rawValue, &extAudio)
             // write data to the empty Audio-file
             var wErr = noErr
             wErr = ExtAudioFileWrite(extAudio, buffer.mBuffers.mDataByteSize, &buffer)
@@ -182,7 +181,7 @@ public class AudioFile {
     */
     public func safeSamples(samples:[Float], ToPath path:String) -> String? {
         // convert array to UnsafeMutablePointer
-        var samplePointer = UnsafeMutablePointer<Void>(samples)
+        let samplePointer = UnsafeMutablePointer<Void>(samples)
         // create AudioBufferList
         var buffer:AudioBufferList = AudioBufferList()
         buffer.mNumberBuffers = 1
@@ -190,12 +189,22 @@ public class AudioFile {
         buffer.mBuffers.mDataByteSize = UInt32(samples.count)
         buffer.mBuffers.mData = samplePointer
         // split path
-        var name = path.lastPathComponent.stringByDeletingPathExtension + ".caf"
-        var clearPath = path.stringByDeletingLastPathComponent + "/"
+        let url = NSURL(string: path)!
+        let fileName = url.URLByDeletingPathExtension?.URLByAppendingPathExtension(".caf").lastPathComponent
+//        let name = path.lastPathComponent.stringByDeletingPathExtension + ".caf"
+        let clearPath = String(url.URLByDeletingLastPathComponent?.URLByAppendingPathComponent("/"))
+//        let clearPath = path.stringByDeletingLastPathComponent + "/"
         // create AudioStreamBasicDescription for PCM
-        var desc = self.createBasicPCMDescription()
+        let desc = self.createBasicPCMDescription()
         // safe file and return path
-        return self.saveFileAtPath(clearPath, withName: name, Content: buffer, andDescription: desc).dematerialize()
+        if let name = fileName {
+            return self.saveFileAtPath(clearPath, withName: name, Content: buffer, andDescription: desc).dematerialize()
+        } else {
+            let defaultPath = NSBundle.mainBundle().resourcePath!
+            let junkName = "trash.caf"
+            return self.saveFileAtPath(defaultPath, withName: junkName, Content: buffer, andDescription: desc).dematerialize()
+        }
+        
     }
 
 
@@ -229,7 +238,7 @@ public class AudioFile {
     :returns: String? -> optional path to the converted .caf file
     */
     public func convertFileToLinearPCMFormat(path:String) -> String? {
-        var floats = self.readAudioFile(path) --> self.convertToFloatSamples
+        let floats = self.readAudioFile(path) --> self.convertToFloatSamples
         return self.safeSamples(floats.dematerialize()!, ToPath: path)
     }
 

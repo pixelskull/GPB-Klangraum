@@ -18,11 +18,11 @@ public func create_fft_setupD( length: Int ) -> FFTSetup {
 }
 
 internal func fft<C: Unsafeable where C.Generator.Element == Float, C.Index == Int>(setup: FFTSetup, x: C, fft_length: Int) -> SplitComplexVector<Float> {
-    var splitComplex = SplitComplexVector<Float>(count: count(x) / 2, repeatedValue: Complex<Float>(real: 0, imag: 0))
+    var splitComplex = SplitComplexVector<Float>(count: x.count / 2, repeatedValue: Complex<Float>(real: 0, imag: 0))
     var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
     
     x.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-        var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
         vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
         vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(fft_length))), FFTDirection(kFFTDirection_Forward))
     }
@@ -31,11 +31,11 @@ internal func fft<C: Unsafeable where C.Generator.Element == Float, C.Index == I
 }
 
 internal func fft<C: Unsafeable where C.Generator.Element == Double, C.Index == Int>(setup: FFTSetup, x: C, fft_length: Int) -> SplitComplexVector<Double> {
-    var splitComplex = SplitComplexVector<Double>(count: count(x) / 2, repeatedValue: Complex<Double>(real: 0, imag: 0))
+    var splitComplex = SplitComplexVector<Double>(count: x.count / 2, repeatedValue: Complex<Double>(real: 0, imag: 0))
     var dspSplitComplex = DSPDoubleSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
     
     x.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Double>) -> Void in
-        var xAsComplex = UnsafePointer<DSPDoubleComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafePointer<DSPDoubleComplex>( xPointer.baseAddress )
         vDSP_ctozD(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
         vDSP_fft_zripD(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(fft_length))), FFTDirection(kFFTDirection_Forward))
     }
@@ -44,11 +44,11 @@ internal func fft<C: Unsafeable where C.Generator.Element == Double, C.Index == 
 }
 
 internal func fft(setup: FFTSetup, x: [Double], fft_length: Int) -> (complex: SplitComplexVector<Double>, mag: [Double]) {
-    var splitComplex = SplitComplexVector<Double>(count: count(x) / 2, repeatedValue: Complex<Double>(real: 0, imag: 0))
+    var splitComplex = SplitComplexVector<Double>(count: x.count / 2, repeatedValue: Complex<Double>(real: 0, imag: 0))
     var dspSplitComplex = DSPDoubleSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
     
     x.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Double>) -> Void in
-        var xAsComplex = UnsafePointer<DSPDoubleComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafePointer<DSPDoubleComplex>( xPointer.baseAddress )
         vDSP_ctozD(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
         vDSP_fft_zripD(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(fft_length))), FFTDirection(FFT_FORWARD))
     }
@@ -63,13 +63,13 @@ internal func fft(setup: FFTSetup, x: [Double], fft_length: Int) -> (complex: Sp
 }
 
 public func full(setup: FFTSetup, x: [Double], fft_length: Int) -> [Double] {
-    var splitComplex = SplitComplexVector<Double>(count: count(x) / 2, repeatedValue: Complex<Double>(real: 0, imag: 0))
+    var splitComplex = SplitComplexVector<Double>(count: x.count / 2, repeatedValue: Complex<Double>(real: 0, imag: 0))
     var dspSplitComplex = DSPDoubleSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
     var result = [Double](count: fft_length, repeatedValue: 0)
     
     // FORWARD FROM REAL TO COMPLEX
     x.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Double>) -> Void in
-        var xAsComplex = UnsafePointer<DSPDoubleComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafePointer<DSPDoubleComplex>( xPointer.baseAddress )
         vDSP_ctozD(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
         vDSP_fft_zripD(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(fft_length))), FFTDirection(FFT_FORWARD))
     }
@@ -79,7 +79,7 @@ public func full(setup: FFTSetup, x: [Double], fft_length: Int) -> [Double] {
     
     // complex -> real
     magnitudes.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Double>) -> Void in
-        var xAsComplex = UnsafeMutablePointer<DSPDoubleComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafeMutablePointer<DSPDoubleComplex>( xPointer.baseAddress )
         vDSP_ztocD(&dspSplitComplex, 1, xAsComplex, 2, vDSP_Length(splitComplex.count))
     }
     
@@ -88,32 +88,32 @@ public func full(setup: FFTSetup, x: [Double], fft_length: Int) -> [Double] {
     
     // real to complex
     magnitudes.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Double>) -> Void in
-        var xAsComplex = UnsafeMutablePointer<DSPDoubleComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafeMutablePointer<DSPDoubleComplex>( xPointer.baseAddress )
         vDSP_ctozD(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
     }
     
     // INVERSE FROM COMPLEX TO REAL
     result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Double>) -> Void in
-        var xAsComplex = UnsafeMutablePointer<DSPDoubleComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafeMutablePointer<DSPDoubleComplex>( xPointer.baseAddress )
         //x = shit(x)
         vDSP_fft_zripD(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(fft_length))), FFTDirection(FFT_INVERSE))
         vDSP_ztocD(&dspSplitComplex, 1, xAsComplex, 2, vDSP_Length(splitComplex.count))
     }
     
     // FLATTEN
-    vDSP_vsmulD(result, 1, [0.5/Double(count(x))], &result, 1, vDSP_Length(count(x)))
+    vDSP_vsmulD(result, 1, [0.5/Double(x.count)], &result, 1, vDSP_Length(x.count))
     
     return result
 }
 
 public func full(setup: FFTSetup, x: [Float], fft_length: Int) -> [Float] {
-    var splitComplex = SplitComplexVector<Float>(count: count(x) / 2, repeatedValue: Complex<Float>(real: 0, imag: 0))
+    var splitComplex = SplitComplexVector<Float>(count: (x.count) / 2, repeatedValue: Complex<Float>(real: 0, imag: 0))
     var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
     var result = [Float](count: fft_length, repeatedValue: 0)
     
     // FORWARD FROM REAL TO COMPLEX
     x.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-        var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
         vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
         vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(fft_length))), FFTDirection(FFT_FORWARD))
     }
@@ -123,7 +123,7 @@ public func full(setup: FFTSetup, x: [Float], fft_length: Int) -> [Float] {
     
     // complex -> real
     magnitudes.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-        var xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
         vDSP_ztoc(&dspSplitComplex, 1, xAsComplex, 2, vDSP_Length(splitComplex.count))
     }
     
@@ -132,19 +132,19 @@ public func full(setup: FFTSetup, x: [Float], fft_length: Int) -> [Float] {
 
     // real to complex
     magnitudes.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-        var xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
         vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
     }
 
     // INVERSE FROM COMPLEX TO REAL
     result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-        var xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
+        let xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
         vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(fft_length))), FFTDirection(FFT_INVERSE))
         vDSP_ztoc(&dspSplitComplex, 1, xAsComplex, 2, vDSP_Length(splitComplex.count))
     }
     
     // FLATTEN
-    vDSP_vsmul(result, 1, [0.5/Float(count(x))], &result, 1, vDSP_Length(fft_length))
+    vDSP_vsmul(result, 1, [0.5/Float(x.count)], &result, 1, vDSP_Length(fft_length))
     
     return result
 }

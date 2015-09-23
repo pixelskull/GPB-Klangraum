@@ -50,13 +50,13 @@ public struct SplitComplexVector<T> {
     }
 }
 
-extension Complex : Printable {
+extension Complex : CustomStringConvertible {
     public var description: String {
         return "\(self.real)+\(self.imag)i";
     }
 }
 
-extension SplitComplexVector : Printable {
+extension SplitComplexVector : CustomStringConvertible {
     public var description: String {
         let maxElements = 25
         var desc = "["
