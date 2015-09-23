@@ -145,7 +145,7 @@ public class FFT: Transformation, FFTAltering {
             vDSP_ztoc(&dspSplitComplex, 1, resultAsComplex, 2, vDSP_Length(splitComplex.count))
         }
         
-        result = strategy.first!.apply(result)
+        result = strategy.first!.use(result)
         
         result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
             var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )

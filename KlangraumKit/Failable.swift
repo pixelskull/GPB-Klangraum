@@ -44,7 +44,7 @@ public enum Failable<T> {
         case .Success(let box):
             return box.value
         case .Failure(let error):
-            println(error)
+            print(error)
             return nil
         }
     }

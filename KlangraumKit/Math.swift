@@ -60,7 +60,7 @@ public func sqrt(x: [Double]) -> [Double] {
 public func sum(x: [Float]) -> Float {
     var result: Float = 0.0
     vDSP_sve(x, 1, &result, vDSP_Length(x.count))
-    
+
     return result
 }
 
@@ -70,3 +70,20 @@ public func sum(x: [Double]) -> Double {
     
     return result
 }
+
+
+// MARK: GGT(GCD) und KGV(LCM)
+
+public func gcd(m:Int, n:Int) -> Int {
+    if (m % n == 0) {
+        return n
+    } else {
+        return gcd(n, n: m % n)
+    }
+}
+
+public func lcm(a:Int, b:Int) -> Int {
+    return (a*b) / gcd(a, n: b)
+}
+
+
