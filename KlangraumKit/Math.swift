@@ -60,7 +60,7 @@ public func sqrt(x: [Double]) -> [Double] {
 public func sum(x: [Float]) -> Float {
     var result: Float = 0.0
     vDSP_sve(x, 1, &result, vDSP_Length(x.count))
-    
+
     return result
 }
 
