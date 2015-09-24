@@ -175,12 +175,17 @@ internal func ifft(setup: FFTSetup, var X: SplitComplexVector<Double>, fft_lengt
     return result
 }
 
+public func addZeroPadding(a:[Float], WhileModulo mod:Int) -> [Float] {
+    var tmp = a
+    while tmp.count % mod != 0 {
+        //tmp.count % steps != 0 { //TODO: possible performance optimazation
+        tmp.append(0.0)
+    }
+    return tmp
+}
+
 public func prepare(samples: [Float], steppingBy steps: Int) -> [[Float]] {
     var tmp = samples
-    
-    /*while tmp.count % steps != 0 { //TODO: possible performance optimazation
-    tmp.append(0.0)
-    }*/
     
     let count = tmp.count
     let length = count / steps

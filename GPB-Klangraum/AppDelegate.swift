@@ -23,20 +23,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let audioFile = AudioFile()
 
         let url = NSBundle.mainBundle().bundleURL
-        if let data = audioFile.readAudioFileToFloatArray(String(url.URLByAppendingPathComponent("alex.m4a"))) {
+        if let data = audioFile.readAudioFileToFloatArray(String(url.URLByAppendingPathComponent("pascal.m4a"))) {
             
             let max = 13000
-            let min = 200
+            let min = 600
             
             let length = n / 2
             
             let maxIndex = (length * max) / (samplingRate / 2 )
             let minIndex = (length * min) / (samplingRate / 2 )
 
+            let dataWithPadding = addZeroPadding(data, WhileModulo: n)
 
-            let prepared = prepare(data, steppingBy: n)
+            let window:[Float] = hamming(dataWithPadding.count)
+            let windowedData = dataWithPadding * window
+            let prepared = prepare(windowedData, steppingBy: n)
+
             var result = [[Float]]()
-            
             for prepare in prepared {
                 let a = FFT(initWithSamples: prepare, andStrategy: [AverageMappingStrategy(minIndex: minIndex, and: maxIndex)])
                 let b = a.forward()
@@ -45,12 +48,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 result.append(d)
             }
             
-            let evenBetter = Array(result.flatten())
+            let evenBetter = Array(result.flatten()) / window
+
             print(NSBundle.mainBundle().resourcePath!)
             audioFile.safeSamples(evenBetter, ToPath: NSBundle.mainBundle().resourcePath! + "/new.caf")
         }
-
-
 //        var audioFile:AudioFile = AudioFile()
 //
 //        let aPath:String = audioFile.createDummyFile().dematerialize()!

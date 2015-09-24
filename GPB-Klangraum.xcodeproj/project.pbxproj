@@ -18,6 +18,7 @@
 		504DCBE51BA8592C00066257 /* FFTOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779B1BA0314800DBEC49 /* FFTOperations.swift */; };
 		504DCBE61BA8592F00066257 /* ComplexVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779A1BA0314800DBEC49 /* ComplexVectorOperations.swift */; };
 		504DCBE71BA8593200066257 /* ComplexVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0577991BA0314800DBEC49 /* ComplexVector.swift */; };
+		50717CFE1BB4300C00066257 /* pascal.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 50717CFD1BB42FFE00066257 /* pascal.m4a */; };
 		5080B0CE1B789DB500066257 /* KlangraumKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 5080B0CD1B789DB500066257 /* KlangraumKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		5080B0D41B789DB500066257 /* KlangraumKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; };
 		5080B0DD1B789DB500066257 /* KlangraumKitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0DC1B789DB500066257 /* KlangraumKitTests.swift */; };
@@ -93,6 +94,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		50717CFD1BB42FFE00066257 /* pascal.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = pascal.m4a; sourceTree = "<group>"; };
 		5080B0C91B789DB500066257 /* KlangraumKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = KlangraumKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5080B0CC1B789DB500066257 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5080B0CD1B789DB500066257 /* KlangraumKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KlangraumKit.h; sourceTree = "<group>"; };
@@ -276,6 +278,7 @@
 		5084EB751B67DBCD00066257 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				50717CFD1BB42FFE00066257 /* pascal.m4a */,
 				FA2D63BE1BB412D2002BF14B /* alex.m4a */,
 				5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */,
 			);
@@ -446,6 +449,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50717CFE1BB4300C00066257 /* pascal.m4a in Resources */,
 				FA2D63BF1BB412E5002BF14B /* alex.m4a in Resources */,
 				5084EB5B1B67DA9800066257 /* Main.storyboard in Resources */,
 				5084EB601B67DA9800066257 /* LaunchScreen.xib in Resources */,

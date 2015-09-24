@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "43DBEE6768B471281E29EB7EA8ACC5F21AAE5212",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "5D7AE6F26A6D7E393D8CA002FDE5D0D8ABCDAE62" : 0,
+    "43DBEE6768B471281E29EB7EA8ACC5F21AAE5212" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "E989E499-8A01-4A13-97D6-3B904120E044",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "5D7AE6F26A6D7E393D8CA002FDE5D0D8ABCDAE62" : "AudioKit\/",
+    "43DBEE6768B471281E29EB7EA8ACC5F21AAE5212" : "GPB-Klangraum\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "GPB-Klangraum",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "GPB-Klangraum.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "github.com:pixelskull\/GPB-Klangraum.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "43DBEE6768B471281E29EB7EA8ACC5F21AAE5212"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/audiokit\/AudioKit.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "5D7AE6F26A6D7E393D8CA002FDE5D0D8ABCDAE62"
+    }
+  ]
+}
