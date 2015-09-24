@@ -42,7 +42,7 @@ public class FFT: Transformation, Filterable {
         
         // FORWARD FROM REAL TO COMPLEX
         samples.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-            var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
+            let xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
             vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
             vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(length))), FFTDirection(FFT_FORWARD))
         }
@@ -57,17 +57,17 @@ public class FFT: Transformation, Filterable {
         
         // FORWARD FROM REAL TO COMPLEX
         samples.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-            var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
+            let xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
             vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
             vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(length))), FFTDirection(FFT_FORWARD))
         }
         
         // MANIPULATE MAGNITUDES, PHASE DOES NOT WORK YET
-        var magnitudes = [Float](count: splitComplex.count, repeatedValue: 0.0)
+        let magnitudes = [Float](count: splitComplex.count, repeatedValue: 0.0)
         
         // complex -> real
         magnitudes.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-            var xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
+            let xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
             vDSP_ztoc(&dspSplitComplex, 1, xAsComplex, 2, vDSP_Length(splitComplex.count))
         }
         
@@ -76,13 +76,13 @@ public class FFT: Transformation, Filterable {
         
         // real to complex
         magnitudes.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-            var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
+            let xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
             vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
         }
         
         // INVERSE FROM COMPLEX TO REAL
         result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-            var xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
+            let xAsComplex = UnsafeMutablePointer<DSPComplex>( xPointer.baseAddress )
             vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(length))), FFTDirection(FFT_INVERSE))
             vDSP_ztoc(&dspSplitComplex, 1, xAsComplex, 2, vDSP_Length(splitComplex.count))
         }
@@ -99,7 +99,7 @@ public class FFT: Transformation, Filterable {
         var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
         
         result.withUnsafeBufferPointer { (resultPointer: UnsafeBufferPointer<Float>) -> Void in
-            var resultAsComplex = UnsafeMutablePointer<DSPComplex>( resultPointer.baseAddress )
+            let resultAsComplex = UnsafeMutablePointer<DSPComplex>( resultPointer.baseAddress )
             vDSP_fft_zrip(setup, &dspSplitComplex, 1, vDSP_Length(log2(CDouble(length))), FFTDirection(kFFTDirection_Inverse))
             vDSP_ztoc(&dspSplitComplex, 1, resultAsComplex, 2, vDSP_Length(splitComplex.count))
         }
@@ -115,14 +115,14 @@ public class FFT: Transformation, Filterable {
         var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
 
         result.withUnsafeBufferPointer { (resultPointer: UnsafeBufferPointer<Float>) -> Void in
-            var resultAsComplex = UnsafeMutablePointer<DSPComplex>( resultPointer.baseAddress )
+            let resultAsComplex = UnsafeMutablePointer<DSPComplex>( resultPointer.baseAddress )
             vDSP_ztoc(&dspSplitComplex, 1, resultAsComplex, 2, vDSP_Length(splitComplex.count))
         }
         
         result = strategy.first!.apply(result)
         
         result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
-            var xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
+            let xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
             vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
         }
 

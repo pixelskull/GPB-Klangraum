@@ -23,37 +23,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let audioFile = AudioFile()
 
         let url = NSBundle.mainBundle().bundleURL
-        if let data = audioFile.readAudioFileToFloatArray(String(url.URLByAppendingPathComponent("YellowNintendoHero-Muciojad.mp3"))) {
-
-            let max = 800
-            let min = 100
-
-//            let maxIndex = /*(n) * min / (samplingRate / 2)*/  max / 2 
-//            let minIndex = /*(n) * max / (samplingRate / 2)*/  min / 2
-
+        if let data = audioFile.readAudioFileToFloatArray(String(url.URLByAppendingPathComponent("alex.m4a"))) {
+            
+            let max = 13000
+            let min = 200
+            
             let length = n / 2
-//            var j = 0
-            var full = [[Float]](count: length, repeatedValue: [0.0])
-
-            //    for i in 0..<length {
-            //        let first = j*n
-            //        let last = (j+1) * n
-            //        full[i] = Array(data[first..<last])
-            //        j++
-            //    }
-
-            full[0] = Array(data[0*n..<(0+1)*n])
+            
+            let maxIndex = (length * max) / (samplingRate / 2 )
+            let minIndex = (length * min) / (samplingRate / 2 )
 
 
-            let a = FFT(initWithSamples: full[0], andStrategy: [MappingStrategy(minIndex: min, and: max)])
-            let b = a.forward()
-//            plot(magnitudes(b), "original")
-            print(magnitudes(b))
-
-            let c = a.applyStrategy(b)
-            print(magnitudes(c))
-//            plot(magnitudes(c), "strategy")
-
+            let prepared = prepare(data, steppingBy: n)
+            var result = [[Float]]()
+            
+            for prepare in prepared {
+                let a = FFT(initWithSamples: prepare, andStrategy: [AverageMappingStrategy(minIndex: minIndex, and: maxIndex)])
+                let b = a.forward()
+                let c = a.applyStrategy(b)
+                let d = a.inverse(c)
+                result.append(d)
+            }
+            
+            let evenBetter = Array(result.flatten())
+            print(NSBundle.mainBundle().resourcePath!)
+            audioFile.safeSamples(evenBetter, ToPath: NSBundle.mainBundle().resourcePath! + "/new.caf")
         }
 
 

@@ -54,25 +54,93 @@ if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePa
     let maxIndex = (length * max) / (samplingRate / 2 )
     let minIndex = (length * min) / (samplingRate / 2 )
     
-    var full = [[Float]](count: length, repeatedValue: [0.0])
+    /* TESTDATEN
+    var a = [Float](count: 300, repeatedValue: Float(0.0))
+    for i in 0..<a.count {
+        a[i] += Float(i)
+    }
+    var test = prepare(a, steppingBy: 18)
+    var test2 = complete(test)
     
-//    for i in 0..<length {
-//        let first = j*n
-//        let last = (j+1) * n
-//        full[i] = Array(data[first..<last])
-//        j++
-//    }
+    test2.count
+    a.count
+    test2 == a*/
     
-    full[0] = Array(data[0*n..<(0+1)*n])
-    full[0].count
-
-    let a = FFT(initWithSamples: full[0], andStrategy: [AverageMappingStrategy(minIndex: minIndex, and: maxIndex)])
+    //var test = prepare(data, steppingBy: n)
+    //var test2 = complete(test)
+    
+    /* RICHTE IMPLEMENTIERUNG */
+    //plot(data, title: "1")
+    
+    //var full = prepare(data, steppingBy: n)
+    /*
+    let a = FFT(initWithSamples: data, andStrategy: [NoStrategy()])
     let b = a.forward()
-    
-    plot(magnitudes(b), title: "original")
+    let c = a.inverse(b)
+    */
 
-    let c = a.applyStrategy(b)
-    plot(magnitudes(c), title: "strategy")
+
+/*    let prepared = prepare(data, steppingBy: n)
+    var result = [[Float]]()
+
+    for prepare in prepared {
+        let d = FFT(initWithSamples: prepare, andStrategy: [NoStrategy()])
+        let e = d.forward()
+        let f = magnitudes(e)
+        result.append(f)
+    }
+
+
+    plot(Array(result.flatten()), title: "flatten1")
+    
+
+var result2 = [[Float]]()
+
+for prepare2 in prepared {
+let d2 = FFT(initWithSamples: prepare2, andStrategy: [AverageMappingStrategy(minIndex: minIndex, and: maxIndex)])
+let e2 = d2.forward()
+let f2 = magnitudes(d2.applyStrategy(e2))
+result2.append(f2)
+}
+
+plot(Array(result2.flatten()), title: "flatten2")
+*/
+    /*
+    let prepared = prepare(data, steppingBy: n)
+    var result = [[Float]]()
+    
+    for prepare in prepared {
+    let d = FFT(initWithSamples: prepare, andStrategy: [NoStrategy()])
+    let e = d.forward()
+    let f = magnitudes(e)
+    result.append(f)
+    }
+    
+    
+    plot(Array(result.flatten()), title: "flatten1")
+    
+    
+    var result2 = [[Float]]()
+    
+    for prepare2 in prepared {
+    let d2 = FFT(initWithSamples: prepare2, andStrategy: [AverageMappingStrategy(minIndex: minIndex, and: maxIndex)])
+    let e2 = d2.forward()
+    let f2 = magnitudes(d2.applyStrategy(e2))
+    result2.append(f2)
+    }
+    
+    plot(Array(result2.flatten()), title: "flatten2")
+
+*/
+
+
+    //plot(c, title: "c")
+    //plot(Array(result.flatten()), title: "flatten")
+    
+    //plot(magnitudes(b), title: "original")
+
+    //let c = a.applyStrategy(b)
+    //plot(magnitudes(c), title: "strategy")
 
 }
 

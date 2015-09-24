@@ -44,6 +44,7 @@
 		FA0577A31BA0314800DBEC49 /* Unsafeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779D1BA0314800DBEC49 /* Unsafeable.swift */; };
 		FA0577A41BA0314800DBEC49 /* Windowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779E1BA0314800DBEC49 /* Windowing.swift */; };
 		FA0577A61BA04F1C00DBEC49 /* FFTStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0577A51BA04F1C00DBEC49 /* FFTStrategies.swift */; };
+		FA2D63BF1BB412E5002BF14B /* alex.m4a in Resources */ = {isa = PBXBuildFile; fileRef = FA2D63BE1BB412D2002BF14B /* alex.m4a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,6 +125,7 @@
 		FA05779D1BA0314800DBEC49 /* Unsafeable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unsafeable.swift; sourceTree = "<group>"; };
 		FA05779E1BA0314800DBEC49 /* Windowing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windowing.swift; sourceTree = "<group>"; };
 		FA0577A51BA04F1C00DBEC49 /* FFTStrategies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFTStrategies.swift; sourceTree = "<group>"; };
+		FA2D63BE1BB412D2002BF14B /* alex.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = alex.m4a; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -274,6 +276,7 @@
 		5084EB751B67DBCD00066257 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				FA2D63BE1BB412D2002BF14B /* alex.m4a */,
 				5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */,
 			);
 			name = Misc;
@@ -443,6 +446,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA2D63BF1BB412E5002BF14B /* alex.m4a in Resources */,
 				5084EB5B1B67DA9800066257 /* Main.storyboard in Resources */,
 				5084EB601B67DA9800066257 /* LaunchScreen.xib in Resources */,
 				5084EB5D1B67DA9800066257 /* Images.xcassets in Resources */,

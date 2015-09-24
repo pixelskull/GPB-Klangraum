@@ -174,3 +174,30 @@ internal func ifft(setup: FFTSetup, var X: SplitComplexVector<Double>, fft_lengt
     
     return result
 }
+
+public func prepare(samples: [Float], steppingBy steps: Int) -> [[Float]] {
+    var tmp = samples
+    
+    /*while tmp.count % steps != 0 { //TODO: possible performance optimazation
+    tmp.append(0.0)
+    }*/
+    
+    let count = tmp.count
+    let length = count / steps
+    
+    var splitSamples = [[Float]](count: length, repeatedValue: [0.0])
+    var j = 0
+    
+    for i in 0..<splitSamples.count {
+        let first = j * steps
+        let last = first + (steps - 1)
+        splitSamples[i] = Array(tmp[first...last])
+        j++
+    }
+    
+    return splitSamples
+}
+
+public func complete(splitSamples: [[Float]]) -> [Float] {
+    return Array(splitSamples.flatten())
+}
