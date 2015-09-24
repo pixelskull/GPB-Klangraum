@@ -156,7 +156,10 @@ public class AudioFile {
     :returns: Failable<String> -> path where audiofile can be found or error string
     */
     func saveFileAtPath(path:String, withName name:String, Content content:AudioBufferList, andDescription desc:AudioStreamBasicDescription) -> Failable<String> {
-        let url:NSURL? = NSURL(fileURLWithPath: path + name)
+        let fullPath = path + "/" + name
+        print(fullPath)
+        let url:NSURL? = NSURL(string: fullPath)
+
         var buffer = content
         var description = desc
 
@@ -171,7 +174,7 @@ public class AudioFile {
             if wErr == noErr {
                 return Failable.Success(Box(path + name))
             } else {
-                return Failable.Failure("saveFilePCMFormatedAtPath()::: File not created")
+                return Failable.Failure("saveFilePCMFormatedAtPath()::: File not created OSStatus \(wErr)")
             }
         } else {
             return Failable.Failure("saveFilePCMFormatedAtPath()::: Path was not valid")
@@ -198,9 +201,13 @@ public class AudioFile {
         buffer.mBuffers.mData = samplePointer
         // split path
         let url = NSURL(string: path)!
-        let fileName = url.URLByDeletingPathExtension?.URLByAppendingPathExtension(".caf").lastPathComponent
+//        print("safeSamples -> url: \(url.debugDescription)")
+        let fileName = url.URLByDeletingPathExtension?.URLByAppendingPathExtension("caf").lastPathComponent
+//        print("safeSamples -> filename: \(fileName)")
 //        let name = path.lastPathComponent.stringByDeletingPathExtension + ".caf"
-        let clearPath = String(url.URLByDeletingLastPathComponent?.URLByAppendingPathComponent("/"))
+        let tmpPath = url.URLByDeletingLastPathComponent
+        let clearPath = tmpPath!.path!
+//        print("safeSamples -> clearPath: \(clearPath.debugDescription)")
 //        let clearPath = path.stringByDeletingLastPathComponent + "/"
         // create AudioStreamBasicDescription for PCM
         let desc = self.createBasicPCMDescription()
