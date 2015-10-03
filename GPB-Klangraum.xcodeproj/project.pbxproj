@@ -27,7 +27,7 @@
 		5080B0EF1B789F3D00066257 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0EC1B789F3D00066257 /* Math.swift */; };
 		5080B0F01B789F3D00066257 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5080B0EC1B789F3D00066257 /* Math.swift */; };
 		5084EB561B67DA9800066257 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5084EB551B67DA9800066257 /* AppDelegate.swift */; };
-		5084EB581B67DA9800066257 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5084EB571B67DA9800066257 /* ViewController.swift */; };
+		5084EB581B67DA9800066257 /* HearingTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5084EB571B67DA9800066257 /* HearingTestViewController.swift */; };
 		5084EB5B1B67DA9800066257 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB591B67DA9800066257 /* Main.storyboard */; };
 		5084EB5D1B67DA9800066257 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB5C1B67DA9800066257 /* Images.xcassets */; };
 		5084EB601B67DA9800066257 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB5E1B67DA9800066257 /* LaunchScreen.xib */; };
@@ -46,6 +46,10 @@
 		FA0577A41BA0314800DBEC49 /* Windowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779E1BA0314800DBEC49 /* Windowing.swift */; };
 		FA0577A61BA04F1C00DBEC49 /* FFTStrategies.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0577A51BA04F1C00DBEC49 /* FFTStrategies.swift */; };
 		FA2D63BF1BB412E5002BF14B /* alex.m4a in Resources */ = {isa = PBXBuildFile; fileRef = FA2D63BE1BB412D2002BF14B /* alex.m4a */; };
+		FA3D96F91BBEA2B70094F14D /* ToneWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3D96F81BBEA2B70094F14D /* ToneWidget.swift */; settings = {ASSET_TAGS = (); }; };
+		FA3D96FB1BBEA2E30094F14D /* NumericDial.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3D96FA1BBEA2E30094F14D /* NumericDial.swift */; settings = {ASSET_TAGS = (); }; };
+		FA3D96FF1BBEA3310094F14D /* SineWaveRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3D96FE1BBEA3310094F14D /* SineWaveRenderer.swift */; settings = {ASSET_TAGS = (); }; };
+		FA3D97011BBEA43D0094F14D /* SoundGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA3D97001BBEA43D0094F14D /* SoundGenerator.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,7 +111,7 @@
 		5084EB501B67DA9800066257 /* GPB-Klangraum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GPB-Klangraum.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5084EB541B67DA9800066257 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5084EB551B67DA9800066257 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5084EB571B67DA9800066257 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5084EB571B67DA9800066257 /* HearingTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HearingTestViewController.swift; sourceTree = "<group>"; };
 		5084EB5A1B67DA9800066257 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5084EB5C1B67DA9800066257 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5084EB5F1B67DA9800066257 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -128,6 +132,15 @@
 		FA05779E1BA0314800DBEC49 /* Windowing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windowing.swift; sourceTree = "<group>"; };
 		FA0577A51BA04F1C00DBEC49 /* FFTStrategies.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFTStrategies.swift; sourceTree = "<group>"; };
 		FA2D63BE1BB412D2002BF14B /* alex.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = alex.m4a; sourceTree = "<group>"; };
+		FA3D96F51BBE76E50094F14D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		FA3D96F81BBEA2B70094F14D /* ToneWidget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToneWidget.swift; sourceTree = "<group>"; };
+		FA3D96FA1BBEA2E30094F14D /* NumericDial.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumericDial.swift; sourceTree = "<group>"; };
+		FA3D96FE1BBEA3310094F14D /* SineWaveRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SineWaveRenderer.swift; sourceTree = "<group>"; };
+		FA3D97001BBEA43D0094F14D /* SoundGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundGenerator.swift; sourceTree = "<group>"; };
+		FAEB0A171BBEA84200B3D3FD /* libcsound.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcsound.a; path = Pods/AudioKit/AudioKit/Platforms/iOS/libs/libcsound.a; sourceTree = "<group>"; };
+		FAEB0A181BBEA84200B3D3FD /* libsndfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsndfile.a; path = Pods/AudioKit/AudioKit/Platforms/iOS/libs/libsndfile.a; sourceTree = "<group>"; };
+		FAEB0A1B1BBEA88900B3D3FD /* libAudioKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAudioKit.a; path = "Pods/../build/Debug-iphoneos/libAudioKit.a"; sourceTree = "<group>"; };
+		FAEB0A1D1BBEA8AE00B3D3FD /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,8 +253,8 @@
 		5084EB521B67DA9800066257 /* GPB-Klangraum */ = {
 			isa = PBXGroup;
 			children = (
+				FA3D96F71BBE97EA0094F14D /* HearingTest */,
 				5084EB551B67DA9800066257 /* AppDelegate.swift */,
-				5084EB571B67DA9800066257 /* ViewController.swift */,
 				5084EB591B67DA9800066257 /* Main.storyboard */,
 				5084EB5C1B67DA9800066257 /* Images.xcassets */,
 				5084EB5E1B67DA9800066257 /* LaunchScreen.xib */,
@@ -288,11 +301,28 @@
 		5084EB7C1B67E22000066257 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FAEB0A1D1BBEA8AE00B3D3FD /* AudioUnit.framework */,
+				FAEB0A1B1BBEA88900B3D3FD /* libAudioKit.a */,
+				FAEB0A171BBEA84200B3D3FD /* libcsound.a */,
+				FAEB0A181BBEA84200B3D3FD /* libsndfile.a */,
+				FA3D96F51BBE76E50094F14D /* CoreGraphics.framework */,
 				5097BD671B69039E00066257 /* AVFoundation.framework */,
 				5084EB7A1B67E1F600066257 /* CoreAudio.framework */,
 				5084EB781B67E1ED00066257 /* AudioToolbox.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FA3D96F71BBE97EA0094F14D /* HearingTest */ = {
+			isa = PBXGroup;
+			children = (
+				5084EB571B67DA9800066257 /* HearingTestViewController.swift */,
+				FA3D96F81BBEA2B70094F14D /* ToneWidget.swift */,
+				FA3D96FA1BBEA2E30094F14D /* NumericDial.swift */,
+				FA3D96FE1BBEA3310094F14D /* SineWaveRenderer.swift */,
+				FA3D97001BBEA43D0094F14D /* SoundGenerator.swift */,
+			);
+			name = HearingTest;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -354,6 +384,7 @@
 				5084EB4D1B67DA9800066257 /* Frameworks */,
 				5084EB4E1B67DA9800066257 /* Resources */,
 				5080B0E71B789DB500066257 /* Embed Frameworks */,
+				F90910B1AE4BF2D70158ECAB /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -467,6 +498,24 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		F90910B1AE4BF2D70158ECAB /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5080B0C41B789DB500066257 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -509,8 +558,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5084EB581B67DA9800066257 /* ViewController.swift in Sources */,
+				FA3D96FF1BBEA3310094F14D /* SineWaveRenderer.swift in Sources */,
+				5084EB581B67DA9800066257 /* HearingTestViewController.swift in Sources */,
+				FA3D96FB1BBEA2E30094F14D /* NumericDial.swift in Sources */,
+				FA3D97011BBEA43D0094F14D /* SoundGenerator.swift in Sources */,
 				5084EB561B67DA9800066257 /* AppDelegate.swift in Sources */,
+				FA3D96F91BBEA2B70094F14D /* ToneWidget.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -743,6 +796,11 @@
 				DEFINES_MODULE = NO;
 				INFOPLIST_FILE = "GPB-Klangraum/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/AudioKit/AudioKit/Platforms/iOS/libs",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "de.fh-koeln.inf.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -757,6 +815,11 @@
 				DEFINES_MODULE = NO;
 				INFOPLIST_FILE = "GPB-Klangraum/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/AudioKit/AudioKit/Platforms/iOS/libs",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "de.fh-koeln.inf.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OPTIMIZATION_LEVEL = "-O";

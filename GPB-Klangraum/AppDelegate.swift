@@ -18,10 +18,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
+        //doShit()
+
+        return true 
+    }
+    
+    private func doShit() {
         let samplingRate = 44100
         let n = 1024
         let audioFile = AudioFile()
-
+        
         let url = NSBundle.mainBundle().bundleURL
         if let data = audioFile.readAudioFileToFloatArray(String(url.URLByAppendingPathComponent("pascal.m4a"))) {
             
@@ -32,13 +38,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             let maxIndex = (length * max) / (samplingRate / 2 )
             let minIndex = (length * min) / (samplingRate / 2 )
-
+            
             let dataWithPadding = addZeroPadding(data, WhileModulo: n)
-
+            
             let window:[Float] = hamming(dataWithPadding.count)
             let windowedData = dataWithPadding * window
             let prepared = prepare(windowedData, steppingBy: n)
-
+            
             var result = [[Float]]()
             for prepare in prepared {
                 let a = FFT(initWithSamples: prepare, andStrategy: [AverageMappingStrategy(minIndex: minIndex, and: maxIndex)])
@@ -49,32 +55,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             
             let evenBetter = Array(result.flatten()) / window
-
+            
             print(NSBundle.mainBundle().resourcePath!)
             audioFile.safeSamples(evenBetter, ToPath: NSBundle.mainBundle().resourcePath! + "/new.caf")
         }
-//        var audioFile:AudioFile = AudioFile()
-//
-//        let aPath:String = audioFile.createDummyFile().dematerialize()!
-////        println(aPath)
-//
-//        let convertPath = audioFile.convertFileToLinearPCMFormat(NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!)
-//
-//        println("-----")
-//
-//        
-//        let audioPath:String = NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!
-//
-//        /*audioFile.openAudioFile(audioPath) --> audioFile.convertToLinearPCM -->*/
-//        let path = audioFile.safeSamples([0.0], ToPath: NSBundle.mainBundle().resourcePath! + "/dummy2.caf")
-//
-//        let result:[String:[Float]]? = audioFile.readAudioFileToSplitFloatArray(audioPath)
-//        if let r = result {
-//            println(r["left"]!.count)
-//            println(r["right"]!.count)
-//        }
-
-        return true 
+        //        var audioFile:AudioFile = AudioFile()
+        //
+        //        let aPath:String = audioFile.createDummyFile().dematerialize()!
+        ////        println(aPath)
+        //
+        //        let convertPath = audioFile.convertFileToLinearPCMFormat(NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!)
+        //
+        //        println("-----")
+        //
+        //
+        //        let audioPath:String = NSBundle.mainBundle().pathForResource("YellowNintendoHero-Muciojad", ofType: "mp3")!
+        //
+        //        /*audioFile.openAudioFile(audioPath) --> audioFile.convertToLinearPCM -->*/
+        //        let path = audioFile.safeSamples([0.0], ToPath: NSBundle.mainBundle().resourcePath! + "/dummy2.caf")
+        //
+        //        let result:[String:[Float]]? = audioFile.readAudioFileToSplitFloatArray(audioPath)
+        //        if let r = result {
+        //            println(r["left"]!.count)
+        //            println(r["right"]!.count)
+        //        }
     }
 
     func applicationWillResignActive(application: UIApplication) {
