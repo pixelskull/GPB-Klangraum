@@ -20,12 +20,36 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Hörtest" id="62i-xK-iy1">
-                        <barButtonItem key="rightBarButtonItem" title="Item" systemItem="done" id="PRa-ce-bfJ"/>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" title="Item" systemItem="done" id="PRa-ce-bfJ">
+                            <connections>
+                                <segue destination="odM-JG-5jm" kind="show" identifier="Show Player Identifier" id="IbE-OW-QzA"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1057" y="349"/>
+            <point key="canvasLocation" x="-995" y="349"/>
+        </scene>
+        <!--Player View Controller-->
+        <scene sceneID="1V9-FO-flo">
+            <objects>
+                <viewController id="odM-JG-5jm" customClass="PlayerViewController" customModule="GPB_Klangraum" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Yoc-pO-hOG"/>
+                        <viewControllerLayoutGuide type="bottom" id="6gA-S2-gbo"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="rbI-Sg-2Aw">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="88x-YY-4MB"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="b5I-2d-5H2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-273" y="349"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="btd-ZS-avV">
@@ -44,7 +68,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2tv-yw-qLu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="245" y="349"/>
+            <point key="canvasLocation" x="-1807" y="349"/>
         </scene>
     </scenes>
 </document>

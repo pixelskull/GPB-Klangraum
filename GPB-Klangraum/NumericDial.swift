@@ -8,17 +8,15 @@
 
 import UIKit
 
-class NumericDial: UIControl
-{
+class NumericDial: UIControl {
     let minimumValue = 0.0
     let maximumValue = 1.0
     let trackLayer = NumericDialTrack()
     let background = NumericDialBackground()
-    let label = UILabel();
+    let label = UILabel()
     let titleLabel = UILabel()
     
-    override init(frame: CGRect)
-    {
+    override init(frame: CGRect) {
         super.init(frame: frame)
         
         background.contentsScale = UIScreen.mainScreen().scale
@@ -32,6 +30,12 @@ class NumericDial: UIControl
         label.textColor = UIColor.blueColor()
         label.font = UIFont.systemFontOfSize(24)
         label.numberOfLines = 0
+        
+        let gesture = UILongPressGestureRecognizer(target: self, action: Selector("determineHearableFrequencies:"))
+        gesture.minimumPressDuration = CFTimeInterval(0.0)
+        label.addGestureRecognizer(gesture)
+        label.userInteractionEnabled = true
+        
         self.addSubview(label)
         
         titleLabel.textAlignment = NSTextAlignment.Center
@@ -42,27 +46,40 @@ class NumericDial: UIControl
         drawTrack()
     }
     
-    required init?(coder: NSCoder)
-    {
+    func determineHearableFrequencies(sender: UILongPressGestureRecognizer) {
+        switch sender.state {
+            case .Began:
+                let value = currentValue * Constants.frequencyScale
+                print(value)
+                NSUserDefaults.standardUserDefaults().setFloat(value, forKey: Constants.minFrequency)
+
+            case .Ended:
+                let value = currentValue * Constants.frequencyScale
+                print(value)
+                NSUserDefaults.standardUserDefaults().setFloat(value, forKey: Constants.maxFrequency)
+                NSNotificationCenter.defaultCenter().postNotificationName(Constants.StopToneGeneratorNotification, object: nil)
+            
+            default: break
+        }
+    }
+    
+    required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
     
-    override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool
-    {
+    override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
         setCurrentValueFromLocation(touch.locationInView(self))
         
         return true
     }
     
-    override func continueTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool
-    {
+    override func continueTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
         setCurrentValueFromLocation(touch.locationInView(self))
         
         return true
     }
     
-    private func setCurrentValueFromLocation(location : CGPoint)
-    {
+    private func setCurrentValueFromLocation(location : CGPoint) {
         let angle = atan2(location.x - (frame.width / 2), location.y - (frame.height / 2)) * 180/CGFloat(M_PI)
         let distance = hypot(location.x - (frame.width / 2), location.y - (frame.height / 2))
         

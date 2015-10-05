@@ -8,10 +8,9 @@
 
 import UIKit
 
-class ToneWidget: UIControl
-{
+class ToneWidget: UIControl {
     private let frequencyDial = NumericDial(frame: CGRectZero)
-    private let amplitudeDial = NumericDial(frame: CGRectZero)
+    //private let amplitudeDial = NumericDial(frame: CGRectZero)
     private let sineWaveRenderer = SineWaveRenderer(frame: CGRectZero)
     
     private let channelNumber: Int
@@ -24,13 +23,13 @@ class ToneWidget: UIControl
         
         addSubview(sineWaveRenderer)
         addSubview(frequencyDial)
-        addSubview(amplitudeDial)
+        //addSubview(amplitudeDial)
         
         frequencyDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
-        amplitudeDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
+        //amplitudeDial.addTarget(self, action: "dialChangeHander", forControlEvents: UIControlEvents.ValueChanged)
         
         frequencyDial.currentValue = 0.0
-        amplitudeDial.currentValue = 0.25
+        //amplitudeDial.currentValue = 0.25
         
         dialChangeHander()
     }
@@ -51,7 +50,7 @@ class ToneWidget: UIControl
     
     func getFrequencyAmplitudePair() -> FrequencyAmplitudePair
     {
-        return FrequencyAmplitudePair(frequency: frequencyDial.currentValue, amplitude: amplitudeDial.currentValue)
+        return FrequencyAmplitudePair(frequency: frequencyDial.currentValue, amplitude: Constants.amplitude)
     }
     
     func dialChangeHander()
@@ -65,10 +64,10 @@ class ToneWidget: UIControl
     {
         sineWaveRenderer.frame = CGRect(x: 0, y: 0, width: Constants.width, height: 125)
         frequencyDial.frame = CGRect(x: 0, y: 145, width: Constants.width, height: Constants.width)
-        amplitudeDial.frame = CGRect(x: 0, y: 355, width: Constants.width, height: Constants.width)
+        //amplitudeDial.frame = CGRect(x: 0, y: 355, width: Constants.width, height: Constants.width)
         
         frequencyDial.labelFunction = frequencyLabelFunction
-        amplitudeDial.labelFunction = amplitudeLabelFunction
+        //amplitudeDial.labelFunction = amplitudeLabelFunction
         
         sineWaveRenderer.setFrequencyAmplitudePairs([getFrequencyAmplitudePair()])
     }

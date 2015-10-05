@@ -8,8 +8,7 @@
 
 import UIKit
 
-class SineWaveRenderer: UIControl
-{
+class SineWaveRenderer: UIControl {
     let imageView: UIImageView = UIImageView(frame: CGRectZero)
     
     private var frequencyAplitudePairs = [FrequencyAmplitudePair]()
@@ -18,33 +17,25 @@ class SineWaveRenderer: UIControl
     let operationQueue = NSOperationQueue()
     var pendingOperation = false
     
-    
-    override func didMoveToSuperview()
-    {
+    override func didMoveToSuperview() {
         addSubview(imageView)
         
         backgroundColor = UIColor.blackColor()
         layer.cornerRadius = 10
     }
     
-    override func layoutSubviews()
-    {
+    override func layoutSubviews() {
         imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
     }
     
     
-    final func setFrequencyAmplitudePairs(value: [FrequencyAmplitudePair])
-    {
+    final func setFrequencyAmplitudePairs(value: [FrequencyAmplitudePair]) {
         frequencyAplitudePairs = value
         
-        if frame == CGRectZero
-        {
+        if frame == CGRectZero {
             return
-        }
-        else if let _operation = operation
-        {
-            if _operation.executing
-            {
+        } else if let _operation = operation {
+            if _operation.executing {
                 self.pendingOperation = true
                 return
             }
@@ -57,26 +48,22 @@ class SineWaveRenderer: UIControl
         operationQueue.addOperation(operation!)
     }
     
-    final func completionBlock()
-    {
-        if let _operation = operation
-        {
-            dispatch_async(dispatch_get_main_queue(), {
+    final func completionBlock() {
+        if let _operation = operation {
+            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
                 self.imageView.image = _operation.finalImage
                 
-                if self.pendingOperation
-                {
+                if self.pendingOperation {
                     self.pendingOperation = false;
                     self.setFrequencyAmplitudePairs(self.frequencyAplitudePairs)
                 }
-            })
+            }
         }
     }
     
 }
 
-class SineWaveRendererOperation: NSOperation
-{
+class SineWaveRendererOperation: NSOperation {
     private let colorRef = CGColorGetComponents(UIColor.yellowColor().CGColor)
     private let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
     private let bitmapInfo:CGBitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.PremultipliedFirst.rawValue)
@@ -87,41 +74,35 @@ class SineWaveRendererOperation: NSOperation
     
     var finalImage: UIImage?
     
-    init (frequencyAplitudePairs: [FrequencyAmplitudePair], width: Int, height: Int)
-    {
+    init (frequencyAplitudePairs: [FrequencyAmplitudePair], width: Int, height: Int) {
         self.frequencyAplitudePairs = frequencyAplitudePairs
         self.width = width
         self.height = height
     }
     
-    override func main() -> ()
-    {
-        var pixelArray = [PixelData](count: width * height, repeatedValue: PixelData(a: 0, r:0, g: 0, b: 0));
-        var previousCurveY:Double!
+    override func main() -> () {
+        var pixelArray = [PixelData](count: width * height, repeatedValue: PixelData(a: 0, r:0, g: 0, b: 0))
+        var previousCurveY: Double!
         
-        for i in 1 ..< width
-        {
+        for i in 1 ..< width {
             let scale = M_PI * 5
             let curveX = Double(i)
             
             var curveY = Double(height / 2)
             
-            for pair in frequencyAplitudePairs
-            {
+            for pair in frequencyAplitudePairs {
                 let frequency = Double(pair.frequency)
                 let velocity = Double(pair.amplitude)
                 
                 curveY += ((sin(curveX / scale * frequency * 5)) * (velocity * 10))
             }
             
-            if previousCurveY == nil
-            {
+            if previousCurveY == nil {
                 previousCurveY = curveY
             }
             
             // draw line from previous
-            for yy in Int(min(previousCurveY, curveY)) ... Int(max(previousCurveY, curveY))
-            {
+            for yy in Int(min(previousCurveY, curveY)) ... Int(max(previousCurveY, curveY)) {
                 let pixelIndex : Int = (yy * width + i);
                 
                 pixelArray[pixelIndex].r = UInt8(255 * colorRef[0]);
@@ -129,16 +110,14 @@ class SineWaveRendererOperation: NSOperation
                 pixelArray[pixelIndex].b = UInt8(255 * colorRef[2]);
                 
                 let pixelIndex2 : Int = pixelIndex + 1
-                if pixelIndex2 < pixelArray.count
-                {
+                if pixelIndex2 < pixelArray.count {
                     pixelArray[pixelIndex2].r = UInt8(255 * colorRef[0]);
                     pixelArray[pixelIndex2].g = UInt8(255 * colorRef[1]);
                     pixelArray[pixelIndex2].b = UInt8(255 * colorRef[2]);
                 }
                 
                 let pixelIndex3 : Int = ((yy + 1) * width + i);
-                if pixelIndex3 < pixelArray.count
-                {
+                if pixelIndex3 < pixelArray.count {
                     pixelArray[pixelIndex3].r = UInt8(255 * colorRef[0]);
                     pixelArray[pixelIndex3].g = UInt8(255 * colorRef[1]);
                     pixelArray[pixelIndex3].b = UInt8(255 * colorRef[2]);
@@ -151,8 +130,7 @@ class SineWaveRendererOperation: NSOperation
         finalImage = imageFromARGB32Bitmap(pixelArray, width: Int(width), height: Int(height))
     }
     
-    private func imageFromARGB32Bitmap(pixels:[PixelData], width:Int, height:Int)->UIImage
-    {
+    private func imageFromARGB32Bitmap(pixels:[PixelData], width:Int, height:Int)->UIImage {
         let bitsPerComponent:Int = 8
         let bitsPerPixel:Int = 32
         
@@ -167,20 +145,17 @@ class SineWaveRendererOperation: NSOperation
     
 }
 
-struct FrequencyAmplitudePair
-{
+struct FrequencyAmplitudePair {
     var frequency: Float
     var amplitude: Float
     
-    init (frequency: Float, amplitude: Float)
-    {
+    init (frequency: Float, amplitude: Float) {
         self.frequency = frequency
         self.amplitude = amplitude
     }
 }
 
-struct PixelData
-{
+struct PixelData {
     var a:UInt8 = 255
     var r:UInt8
     var g:UInt8
