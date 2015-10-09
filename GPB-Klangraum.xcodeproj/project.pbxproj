@@ -15,7 +15,7 @@
 		504DCBE21BA8592400066257 /* Windowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779E1BA0314800DBEC49 /* Windowing.swift */; };
 		504DCBE31BA8592600066257 /* Unsafeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779D1BA0314800DBEC49 /* Unsafeable.swift */; };
 		504DCBE41BA8592A00066257 /* RealVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779C1BA0314800DBEC49 /* RealVectorOperations.swift */; };
-		504DCBE51BA8592C00066257 /* FFTOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779B1BA0314800DBEC49 /* FFTOperations.swift */; };
+		504DCBE51BA8592C00066257 /* FFTHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779B1BA0314800DBEC49 /* FFTHelper.swift */; };
 		504DCBE61BA8592F00066257 /* ComplexVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779A1BA0314800DBEC49 /* ComplexVectorOperations.swift */; };
 		504DCBE71BA8593200066257 /* ComplexVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0577991BA0314800DBEC49 /* ComplexVector.swift */; };
 		50717CFE1BB4300C00066257 /* pascal.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 50717CFD1BB42FFE00066257 /* pascal.m4a */; };
@@ -39,8 +39,8 @@
 		50D5C0DE1B84DAED00066257 /* KlangraumKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50F007B11B8C8B3D00066257 /* Failable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F007B01B8C8B3D00066257 /* Failable.swift */; };
 		FA05779F1BA0314800DBEC49 /* ComplexVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA0577991BA0314800DBEC49 /* ComplexVector.swift */; };
-		FA0577A01BA0314800DBEC49 /* ComplexVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779A1BA0314800DBEC49 /* ComplexVectorOperations.swift */; };
-		FA0577A11BA0314800DBEC49 /* FFTOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779B1BA0314800DBEC49 /* FFTOperations.swift */; };
+		FA0577A01BA0314800DBEC49 /* ComplexVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779A1BA0314800DBEC49 /* ComplexVectorOperations.swift */; settings = {COMPILER_FLAGS = "-w"; }; };
+		FA0577A11BA0314800DBEC49 /* FFTHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779B1BA0314800DBEC49 /* FFTHelper.swift */; };
 		FA0577A21BA0314800DBEC49 /* RealVectorOperations.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779C1BA0314800DBEC49 /* RealVectorOperations.swift */; };
 		FA0577A31BA0314800DBEC49 /* Unsafeable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779D1BA0314800DBEC49 /* Unsafeable.swift */; };
 		FA0577A41BA0314800DBEC49 /* Windowing.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA05779E1BA0314800DBEC49 /* Windowing.swift */; };
@@ -157,7 +157,7 @@
 		50F007B01B8C8B3D00066257 /* Failable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Failable.swift; sourceTree = "<group>"; };
 		FA0577991BA0314800DBEC49 /* ComplexVector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplexVector.swift; sourceTree = "<group>"; };
 		FA05779A1BA0314800DBEC49 /* ComplexVectorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComplexVectorOperations.swift; sourceTree = "<group>"; };
-		FA05779B1BA0314800DBEC49 /* FFTOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFTOperations.swift; sourceTree = "<group>"; };
+		FA05779B1BA0314800DBEC49 /* FFTHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFTHelper.swift; sourceTree = "<group>"; };
 		FA05779C1BA0314800DBEC49 /* RealVectorOperations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealVectorOperations.swift; sourceTree = "<group>"; };
 		FA05779D1BA0314800DBEC49 /* Unsafeable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Unsafeable.swift; sourceTree = "<group>"; };
 		FA05779E1BA0314800DBEC49 /* Windowing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Windowing.swift; sourceTree = "<group>"; };
@@ -221,7 +221,7 @@
 			children = (
 				FA0577991BA0314800DBEC49 /* ComplexVector.swift */,
 				FA05779A1BA0314800DBEC49 /* ComplexVectorOperations.swift */,
-				FA05779B1BA0314800DBEC49 /* FFTOperations.swift */,
+				FA05779B1BA0314800DBEC49 /* FFTHelper.swift */,
 				FA05779C1BA0314800DBEC49 /* RealVectorOperations.swift */,
 				FA05779D1BA0314800DBEC49 /* Unsafeable.swift */,
 				FA05779E1BA0314800DBEC49 /* Windowing.swift */,
@@ -292,13 +292,13 @@
 			children = (
 				FA3D96F71BBE97EA0094F14D /* HearingTest */,
 				5084EB551B67DA9800066257 /* AppDelegate.swift */,
+				FA6BDAB81BC292AC00F7B2A2 /* PlayerViewController.swift */,
 				FA3CECF01BC022090019EA6F /* AudioKit.swift */,
 				5084EB591B67DA9800066257 /* Main.storyboard */,
 				5084EB5C1B67DA9800066257 /* Images.xcassets */,
 				5084EB5E1B67DA9800066257 /* LaunchScreen.xib */,
 				5084EB531B67DA9800066257 /* Supporting Files */,
 				FA3CECF21BC022A10019EA6F /* Bridging-Header.h */,
-				FA6BDAB81BC292AC00F7B2A2 /* PlayerViewController.swift */,
 			);
 			path = "GPB-Klangraum";
 			sourceTree = "<group>";
@@ -589,7 +589,7 @@
 				50D5C0DD1B84D3A200066257 /* AudioFile.swift in Sources */,
 				50F007B11B8C8B3D00066257 /* Failable.swift in Sources */,
 				FA0577A41BA0314800DBEC49 /* Windowing.swift in Sources */,
-				FA0577A11BA0314800DBEC49 /* FFTOperations.swift in Sources */,
+				FA0577A11BA0314800DBEC49 /* FFTHelper.swift in Sources */,
 				5080B0ED1B789F3D00066257 /* FFT.swift in Sources */,
 				5080B0EF1B789F3D00066257 /* Math.swift in Sources */,
 				FA0577A31BA0314800DBEC49 /* Unsafeable.swift in Sources */,
@@ -603,7 +603,7 @@
 			files = (
 				5080B0DD1B789DB500066257 /* KlangraumKitTests.swift in Sources */,
 				504DCBE41BA8592A00066257 /* RealVectorOperations.swift in Sources */,
-				504DCBE51BA8592C00066257 /* FFTOperations.swift in Sources */,
+				504DCBE51BA8592C00066257 /* FFTHelper.swift in Sources */,
 				504DCBE31BA8592600066257 /* Unsafeable.swift in Sources */,
 				504DCBDF1BA8591B00066257 /* FFTStrategies.swift in Sources */,
 				504DCBE71BA8593200066257 /* ComplexVector.swift in Sources */,

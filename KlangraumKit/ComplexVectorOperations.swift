@@ -30,7 +30,7 @@ public func abs( var x: SplitComplexVector<Double> ) -> [Double] {
 public func magnitudes( var x: SplitComplexVector<Float> ) -> [Float] {
     var magnitudes = [Float]( count: x.count, repeatedValue: 0 )
     
-    var dspSplitComplex = DSPSplitComplex( realp: &x.real, imagp: &x.imag )
+    let dspSplitComplex = DSPSplitComplex( realp: &x.real, imagp: &x.imag )
     
     for i in 0..<x.count {
         magnitudes[i] = sqrt(dspSplitComplex.realp[i] * dspSplitComplex.realp[i] + dspSplitComplex.imagp[i] * dspSplitComplex.imagp[i])

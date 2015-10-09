@@ -9,7 +9,7 @@
 import Foundation
 import Accelerate
 
-public protocol Filterable {
+internal protocol Filterable {
     
     var strategy: [FilterStrategy] { get }
 }
@@ -65,10 +65,6 @@ extension MappingStrategy {
         }
         
         return result
-    }
-
-    func average(input:[Float]) -> Float {
-        return sum(input) / Float(input.count)
     }
     
     public func apply(x: [Float]) -> [Float] {
@@ -126,7 +122,7 @@ public class AverageMappingStrategy: MappingStrategy {
     public let minIndex: Int
     public let maxIndex: Int
     
-    public init(minIndex: Int, and maxIndex: Int) {
+    public init(minIndex: Int, andMaxIndex maxIndex: Int) {
         self.minIndex = minIndex
         self.maxIndex = maxIndex
     }

@@ -7,17 +7,78 @@
 //
 
 import UIKit
+import KlangraumKit
+
+extension UIAlertController {
+    
+    class func alertControllerWithTitle(title:String, message:String) -> UIAlertController {
+        let controller = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+        controller.addAction(UIAlertAction(title: "OK", style: .Default, handler: nil))
+        return controller
+    }  
+}
 
 class PlayerViewController: UIViewController {
 
+    private let samplingRate = 44100
+    private let n = 1024
+    
     var minFrequency: Float?
     var maxFrequency: Float?
     
+    var mappedSamples: [Float]? { didSet { play() } }
+    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView! {
+        didSet {
+            activityIndicator?.hidesWhenStopped = true
+            activityIndicator?.startAnimating()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        print(minFrequency)
-        print(maxFrequency)
+        
+        let audioFile = AudioFile()
+        let url = NSBundle.mainBundle().bundleURL
+        let filename = "pascal.m4a"
+        
+        guard let data = audioFile.readAudioFileToFloatArray(String(url.URLByAppendingPathComponent(filename))) else {
+            let alert = UIAlertController.alertControllerWithTitle("Fehler", message: "Die Datei \(filename) konnte nicht geladen werden.")
+            presentViewController(alert, animated: true, completion: nil)
+            return
+        }
+        
+        guard let min = minFrequency, max = maxFrequency else {
+            let alert = UIAlertController.alertControllerWithTitle("Fehler", message: "Es wurden keine Frequenzen übergeben.")
+            presentViewController(alert, animated: true, completion: nil)
+            return
+        }
+        
+        dispatch_async(dispatch_get_global_queue(Int(DISPATCH_QUEUE_PRIORITY_BACKGROUND), 0)) { [unowned self] in
+            let length = self.n / 2
+            
+            let maxIndex = (length * Int(max)) / (self.samplingRate / 2 )
+            let minIndex = (length * Int(min)) / (self.samplingRate / 2 )
+            
+            let padded = addZeroPadding(data, whileModulo: self.n)
+            let window: [Float] = hamming(padded.count)
+            let windowedData = window * padded
+            let prepared = prepare(windowedData, steppingBy: self.n)
+            
+            let result = prepared.flatMap { samples -> [Float] in
+                let f = FFT(initWithSamples: samples, andStrategy: [AverageMappingStrategy(minIndex: minIndex, andMaxIndex: maxIndex)])
+                return f.forward() --> f.applyStrategy --> f.inverse
+            }
+            
+            dispatch_async(dispatch_get_main_queue()) { [unowned self] in
+                self.mappedSamples = result / window
+                
+                if self.activityIndicator.isAnimating() { self.activityIndicator?.stopAnimating() }
+                
+                let alert = UIAlertController.alertControllerWithTitle("Fertig", message: "Wir haben krassen shit gemacht!")
+                self.presentViewController(alert, animated: true, completion: nil)
+            }
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,15 +86,5 @@ class PlayerViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    func play() { }
 }

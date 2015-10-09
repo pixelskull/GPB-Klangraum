@@ -54,6 +54,38 @@ if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePa
     let maxIndex = (length * max) / (samplingRate / 2 )
     let minIndex = (length * min) / (samplingRate / 2 )
     
+    let a = Array(data[0...n])
+    let padded = addZeroPadding(a, WhileModulo: n)
+    let window: [Float] = hamming(padded.count)
+    let new = window * padded
+    
+    let x = prepare(new, steppingBy: n).flatMap { samples -> [Float] in
+        let f = FFT(initWithSamples: samples)
+        return f.forward() --> f.applyStrategy --> f.inverse
+    }
+    
+    //let aa = addZeroPadding(a, WhileModulo: n)
+    let aaa = prepare(new, steppingBy: n)
+    var result = [[Float]]()
+    for i in aaa {
+        let b = FFT(initWithSamples: i, andStrategy: [AverageMappingStrategy(minIndex: minIndex, and: maxIndex)])
+        let c = b.forward()
+        let d = b.applyStrategy(c)
+        let e = b.inverse(d)
+        
+        result.append(e)
+    }
+    
+    plot(a, title: "a")
+    let z = (x / window)
+    let zz = z[0...z.count / 2]
+    plot(Array(zz), title: "backed")
+    
+
+    /*let window: [Float] = hamming(data.count)
+    let windowed = data * window
+    let inverse = windowed / window*/
+    
     /* TESTDATEN
     var a = [Float](count: 300, repeatedValue: Float(0.0))
     for i in 0..<a.count {

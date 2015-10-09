@@ -22,7 +22,7 @@
                     <navigationItem key="navigationItem" title="Hörtest" id="62i-xK-iy1">
                         <barButtonItem key="rightBarButtonItem" enabled="NO" title="Item" systemItem="done" id="PRa-ce-bfJ">
                             <connections>
-                                <segue destination="odM-JG-5jm" kind="show" identifier="Show Player Identifier" id="IbE-OW-QzA"/>
+                                <segue destination="odM-JG-5jm" kind="presentation" identifier="Show Player Identifier" id="IbE-OW-QzA"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -42,10 +42,23 @@
                     <view key="view" contentMode="scaleToFill" id="rbI-Sg-2Aw">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="aHm-Kq-WyS">
+                                <rect key="frame" x="290" y="290" width="20" height="20"/>
+                                <animations/>
+                            </activityIndicatorView>
+                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="aHm-Kq-WyS" firstAttribute="centerX" secondItem="rbI-Sg-2Aw" secondAttribute="centerX" id="JjJ-Az-lpG"/>
+                            <constraint firstItem="aHm-Kq-WyS" firstAttribute="centerY" secondItem="rbI-Sg-2Aw" secondAttribute="centerY" id="oru-u3-BOV"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="88x-YY-4MB"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="aHm-Kq-WyS" id="nE6-od-G0z"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b5I-2d-5H2" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

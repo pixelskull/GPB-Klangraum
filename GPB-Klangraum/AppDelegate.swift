@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let maxIndex = (length * max) / (samplingRate / 2 )
             let minIndex = (length * min) / (samplingRate / 2 )
             
-            let dataWithPadding = addZeroPadding(data, WhileModulo: n)
+            let dataWithPadding = addZeroPadding(data, whileModulo: n)
             
             let window:[Float] = hamming(dataWithPadding.count)
             let windowedData = dataWithPadding * window
@@ -47,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             var result = [[Float]]()
             for prepare in prepared {
-                let a = FFT(initWithSamples: prepare, andStrategy: [AverageMappingStrategy(minIndex: minIndex, and: maxIndex)])
+                let a = FFT(initWithSamples: prepare, andStrategy: [AverageMappingStrategy(minIndex: minIndex, andMaxIndex: maxIndex)])
                 let b = a.forward()
                 let c = a.applyStrategy(b)
                 let d = a.inverse(c)
