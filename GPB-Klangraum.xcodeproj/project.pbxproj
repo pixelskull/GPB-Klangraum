@@ -35,6 +35,7 @@
 		5084EB771B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */; };
 		5084EB7B1B67E1F600066257 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5084EB7A1B67E1F600066257 /* CoreAudio.framework */; };
 		5097BD681B69039E00066257 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5097BD671B69039E00066257 /* AVFoundation.framework */; };
+		50ACCA311BCA63B200066257 /* NoiseReductionStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ACCA301BCA63B200066257 /* NoiseReductionStrategy.swift */; settings = {ASSET_TAGS = (); }; };
 		50D5C0DD1B84D3A200066257 /* AudioFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D5C0DC1B84D3A200066257 /* AudioFile.swift */; };
 		50D5C0DE1B84DAED00066257 /* KlangraumKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50F007B11B8C8B3D00066257 /* Failable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F007B01B8C8B3D00066257 /* Failable.swift */; };
@@ -161,6 +162,7 @@
 		5084EB781B67E1ED00066257 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		5084EB7A1B67E1F600066257 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		5097BD671B69039E00066257 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		50ACCA301BCA63B200066257 /* NoiseReductionStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoiseReductionStrategy.swift; sourceTree = "<group>"; };
 		50D5C0DC1B84D3A200066257 /* AudioFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioFile.swift; sourceTree = "<group>"; };
 		50F007B01B8C8B3D00066257 /* Failable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Failable.swift; sourceTree = "<group>"; };
 		50F09A0A1BC9889E00066257 /* AudioKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AudioKit.xcodeproj; path = AudioKit/AudioKit.xcodeproj; sourceTree = "<group>"; };
@@ -239,6 +241,7 @@
 				50F007B01B8C8B3D00066257 /* Failable.swift */,
 				50D5C0DC1B84D3A200066257 /* AudioFile.swift */,
 				FA0577A51BA04F1C00DBEC49 /* FFTStrategies.swift */,
+				50ACCA301BCA63B200066257 /* NoiseReductionStrategy.swift */,
 				5080B0EB1B789F3D00066257 /* FFT.swift */,
 				5080B0EC1B789F3D00066257 /* Math.swift */,
 				5080B0CD1B789DB500066257 /* KlangraumKit.h */,
@@ -615,6 +618,7 @@
 				FA05779F1BA0314800DBEC49 /* ComplexVector.swift in Sources */,
 				50D5C0DD1B84D3A200066257 /* AudioFile.swift in Sources */,
 				50F007B11B8C8B3D00066257 /* Failable.swift in Sources */,
+				50ACCA311BCA63B200066257 /* NoiseReductionStrategy.swift in Sources */,
 				FA0577A41BA0314800DBEC49 /* Windowing.swift in Sources */,
 				FA0577A11BA0314800DBEC49 /* FFTHelper.swift in Sources */,
 				5080B0ED1B789F3D00066257 /* FFT.swift in Sources */,
