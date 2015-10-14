@@ -23,7 +23,7 @@ public class NoiseReductionStrategy: FilterStrategy {
             if value >= amdf {
                 result.append(value)
             } else {
-                result.append(value/2)
+                result.append(0.0)
             }
         }
 
@@ -58,4 +58,12 @@ public class NoiseReductionStrategy: FilterStrategy {
         }
         return tmp / Float(x.count)
     }
+
+//    func gaussianFilter(x:Float) -> Float {
+////        var result:[Float] = [Float]()
+////        let alpha:Float = sqrt(log(2.0)) / sqrt(2)
+//        let alpha:Float = Float(M_PI) / sqrt(log(sqrt(2.0)))
+////        return exp((-1.0*(alpha*alpha))*(x*x))
+//        return abs(exp(-1.0*((x/(2*alpha))*(x/(2*alpha)))))
+//    }
 }

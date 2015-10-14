@@ -88,8 +88,11 @@ public class FFT: Transformation, Filterable {
             vDSP_ztoc(&dspSplitComplex, 1, resultAsComplex, 2, vDSP_Length(splitComplex.count))
         }
         
-        result = strategy.first!.apply(result)
-        
+//        result = strategy.first!.apply(result)
+        for s in strategy {
+            result = s.apply(result)
+        }
+
         result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
             let xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
             vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
