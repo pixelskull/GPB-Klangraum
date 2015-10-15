@@ -48,7 +48,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             var result = [[Float]]()
             for prepare in prepared {
-                let a = FFT(initWithSamples: prepare, andStrategy: [NoiseReductionStrategy(), MeanFilterStrategy()])
+                let a = FFT(initWithSamples: prepare, andStrategy: [NoiseReductionStrategy(), MeanFilterStrategy() /*NoiseCancelationStrategy()*/])
                 let b = a.forward()
                 let c = a.applyStrategy(b)
                 let d = a.inverse(c)
