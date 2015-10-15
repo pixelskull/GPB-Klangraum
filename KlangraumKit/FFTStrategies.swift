@@ -106,7 +106,7 @@ public class MaxMappingStrategy: MappingStrategy {
     public let minIndex: Int
     public let maxIndex: Int
     
-    public init(minIndex: Int, and maxIndex: Int) {
+    public init(minIndex: Int, andmaxIndex maxIndex: Int) {
         self.minIndex = minIndex
         self.maxIndex = maxIndex
     }

@@ -66,7 +66,7 @@ class PlayerViewController: UIViewController {
             let prepared = prepare(windowedData, steppingBy: self.n)
             
             let result = prepared.flatMap { samples -> [Float] in
-                let f = FFT(initWithSamples: samples, andStrategy: [AverageMappingStrategy(minIndex: minIndex, andMaxIndex: maxIndex)])
+                let f = FFT(initWithSamples: samples, andStrategy: [NoiseReductionStrategy(), AverageMappingStrategy(minIndex: minIndex, andMaxIndex: maxIndex)])
                 return f.forward() --> f.applyStrategy --> f.inverse
             }
             
