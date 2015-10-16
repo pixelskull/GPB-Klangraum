@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Hörtest-->
@@ -47,17 +48,35 @@
                                 <rect key="frame" x="290" y="290" width="20" height="20"/>
                                 <animations/>
                             </activityIndicatorView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DR6-YO-5hv">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <animations/>
+                                <items>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="q1i-bo-hAi"/>
+                                    <barButtonItem systemItem="play" id="cAC-Rn-rVc">
+                                        <connections>
+                                            <action selector="playPauseButtonAction:" destination="odM-JG-5jm" id="oFu-Ws-6VR"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="Eti-nQ-g2R"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="DR6-YO-5hv" secondAttribute="trailing" constant="-20" id="DlS-ce-Ifr"/>
                             <constraint firstItem="aHm-Kq-WyS" firstAttribute="centerX" secondItem="rbI-Sg-2Aw" secondAttribute="centerX" id="JjJ-Az-lpG"/>
+                            <constraint firstItem="DR6-YO-5hv" firstAttribute="leading" secondItem="rbI-Sg-2Aw" secondAttribute="leadingMargin" constant="-20" id="Obq-hV-a04"/>
+                            <constraint firstItem="6gA-S2-gbo" firstAttribute="top" secondItem="DR6-YO-5hv" secondAttribute="bottom" id="h6u-RK-ZIQ"/>
                             <constraint firstItem="aHm-Kq-WyS" firstAttribute="centerY" secondItem="rbI-Sg-2Aw" secondAttribute="centerY" id="oru-u3-BOV"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="88x-YY-4MB"/>
                     <connections>
                         <outlet property="activityIndicator" destination="aHm-Kq-WyS" id="nE6-od-G0z"/>
+                        <outlet property="playPauseButton" destination="cAC-Rn-rVc" id="Pxb-aq-LZC"/>
+                        <outlet property="toolbar" destination="DR6-YO-5hv" id="gp7-Ow-wx2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="b5I-2d-5H2" userLabel="First Responder" sceneMemberID="firstResponder"/>

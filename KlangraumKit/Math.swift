@@ -84,7 +84,7 @@ public func gcd(m:Int, var n:Int) -> Int {
 }
 
 public func lcm(a:Int, b:Int) -> Int {
-    return (a*b) / gcd(a, n: b)
+    return (a * b) / gcd(a, n: b)
 }
 
 

@@ -38,7 +38,7 @@ public class NoiseReductionStrategy: FilterStrategy {
     }
 
     func averageNoiseMagnitudes(x:[Float]) -> AverageNoiseMagnitude {
-        var noise = AverageNoiseMagnitude.sharedInstance
+        let noise = AverageNoiseMagnitude.sharedInstance
         noise.anm = (sum(x) / Float(x.count))
         return noise
     }

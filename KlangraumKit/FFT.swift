@@ -80,20 +80,17 @@ public class FFT: Transformation, Filterable {
     
     public func applyStrategy(x: SplitComplexVector<Float>) -> SplitComplexVector<Float> {
         var splitComplex = x
-        var result = [Float](count: length, repeatedValue: 0)
+        let result = [Float](count: length, repeatedValue: 0)
         var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
 
         result.withUnsafeBufferPointer { (resultPointer: UnsafeBufferPointer<Float>) -> Void in
             let resultAsComplex = UnsafeMutablePointer<DSPComplex>( resultPointer.baseAddress )
             vDSP_ztoc(&dspSplitComplex, 1, resultAsComplex, 2, vDSP_Length(splitComplex.count))
         }
-        
-//        result = strategy.first!.apply(result)
-        for s in strategy {
-            result = s.apply(result)
-        }
 
-        result.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
+        let applied = strategy.reduce(result) { $1.apply($0) }
+
+        applied.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
             let xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
             vDSP_ctoz(xAsComplex, 2, &dspSplitComplex, 1, vDSP_Length(splitComplex.count))
         }

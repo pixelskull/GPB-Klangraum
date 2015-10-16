@@ -33,7 +33,6 @@ public class NoiseCancelationStrategy: FilterStrategy {
                 result.append(0.0)
             }
         }
-
         return result
     }
 

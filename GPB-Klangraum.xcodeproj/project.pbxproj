@@ -916,7 +916,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "de.fh-koeln.inf.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/GPB-Klangraum/Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				USER_HEADER_SEARCH_PATHS = "AudioKit/AudioKit/**";
 			};
 			name = Debug;
