@@ -172,7 +172,7 @@ public class AudioFile {
             wErr = ExtAudioFileWrite(extAudio, buffer.mBuffers.mDataByteSize, &buffer)
             // if no error return the value with Result-Pattern, if not return Failure
             if wErr == noErr {
-                return Failable.Success(Box(path + name))
+                return Failable.Success(Box(path + "/" + name))
             } else {
                 return Failable.Failure("saveFilePCMFormatedAtPath()::: File not created OSStatus \(wErr)")
             }

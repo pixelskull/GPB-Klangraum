@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
 
-        //doShit()
+//        doShit()
 
         return true 
     }
@@ -31,23 +31,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let url = NSBundle.mainBundle().bundleURL
         if let data = audioFile.readAudioFileToFloatArray(String(url.URLByAppendingPathComponent("pascal.m4a"))) {
             
-            let max = 13000
-            let min = 600
+            let max = 13790
+            let min = 0
             
             let length = n / 2
-            
+
             let maxIndex = (length * max) / (samplingRate / 2 )
             let minIndex = (length * min) / (samplingRate / 2 )
-            
+
             let dataWithPadding = addZeroPadding(data, whileModulo: n)
             
             let window:[Float] = hamming(dataWithPadding.count)
             let windowedData = dataWithPadding * window
             let prepared = prepare(windowedData, steppingBy: n)
+            print(prepared.count)
             
             var result = [[Float]]()
             for prepare in prepared {
-                let a = FFT(initWithSamples: prepare, andStrategy: [AverageMappingStrategy(minIndex: minIndex, andMaxIndex: maxIndex)])
+                let a = FFT(initWithSamples: prepare, andStrategy: [NoiseReductionStrategy(), /*MeanFilterStrategy(), MaxMappingStrategy(minIndex: minIndex, andMaxIndex: maxIndex)*/ AverageMappingStrategy(minIndex: minIndex, andMaxIndex: maxIndex)/*, NoiseCancelationStrategy()*/])
                 let b = a.forward()
                 let c = a.applyStrategy(b)
                 let d = a.inverse(c)

@@ -32,6 +32,11 @@ extension MappingStrategy {
     private func interpolate(values:[Float], upsamplingSize lcm:Int) -> [Float] {
         var result = [Float](count: lcm, repeatedValue: 0.0)
         let stepSize = lcm / values.count
+
+        guard stepSize > 0 else {
+            return values
+        }
+
         var f:Float = 1.1
 
         for i in 0.stride(through: result.count-1, by: stepSize) {
@@ -69,21 +74,14 @@ extension MappingStrategy {
     
     public func apply(x: [Float]) -> [Float] {
         var result:[Float] = [Float](count: x.count, repeatedValue: 0.0)
-        print(result.count)
-        print("upsamplingFactor...")
         let upsamplingFactor = lcm(x.count, b: (self.maxIndex - self.minIndex))
-        print("upsampling...")
         let upsampling = self.interpolate(x, upsamplingSize: abs(upsamplingFactor))
-        print("decimation")
-        let decimationFactor = upsampling.count / (self.maxIndex - self.minIndex)
-        print("\(abs(decimationFactor)) = \(upsampling.count) / \(self.maxIndex) - \(self.minIndex)")
-        let downsampled = self.desample(upsampling, decimationFactor: abs(decimationFactor))
-        print("----------------------------")
-        print("\(maxIndex) und \(minIndex)")
-        result.replaceRange(self.minIndex..<self.maxIndex, with: downsampled)
-        print("replaced....")
-        print(result.count)
 
+        guard upsampling != x else { return result }
+
+        let decimationFactor = upsampling.count / (self.maxIndex - self.minIndex)
+        let downsampled = self.desample(upsampling, decimationFactor: abs(decimationFactor))
+        result.replaceRange(self.minIndex..<self.maxIndex, with: downsampled)
 
 //        let ratio = Float(x.count) / Float(maxIndex - minIndex) // 1,73559322
 //        let toFit = Int(round(abs(ratio))) // 2
@@ -106,7 +104,7 @@ public class MaxMappingStrategy: MappingStrategy {
     public let minIndex: Int
     public let maxIndex: Int
     
-    public init(minIndex: Int, and maxIndex: Int) {
+    public init(minIndex: Int, andmaxIndex maxIndex: Int) {
         self.minIndex = minIndex
         self.maxIndex = maxIndex
     }

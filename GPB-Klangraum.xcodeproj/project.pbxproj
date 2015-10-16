@@ -35,12 +35,13 @@
 		5084EB771B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5084EB761B67DFA300066257 /* YellowNintendoHero-Muciojad.mp3 */; };
 		5084EB7B1B67E1F600066257 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5084EB7A1B67E1F600066257 /* CoreAudio.framework */; };
 		5097BD681B69039E00066257 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5097BD671B69039E00066257 /* AVFoundation.framework */; };
+		50ACCA311BCA63B200066257 /* NoiseCancelationStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ACCA301BCA63B200066257 /* NoiseCancelationStrategy.swift */; settings = {ASSET_TAGS = (); }; };
+		50ACCA351BCE807800066257 /* MeanFilterStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ACCA341BCE807800066257 /* MeanFilterStrategy.swift */; settings = {ASSET_TAGS = (); }; };
+		50ACCA371BCFA3FF00066257 /* NoiseReductionStrategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50ACCA361BCFA3FF00066257 /* NoiseReductionStrategy.swift */; settings = {ASSET_TAGS = (); }; };
 		50D5C0DD1B84D3A200066257 /* AudioFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D5C0DC1B84D3A200066257 /* AudioFile.swift */; };
 		50D5C0DE1B84DAED00066257 /* KlangraumKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50F007B11B8C8B3D00066257 /* Failable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F007B01B8C8B3D00066257 /* Failable.swift */; };
 		50F09A181BC988F100066257 /* libAudioKit iOS Dynamic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A131BC9889E00066257 /* libAudioKit iOS Dynamic.a */; };
-		50F09A1B1BC98C1100066257 /* libsndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A191BC98C1100066257 /* libsndfile.framework */; settings = {ASSET_TAGS = (); }; };
-		50F09A1C1BC98C1100066257 /* CsoundLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A1A1BC98C1100066257 /* CsoundLib.framework */; settings = {ASSET_TAGS = (); }; };
 		50F09A1D1BC98D5100066257 /* CsoundLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A1A1BC98C1100066257 /* CsoundLib.framework */; };
 		50F09A1E1BC98D5100066257 /* CsoundLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A1A1BC98C1100066257 /* CsoundLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50F09A1F1BC98D5700066257 /* libsndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A191BC98C1100066257 /* libsndfile.framework */; };
@@ -161,6 +162,9 @@
 		5084EB781B67E1ED00066257 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		5084EB7A1B67E1F600066257 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		5097BD671B69039E00066257 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		50ACCA301BCA63B200066257 /* NoiseCancelationStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoiseCancelationStrategy.swift; sourceTree = "<group>"; };
+		50ACCA341BCE807800066257 /* MeanFilterStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MeanFilterStrategy.swift; sourceTree = "<group>"; };
+		50ACCA361BCFA3FF00066257 /* NoiseReductionStrategy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoiseReductionStrategy.swift; sourceTree = "<group>"; };
 		50D5C0DC1B84D3A200066257 /* AudioFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioFile.swift; sourceTree = "<group>"; };
 		50F007B01B8C8B3D00066257 /* Failable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Failable.swift; sourceTree = "<group>"; };
 		50F09A0A1BC9889E00066257 /* AudioKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AudioKit.xcodeproj; path = AudioKit/AudioKit.xcodeproj; sourceTree = "<group>"; };
@@ -209,10 +213,8 @@
 				5027058D1B79FD0500066257 /* AudioToolbox.framework in Frameworks */,
 				50F09A1F1BC98D5700066257 /* libsndfile.framework in Frameworks */,
 				50F09A1D1BC98D5100066257 /* CsoundLib.framework in Frameworks */,
-				50F09A1B1BC98C1100066257 /* libsndfile.framework in Frameworks */,
 				5080B0E01B789DB500066257 /* KlangraumKit.framework in Frameworks */,
 				5097BD681B69039E00066257 /* AVFoundation.framework in Frameworks */,
-				50F09A1C1BC98C1100066257 /* CsoundLib.framework in Frameworks */,
 				5084EB7B1B67E1F600066257 /* CoreAudio.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,6 +241,9 @@
 				50F007B01B8C8B3D00066257 /* Failable.swift */,
 				50D5C0DC1B84D3A200066257 /* AudioFile.swift */,
 				FA0577A51BA04F1C00DBEC49 /* FFTStrategies.swift */,
+				50ACCA301BCA63B200066257 /* NoiseCancelationStrategy.swift */,
+				50ACCA361BCFA3FF00066257 /* NoiseReductionStrategy.swift */,
+				50ACCA341BCE807800066257 /* MeanFilterStrategy.swift */,
 				5080B0EB1B789F3D00066257 /* FFT.swift */,
 				5080B0EC1B789F3D00066257 /* Math.swift */,
 				5080B0CD1B789DB500066257 /* KlangraumKit.h */,
@@ -613,9 +618,12 @@
 				FA0577A21BA0314800DBEC49 /* RealVectorOperations.swift in Sources */,
 				FA0577A61BA04F1C00DBEC49 /* FFTStrategies.swift in Sources */,
 				FA05779F1BA0314800DBEC49 /* ComplexVector.swift in Sources */,
+				50ACCA371BCFA3FF00066257 /* NoiseReductionStrategy.swift in Sources */,
 				50D5C0DD1B84D3A200066257 /* AudioFile.swift in Sources */,
 				50F007B11B8C8B3D00066257 /* Failable.swift in Sources */,
+				50ACCA311BCA63B200066257 /* NoiseCancelationStrategy.swift in Sources */,
 				FA0577A41BA0314800DBEC49 /* Windowing.swift in Sources */,
+				50ACCA351BCE807800066257 /* MeanFilterStrategy.swift in Sources */,
 				FA0577A11BA0314800DBEC49 /* FFTHelper.swift in Sources */,
 				5080B0ED1B789F3D00066257 /* FFT.swift in Sources */,
 				5080B0EF1B789F3D00066257 /* Math.swift in Sources */,
@@ -904,7 +912,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "de.fh-koeln.inf.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/GPB-Klangraum/Bridging-Header.h";
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				USER_HEADER_SEARCH_PATHS = "AudioKit/AudioKit/**";
 			};
 			name = Debug;

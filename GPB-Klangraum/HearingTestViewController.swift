@@ -32,9 +32,13 @@ class HearingTestViewController: UIViewController {
             
             toneWidgets.append(toneWidget)
             view.addSubview(toneWidget)
-            
-            soundGenerator.playNoteOn(toneWidget.getFrequencyAmplitudePair(), channelNumber: i)
         }
+    }
+    
+    @IBAction func start(sender: UIBarButtonItem) {
+        guard let toneWidget = toneWidgets.first where Constants.numInstruments == 1 else { return }
+        
+        soundGenerator.playNoteOn(toneWidget.getFrequencyAmplitudePair(), channelNumber: 0)
 
         nsTimer = NSTimer.scheduledTimerWithTimeInterval(1.0 / Double(Constants.frequencyScale * 60), target: self, selector: Selector("increase"), userInfo: nil, repeats: true)
         

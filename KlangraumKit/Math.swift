@@ -74,7 +74,8 @@ public func sum(x: [Double]) -> Double {
 
 // MARK: GGT(GCD) und KGV(LCM)
 
-public func gcd(m:Int, n:Int) -> Int {
+public func gcd(m:Int, var n:Int) -> Int {
+    n = (n == 0) ? 1 : n
     if (m % n == 0) {
         return n
     } else {
@@ -83,7 +84,7 @@ public func gcd(m:Int, n:Int) -> Int {
 }
 
 public func lcm(a:Int, b:Int) -> Int {
-    return (a*b) / gcd(a, n: b)
+    return (a * b) / gcd(a, n: b)
 }
 
 

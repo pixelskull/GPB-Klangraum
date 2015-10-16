@@ -8,6 +8,7 @@
 
 import UIKit
 import KlangraumKit
+import AVFoundation
 
 extension UIAlertController {
     
@@ -18,15 +19,20 @@ extension UIAlertController {
     }  
 }
 
-class PlayerViewController: UIViewController {
+class PlayerViewController: UIViewController, AVAudioPlayerDelegate {
+
+    @IBOutlet var playPauseButton: UIBarButtonItem!
+    @IBOutlet var toolbar: UIToolbar!
 
     private let samplingRate = 44100
     private let n = 1024
+
+    private var player = AVAudioPlayer()
     
     var minFrequency: Float?
     var maxFrequency: Float?
     
-    var mappedSamples: [Float]? { didSet { play() } }
+    var mappedSamples: [Float]? { didSet { playPauseButton.enabled = true } }
     
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView! {
         didSet {
@@ -37,7 +43,12 @@ class PlayerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+//        minFrequency = Float(2070)
+//        maxFrequency = Float(2100)
+
+        self.playPauseButton.enabled = false
+
         let audioFile = AudioFile()
         let url = NSBundle.mainBundle().bundleURL
         let filename = "pascal.m4a"
@@ -66,7 +77,7 @@ class PlayerViewController: UIViewController {
             let prepared = prepare(windowedData, steppingBy: self.n)
             
             let result = prepared.flatMap { samples -> [Float] in
-                let f = FFT(initWithSamples: samples, andStrategy: [AverageMappingStrategy(minIndex: minIndex, andMaxIndex: maxIndex)])
+                let f = FFT(initWithSamples: samples, andStrategy: [NoiseReductionStrategy(), AverageMappingStrategy(minIndex: minIndex, andMaxIndex: maxIndex)])
                 return f.forward() --> f.applyStrategy --> f.inverse
             }
             
@@ -77,6 +88,11 @@ class PlayerViewController: UIViewController {
                 
                 let alert = UIAlertController.alertControllerWithTitle("Fertig", message: "Wir haben krassen shit gemacht!")
                 self.presentViewController(alert, animated: true, completion: nil)
+
+                let mappedFilePath = audioFile.safeSamples(self.mappedSamples!, ToPath: NSBundle.mainBundle().resourcePath! + "/mappedFile.caf")
+                if let path = mappedFilePath {
+                    self.prepareAudioPlayer(path)
+                }
             }
         }
     }
@@ -85,6 +101,46 @@ class PlayerViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    func play() { }
+
+    func prepareAudioPlayer(audioPath:String) {
+        if let url = NSURL(string: audioPath) {
+            do {
+                self.player = try AVAudioPlayer(contentsOfURL: url)
+            } catch let error as NSError {
+                print("error occurred while preparing AudioPlayer \(error)")
+                return
+            }
+            self.player.delegate = self
+            self.player.prepareToPlay()
+        }
+    }
+
+    func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool) {
+        let alert = UIAlertController.alertControllerWithTitle("Abgespielt", message: "Das war alles....")
+        self.presentViewController(alert, animated: true, completion: nil)
+
+        let buttonType = UIBarButtonSystemItem.Play
+        setToolbarWithBarButtonSystemItem(buttonType)
+    }
+
+    func setToolbarWithBarButtonSystemItem(buttonType:UIBarButtonSystemItem) {
+        toolbar.items = [UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil),
+            UIBarButtonItem(barButtonSystemItem: buttonType, target: self, action: "playPauseButtonAction:"),
+            UIBarButtonItem(barButtonSystemItem:.FlexibleSpace, target: nil, action: nil)]
+    }
+
+    @IBAction func playPauseButtonAction(sender: UIBarButtonItem) {
+        var buttonType:UIBarButtonSystemItem
+        if self.player.playing {
+            buttonType = UIBarButtonSystemItem.Play
+            self.player.pause()
+        } else {
+            buttonType = UIBarButtonSystemItem.Pause
+            self.player.volume = 1.0
+            self.player.play()
+        }
+        setToolbarWithBarButtonSystemItem(buttonType)
+    }
+
+
 }
