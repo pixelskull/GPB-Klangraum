@@ -42,8 +42,6 @@
 		50D5C0DE1B84DAED00066257 /* KlangraumKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5080B0C91B789DB500066257 /* KlangraumKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50F007B11B8C8B3D00066257 /* Failable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50F007B01B8C8B3D00066257 /* Failable.swift */; };
 		50F09A181BC988F100066257 /* libAudioKit iOS Dynamic.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A131BC9889E00066257 /* libAudioKit iOS Dynamic.a */; };
-		50F09A1B1BC98C1100066257 /* libsndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A191BC98C1100066257 /* libsndfile.framework */; settings = {ASSET_TAGS = (); }; };
-		50F09A1C1BC98C1100066257 /* CsoundLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A1A1BC98C1100066257 /* CsoundLib.framework */; settings = {ASSET_TAGS = (); }; };
 		50F09A1D1BC98D5100066257 /* CsoundLib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A1A1BC98C1100066257 /* CsoundLib.framework */; };
 		50F09A1E1BC98D5100066257 /* CsoundLib.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A1A1BC98C1100066257 /* CsoundLib.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		50F09A1F1BC98D5700066257 /* libsndfile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50F09A191BC98C1100066257 /* libsndfile.framework */; };
@@ -215,10 +213,8 @@
 				5027058D1B79FD0500066257 /* AudioToolbox.framework in Frameworks */,
 				50F09A1F1BC98D5700066257 /* libsndfile.framework in Frameworks */,
 				50F09A1D1BC98D5100066257 /* CsoundLib.framework in Frameworks */,
-				50F09A1B1BC98C1100066257 /* libsndfile.framework in Frameworks */,
 				5080B0E01B789DB500066257 /* KlangraumKit.framework in Frameworks */,
 				5097BD681B69039E00066257 /* AVFoundation.framework in Frameworks */,
-				50F09A1C1BC98C1100066257 /* CsoundLib.framework in Frameworks */,
 				5084EB7B1B67E1F600066257 /* CoreAudio.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
