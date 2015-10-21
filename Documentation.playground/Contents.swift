@@ -6,16 +6,27 @@
 
 * 1..
 * 2...
+*/
 
-## Einleitung // alex
-## Grundlagen // pascal
-## Theoretische Üblegungen, Konzeption und Umsetzung // zusammen
-## Abschluss // zusammen
+/*: 
+##Einleitung // alex
 
 */
 
+/*:
+##Grundlagen // pascal
 
+*/
 
+/*:
+## Theoretische Üblegungen, Konzeption und Umsetzung // zusammen
+
+*/
+
+/*:
+## Abschluss // zusammen
+
+*/
 
 
 
