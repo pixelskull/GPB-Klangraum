@@ -147,7 +147,7 @@
 		5080B0DC1B789DB500066257 /* KlangraumKitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KlangraumKitTests.swift; sourceTree = "<group>"; };
 		5080B0EB1B789F3D00066257 /* FFT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FFT.swift; sourceTree = "<group>"; };
 		5080B0EC1B789F3D00066257 /* Math.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
-		5080B0F11B789FB600066257 /* TestingPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = TestingPlayground.playground; sourceTree = "<group>"; };
+		5080B0F11B789FB600066257 /* Documentation.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = Documentation.playground; sourceTree = "<group>"; };
 		5084EB501B67DA9800066257 /* GPB-Klangraum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GPB-Klangraum.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5084EB541B67DA9800066257 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5084EB551B67DA9800066257 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -281,7 +281,7 @@
 			isa = PBXGroup;
 			children = (
 				50F09A0A1BC9889E00066257 /* AudioKit.xcodeproj */,
-				5080B0F11B789FB600066257 /* TestingPlayground.playground */,
+				5080B0F11B789FB600066257 /* Documentation.playground */,
 				5084EB7C1B67E22000066257 /* Frameworks */,
 				5084EB751B67DBCD00066257 /* Misc */,
 				5084EB521B67DA9800066257 /* GPB-Klangraum */,

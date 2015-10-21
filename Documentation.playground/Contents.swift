@@ -1,4 +1,34 @@
-import UIKit
+/*: 
+
+# Guided Projekt Typ B - Evaluierung von Methoden eines Klangmanagements zur Anpassung von Klangräumen an die Wahrnehmung
+
+## Inhaltsverzeichnis
+
+* 1..
+* 2...
+
+## Einleitung // alex
+## Grundlagen // pascal
+## Theoretische Üblegungen, Konzeption und Umsetzung // zusammen
+## Abschluss // zusammen
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*import UIKit
 import XCPlayground
 import KlangraumKit
 import AVFoundation
@@ -32,4 +62,4 @@ if let data = audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePa
     }
     
     audioFile.safeSamples(result, ToPath: NSBundle.mainBundle().bundlePath.stringByAppendingString("/blaalex.m4a"))
-}
+}*/
