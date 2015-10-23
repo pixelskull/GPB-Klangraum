@@ -21,6 +21,9 @@ betreut durch Prof. Dr. Lutz Köhler
 
 *kelines abstract hier*
 
+* fast fourier transformation (fft)
+* app entwicklung
+
 ## Einleitung
 
 Das Projekt wurde aus eigenem Interesse vorgeschlagen und dahingehend formuliert, dass es sowohl einen wissenschaftlichen Anspruch hat, als auch eine explorative Herangehensweise beinhaltet. Grundlagen und Methoden wurden fundiert erhoben, gegeneinander abgewogen und qualitativ bewertet. Der Prozess und die Implementierung wurden wiederum agil und auf Basis des aktuellen Wissensstandes geprägt. Insgeasmt war das Vorgehen ergebnisorientiert, weshalb das vorliegende Dokument als interaktives Playground geschrieben ist. Aus diesem Grund steht die Implementierung im Vordergrund, die Prosa dient der Beschreibung und Argumentation. Zudem kann sie als roter Faden verstanden werden.
@@ -33,7 +36,7 @@ Jeder Mensch verliert im Laufe seines Lebens die Fähigkeit bestimmte Frequenzbe
 
 ### Ziel und Vorgehen
 
-Das primäre Ziel ist es, Möglichkeiten zum Verbessern bzw. Ausbessern des Frequenzverlustes anhand bestehender Audio-Aufnahmen zu evaluieren. Hierfür werden Ansätze in Form von Konzepten und Algorithmen recherchiert, gegeneinander abgewogen und implementiert. Dessen Wirksamkeit, Realisierbarkeit und Performanz im gegebenen Kontext steht hierbei im Vordergrund. Performanz deshalb, weil eine Verarbeitung in Echtzeit angestrebt wird.
+Das primäre Ziel ist es, Möglichkeiten zum Verbessern bzw. Ausbessern des Frequenzverlustes anhand bestehender Audio-Aufnahmen zu evaluieren. Hierfür werden Ansätze in Form von Konzepten und Algorithmen recherchiert, gegeneinander abgewogen und in einer iOS-Anwendung implementiert. Dessen Wirksamkeit, Realisierbarkeit und Performanz im gegebenen Kontext steht hierbei im Vordergrund. Performanz deshalb, weil eine Verarbeitung in Echtzeit angestrebt wird.
 
 Das sekundäre Ziel befasst sich mit Begriffsdefinitionen bezüglich dem Klangmanagment, des Klangraumes und der Klangwahrnehmung. Hierbei soll an die Verwandten Begriffe des Farbmangement, Farbraum und Farbwahrnehmung angelehnt werden.
 
@@ -61,6 +64,23 @@ Das vorliegende Dokument ist als interaktives Playground organisiert. Während [
 ### Digitale Signalverarbeitung?
 
 ## Theoretische Überlegungen, Konzeption und Umsetzung
+
+In diesem Kapitel soll die explorative Herangehensweise geschrieben werden. Hinsichtlich der Projektbeschreibung und den Grundlagen der auditiven Wahrnehmung, wurde das folgende Konzept überlegt.
+
+* **Hörtest**, um den hörbaren Frequenzbereich des Benutzers zu erfassen
+* **Extrahieren von Samples in Mono und Stereo**, um die Audio-Datei anschließend angemessen bearbeiten zu können
+* **Padding, Windowing und Splitting**, als Vorbereitung für die FFT
+* **Manipulation der Samples mithilfe der FFT**, um das Audio-Signal an den Kontext des Benuters anzupassen
+* **Modifizierte Samples als Audio-Datei abspielen**, um das Ergebnis zu hören
+
+Die einzelnen Schritte können so komplex werden, dass an einigen Algorithmen und Methoden zwar eine ausreichende, aber nicht hinreichende Implementierung stattgefunden hat. Die detailierte Auseinandersetzung mit Audio-Algorithmen ist so umfangreich, dass sie ein eigenes Projekt mit Inhalt füllt. Aus diesem Grund ist die Implementierung der Anwendung als modulares Framework in Swift zum Manipulieren und Abspielen von Audio-Dateien für iOS-Systeme zu verstehen. 
+
+Im Folgenden werden die einzelnen Schritte detailiert erklärt, begründet, implementiert und mithilfe des interaktiven Playgrounds vorgeführt.
+
+### Hörtest
+
+
+
 
 ## Abschluss
 
