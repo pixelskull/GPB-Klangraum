@@ -52,16 +52,54 @@ Bibliotheken und Schnittstellen sind nicht vorgeschrieben. Da die Anwendung in S
 
 Das vorliegende Dokument ist als interaktives Playground organisiert. Während [Kapitel 1](#Einleitung) und [2](#Grundlagen) noch vollständig aus Text bestehen, ist [Kapitel 3](#Theoretische-Überlegungen,-Konzeption-und-Umsetzung) in einem Wechsel zwischen Text und Quellcode organisiert. Der Quellcode wird dynamisch kompiliert, weshalb der Leser Änderungen am Quellcode vornehmen kann, welche anschließend neu kompiliert und ggf. angezeigt werden. Das [letzte Kapitel](#Abschluss) ist ebenfalls klassisch, um das Fazit und die persönliche Einschätzung möglichst präzise, schlüssig und vieldimensional zu Gestalten.
 
+
+
+
+
+
 ## Grundlagen
+In dem folgenden Abschnitt sollen die Grundlagen geklärt werden. Zu diesem Zweck werden zuerst einige Begriffe geklärt, die in der weiteren Ausarbeitung Verwendung finden sollen.
 
 ### Begriffsdefinitionen
+Die Erläuterung der Begriffe teilt sich hier in zwei Kategorien auf, zum einen die allgemeinen Begriffe zum beschreiben der äußeren Umstände und zum verdeutlichen der Anwendung.  Zum anderen sollen die Fachspezifischen Begrifflichkeiten, die Audio und die Signalverarbeitung angehen, auch an dieser Stelle umschreiben werden. 
 
-* Klangmanagement, Klangraum und Klangwahrnehmung
-* Signal, Sample, Samplerate, Bin, Magnitude vs Amplitude, Mapping und Strategien
+Zuerst soll sich an dieser Stelle jedoch der allgemeinen Begriffsdefinition gewidmet werden. Zu diesem Zweck wurden, wie nachfolgend aufgelistet, drei Begriffe definiert.
+
+* **Klangmanagement:** Unter diesem Begriff soll innerhalb dieser Ausarbeitung die Bearbeitung von AudioSignalen mittels Digitaler Signalverarbeitung und deren Algorithmen verstanden werden. Beim Klangmanagement geht es vor allem um eine subjektive verbesserte Wahrnehmung. In diesem Kontext bedeutet das, der Hörer soll nach der Anwendung des Klangmanagements mehr von der Audio-Datei wahrnehmen kann als es im Orginal-Zustand der fall wäre.
+
+* **Klangraum:** Hier wurde der Begriff fachlich an den Begriff des Farbraumes angelehnt. Ähnlich des Farbraumes, bei dem es um die vereinheitlichte Darstellung der Farben geht, soll der Klangraum für eine Vergleichbarkeit von Klängen sorgen. Dies ist im allgemeinen ein Schwieriges Unterfangen, da bei Audio viele Parameter einfließen, die bei Monitoren nicht gelten. So ist es unter anderem wichtig, in welchem Raum die Klänge ertönen sollen, sowie der Resonanzkörper in dem die Lautsprecher verbaut wurden.
+
+* **Klangwahrnehmung:** Innerhalb des Ausarbeitungskontextes soll dieser Begriff explizit die subjektive Wahrnehmung von Klang erläutern. Subjektiv aus dem einfachen Grund, dass eine objektive Wahrnehmung nicht im Rahmen dieses Guided Projects vorgenommen werden kann, da hierzu die entsprechenden Messgeräte fehlen.
+
+
+Nachdem die übergeordneten Begriffe geklärt wurden, widment wir uns nun den technischeren Begriffen. Hierunter fallen die nachfolgend aufgelisteten. 
+
+
+* **Amplitude:** Unter einer Amplitude wird eine Größeneinheit verstanden, mittels derer sich Schwingung darstellen lässt. Es existieren keine genormten Maßeinheiten somit wird für diese Ausarbeitung angenommen, dass es sich um positive Integer- bzw. Floatwerte – wie im linear Pulse Code Modulation (PCM) Standart verwendet – handelt
+* **Signal:** Die Audio-Datei in grafischer bzw. programatischer Representation. Hierunter fällt die Darstellung innerhalb eines Diagramms, als Array von diskreten Werten. Im Wesentlichen handelt es sich hierbei um die An
+* **Sample:** Beschreibt einen Messpunkt innerhalb eines Signals, im programatischen typischerweise ein Integer oder Float wert der den Amplituden-Ausschlag beschreibt
+* **Samplerate:** Auch Abtastrate, beschreibt die Anzahl der erstellten Samples pro Sekunde
+* **Fourier Transformation:** Wandelt das Signal in die spektrale Darstellung. In der spektralen Darstellung an Stelle von Amplituden werden Frequenzen dargestellt die als Magnitude beschrieben werden.
+* **Magnitude:** Beschreibt den Amplituden ähnlichen Ausschlag eines Signal, jedoch zu einer bestimmten Frequenz – typischerweise in Hertz(Hz) gemessen.
+* **Bin:** Beschreibt einen Eintrag des Fourier-Outputs, ein Bin umfasst einen Frequenzbereich, die Ausgegebenen Frequenzbereiche sind untereinander Harmonisch.
+* **Mapping:** Im Rahmen dieser Ausarbeitung steht Mapping für das überführen von einem Frequenzbereich in einen anderen
+* **Strategien:** Als Stretegie wird im Rahmen dieser Ausarbeitung die Implementierung eines Mapping-Ansatzes beziehungsweise eines Filters oder sonstiger Signalverarbeitung verstanden
+
 
 ### Auditive Wahrnehmung
+Das Ohr, das Organ des Menschen mittels dessen Schallwellen Wahrgenommen werden, übersetzt Schall über ein komplexes System an Knochen, Gelenken und Hautähnlichen Strukturen in Nervenreize die dann durch das Gehirn interpretiert werden. Es ist nicht schwer zu erkennen, dass dieser Vorgang viel Spiel und Interpretationsspielraum zulässt. Dieser Umstand erschwert die Beschreibung der Wahrnehmung. Jedoch wird aus diesem Grund auch erst einiges Möglich, so ist das Gehirn darauf fokusiert diese Reize zu interpretieren, was ständiges Lernen vorraussetzt. 
+
+
+
+
 
 ### Digitale Signalverarbeitung?
+
+
+
+
+
+
 
 ## Theoretische Überlegungen, Konzeption und Umsetzung
 
