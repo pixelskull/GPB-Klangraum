@@ -23,7 +23,7 @@ public enum Failable<T> {
             return .Failure(errSting)
         }
     }
-
+    
 
 //    public func bind<U>(input:Failable<T>, fn:T -> Failable<U>) -> Failable<U>{
 //        switch input {
@@ -67,4 +67,20 @@ public func --><In, Out>(left: Failable<In>, fn: In -> Failable<Out>) -> Failabl
 final public class Box<V> {
     public let value: V
     public init(_ value: V) { self.value = value }
+
+    func map<B>(f: V -> B) -> Box<B> {
+        return Box<B>(f(value))
+    }
+    
+    func flatMap<B>(f: V -> Box<B>) -> Box<B> {
+        return f(value)
+    }
+    
+    func zip<B>(that: Box<B>) -> Box<(V, B)> {
+        return flatMap({ v -> Box<(V, B)> in
+            that.map({ b -> (V, B) in
+                return (v, b)
+            })
+        })
+    }
 }

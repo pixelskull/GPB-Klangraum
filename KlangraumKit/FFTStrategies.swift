@@ -138,3 +138,21 @@ public class NoStrategy: FilterStrategy {
         return x
     }
 }
+
+public class DoubleStrategy: FilterStrategy {
+
+    public init() {}
+
+    public func apply(x: [Float]) -> [Float] {
+        return x.map { $0 * 2 }
+    }
+}
+
+public class TrippleStrategy: FilterStrategy {
+    
+    public init() {}
+
+    public func apply(x: [Float]) -> [Float] {
+        return x.map { $0 * 3 }
+    }
+}
