@@ -19,7 +19,7 @@ class HearingTestViewController: UIViewController {
     
     var toneWidgets = [ToneWidget]()
     let soundGenerator = SoundGenerator()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         

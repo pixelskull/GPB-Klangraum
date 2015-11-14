@@ -18,7 +18,7 @@ public func --><A>(left: A, right: A -> A) -> A {
     return right(left)
 }
 
-protocol Transformation {
+public protocol Transformation {
     
     func forward() -> SplitComplexVector<Float>
     
@@ -51,7 +51,7 @@ public class FFT: Transformation, Filterable {
     public func forward() -> SplitComplexVector<Float> {
         var splitComplex = SplitComplexVector<Float>(count: length / 2, repeatedValue: Complex<Float>(real: 0, imag: 0))
         var dspSplitComplex = DSPSplitComplex( realp: &splitComplex.real, imagp: &splitComplex.imag )
-        
+
         // FORWARD FROM REAL TO COMPLEX
         samples.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
             let xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )

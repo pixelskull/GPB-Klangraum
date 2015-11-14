@@ -11,6 +11,11 @@ import Foundation
 public struct Complex<T> {
     var real: T
     var imag: T
+    
+    public init(real: T, imag: T) {
+        self.real = real
+        self.imag = imag
+    }
 }
 
 public struct SplitComplexVector<T> {
