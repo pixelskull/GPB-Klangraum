@@ -13,11 +13,31 @@ betreut durch Prof. Dr. Lutz Köhler
 
 ## Inhaltsverzeichnis
 
-1. [Einleitung](#Einleitung)
-2. [Grundlagen](#Grundlagen)
-3. [Theoretische Überlegungen, Konzeption und Umsetzung](#Theoretische-Überlegungen,-Konzeption-und-Umsetzung)
-5. [Beispiel anhand eines Anwendungsfalls](#Beispiel)
-4. [Abschluss](#Abschluss)
+1. Einleitung
+    * Motivation
+    * Ziel und Vorgehen
+    * Kontext
+    * Organisation des Dokumentes
+2. Grundlagen
+    * Begriffsdefinitionen
+    * Auditive Wahrnehmung
+    * Digitale Signalverarbeitung
+3. Theoretische Überlegungen, Konzeption und Umsetzung
+    * Hörtest
+    * Extrahieren von Samples aus einer Audio-Datei in Mono und Stereo
+    * Padding, Windowing und Splitting
+    * Manipulation der Samples mithilfe der FFT
+        * FFT Datenstrukturen
+        * Die FFT Klasse
+        * Operationen auf komplexen Zahlen
+        * Strategien zum Manipulieren der Magnitudes
+        * Noise-Reduction- und Mapping-Strategien
+    * Modifizierte Samples als Audio-Datei abspielen
+5. Beispiel anhand eines Anwendungsfalls
+4. Abschluss
+    * Zusammenfassung
+    * Persönliche Einschätzung und kritische Reflexion
+    * Ausblick
 
 ## Kurzfassung
 
@@ -25,13 +45,13 @@ Die vorliegende Arbeit wurde im Rahmen des Guided-Project Typ B im Informatik Ma
 
 Das Projekt befasst sich mit der Anpassung des Klangraumes an die individuelle Wahrnehmung. Hierfür wurde ein Kontext definiert, welcher die Rahmenbedingung für die Anpassung beschreibt. Daraufhin wurden Methoden und Techniken explorativ erkundet, um sich dem Thema zu nähern. Alle Ergebnisse befinden sich im vorliegenden Xcode Projekt sowohl in Form einer iOS-App, als auch im interaktiven Playground.
 
-Das Evaluieren von Methoden bezieht sich auf die Auswahl von Algorithmen, welche die Anpassung von Klangräumen vornehmen. Die Algorithmen an sich wurden nicht intensiv evaluiert. Stattdessen wurde eher ein Framework für das Anpassen der Klangräume an die Wahrnehmung des Menschen als iOS-App entwickelt. Dabei wurde das Framework so modular entwickelt, dass die Methoden bzw. Algorithmen dynamisch zur Laufzeit ausgetauscht werden können, um die Qualität der Wahrnehmung zu steigern. Somit können die Ergebnisse einer Evaluation des Klangmanagements als Implementierung in die Anwendung einfließen und zur individuellen Anpassung des Klangraumes beitragen.
+Das Evaluieren von Methoden bezieht sich auf die Auswahl von Algorithmen, welche die Anpassung von Klangräumen vornehmen. Die Algorithmen an sich wurden nicht all zu intensiv evaluiert, weil das Team schnell hörbare Ergebnisse erziehen wollte und sich deshalb zunächst dem FFT-Stack gewidmet hat. Es wurde vielmehr ein Framework für das Klangmanagement, dem Anpassen von Klangräumen an die individuelle Wahrnehmung des Menschen in Form einer iOS-App entwickelt. Dabei wurde das Framework so modular entwickelt, dass die Methoden bzw. Algorithmen dynamisch zur Laufzeit ausgetauscht werden können, um die Wahrnehmung zu optimieren. Somit können die Ergebnisse einer Evaluation des Klangmanagements als Implementierung in die Anwendung einfließen und zur individuellen Anpassung des Klangraumes beitragen.
 
 ## Einleitung
 
-Das Projekt wurde aus eigenem Interesse vorgeschlagen und dahingehend formuliert, dass es sowohl einen wissenschaftlichen Anspruch hat, als auch eine explorative Herangehensweise beinhaltet. Grundlagen und Methoden wurden fundiert erhoben, gegeneinander abgewogen und qualitativ bewertet. Der Prozess und die Implementierung wurden wiederum agil und auf Basis des aktuellen Wissensstandes geprägt. Insgeasmt war das Vorgehen ergebnisorientiert, weshalb das vorliegende Dokument als interaktives Playground geschrieben ist. Aus diesem Grund steht die Implementierung im Vordergrund, die Prosa dient der Beschreibung und Argumentation. Zudem kann sie als roter Faden verstanden werden.
+Das Projekt wurde aus eigenem Interesse vorgeschlagen und dahingehend formuliert, dass es sowohl einen wissenschaftlichen Anspruch hat, als auch eine explorative Herangehensweise beinhaltet. Grundlagen und Methoden wurden fundiert erhoben, gegeneinander abgewogen und qualitativ bewertet. Der Prozess und die Implementierung wurden wiederum agil und auf Basis des aktuellen Wissensstandes geprägt. Insgeasmt war das Vorgehen ergebnisorientiert, weshalb das vorliegende Dokument als interaktives Playground geschrieben ist. Aus diesem Grund steht die Implementierung im Vordergrund, der erklärende Text dient der Beschreibung, Argumentation, Abwägung und Erklärung von Entscheidungen und der Diskussion. Zudem kann sie als roter Faden verstanden werden.
 
-Im Folgenden soll die Arbeit mit einer kurzen Motivation eingeleitet werden. Danach folgt die Beschreibung des Ziels und dem Vorgehen, um das Ziel zu erreichen. Damit eine konkrete Anwendung entwickelt und getestet werden kann, wird ein Kontext definiert, welcher den Rahmen des Anwendungsfalls beschreibt und eingrenzt. Anschließend wird die Organisation des Dokumentes als interaktiven Playgrounds erläutert.
+Im Folgenden soll die Arbeit mit einer kurzen Motivation eingeleitet werden. Danach folgt die Beschreibung des Ziels und dem Vorgehen, um das Ziel zu erreichen. Damit eine konkrete Anwendung entwickelt und getestet werden kann, wird ein Kontext definiert, welcher den Rahmen des Anwendungsfalls beschreibt und eingrenzt. Anschließend wird die Organisation des Dokumentes als interaktiver Playground erläutert.
 
 ### Motivation
 
@@ -55,12 +75,14 @@ Bibliotheken und Schnittstellen sind nicht vorgeschrieben. Da die Anwendung in S
 
 Das vorliegende Dokument ist als interaktives Playground organisiert. Während [Kapitel 1](#Einleitung) und [2](#Grundlagen) noch vollständig aus Text bestehen, ist [Kapitel 3](#Theoretische-Überlegungen,-Konzeption-und-Umsetzung) in einem Wechsel zwischen Text und Quellcode organisiert. Der Quellcode wird dynamisch kompiliert, weshalb der Leser Änderungen am Quellcode vornehmen kann, welche anschließend neu kompiliert und ggf. angezeigt werden. Das [letzte Kapitel](#Abschluss) ist ebenfalls klassisch, um das Fazit und die persönliche Einschätzung möglichst präzise, schlüssig und vieldimensional zu Gestalten.
 
-Das interaktive Playground ist eine Form der Quellcode Dokumentation. Demnach steht hierbei der Quellcode im Vordergrund, welcher interaktiv ist, was bedeutet, dass der Quellcode kompiliert, ausgeführt wird und dessen Ergebnis live angezeigt oder sogar geplottet wird. Der Fließtext dient als roter Faden und erklärt das Vorgehen, die Gedanken und Überlegungen, die Abwägungen von Alternativen und die Begründungen von Entscheidungen. Neben dem interaktiven Quellcode finden sich *Sourcecode-Listings*, welche der iOS-App entstammen. Diese wurde eingefügt, um die Argumentationen mit Quellcode zu führen und Beispiele für die Implementierung zu zeigen.
+Das interaktive Playground ist eine Form der Quellcode Dokumentation. Demnach steht hierbei der Quellcode im Vordergrund, welcher interaktiv ist, was bedeutet, dass der Quellcode kompiliert, ausgeführt und dessen Ergebnis live angezeigt oder sogar in einem Graph geplottet wird. Der Fließtext dient als roter Faden und erklärt das Vorgehen, die Gedanken und Überlegungen, die Abwägungen von Alternativen und die Begründungen von Entscheidungen. Neben dem interaktiven Quellcode finden sich *Sourcecode-Listings*, welche der iOS-App entstammen. Diese wurde eingefügt, um die Argumentationen mit Quellcode zu führen und Beispiele für die Implementierung zu zeigen.
 
 ## Grundlagen
+
 In dem folgenden Abschnitt sollen die Grundlagen geklärt werden. Zu diesem Zweck werden zuerst einige Begriffe geklärt, die in der weiteren Ausarbeitung Verwendung finden sollen.
 
 ### Begriffsdefinitionen
+
 Die Erläuterung der Begriffe teilt sich hier in zwei Kategorien auf. Zum einen die allgemeinen Begriffe zum Beschreiben der äußeren Umstände und zum Verdeutlichen der Anwendung. Zum anderen sollen die fachspezifischen Begrifflichkeiten, die Audio- und die Signalverarbeitung angehen, auch an dieser Stelle umschreiben werden.
 
 Zuerst soll sich an dieser Stelle jedoch der allgemeinen Begriffsdefinition gewidmet werden. Zu diesem Zweck werden, wie nachfolgend aufgelistet, drei Begriffe *Klangmanagement*, *Klangraum* und *Klangwahrnehmung* definiert.
@@ -71,36 +93,38 @@ Zuerst soll sich an dieser Stelle jedoch der allgemeinen Begriffsdefinition gewi
 
 Nachdem die übergeordneten Begriffe geklärt wurden, werden nun die technischeren Begriffen betrachtet. Hierunter fallen die nachfolgend aufgelisteten.
 
-* **Amplitude:** Unter einer Amplitude wird eine Größeneinheit verstanden, mittels derer sich Schwingung darstellen lässt. Es existieren keine genormten Maßeinheiten, somit wird für diese Ausarbeitung angenommen, dass es sich um positive Integer- bzw. Floatwerte – wie im *linear Pulse Code Modulation (PCM)* Standard verwendet – handelt
-* **Signal:** Die Audio-Datei in grafischer bzw. programatischer Representation. Hierunter fällt die Darstellung innerhalb eines Diagramms, als Array von diskreten Werten. Im Wesentlichen handelt es sich hierbei um die An **NOTE: Hier ist etwas abgeschnitten!**
-* **Sample:** Beschreibt einen Messpunkt innerhalb eines Signals, im programatischen typischerweise ein Integer oder Float Wert, welcher den Amplituden-Ausschlag beschreibt
-* **Samplerate:** Auch Abtastrate, beschreibt die Anzahl der erstellten Samples pro Sekunde
-* **Fourier Transformation:** Wandelt das Signal in die spektrale Darstellung. In der spektralen Darstellung an Stelle von Amplituden werden Frequenzen dargestellt die als Magnitude beschrieben werden
-* **Magnitude:** Beschreibt den Amplituden ähnlichen Ausschlag eines Signal, jedoch zu einer bestimmten Frequenz – typischerweise in Hertz (Hz) gemessen
-* **Bin:** Beschreibt einen Eintrag des Fourier-Outputs, ein Bin umfasst einen Frequenzbereich, die Ausgegebenen Frequenzbereiche sind untereinander Harmonisch
-* **Mapping:** Im Rahmen dieser Ausarbeitung steht Mapping für das überführen von einem Frequenzbereich in einen anderen
-* **Strategien:** Als Stretegie wird im Rahmen dieser Ausarbeitung die Implementierung eines Mapping-Ansatzes beziehungsweise eines Filters oder sonstiger Signalverarbeitung verstanden
+* **Amplitude:** Unter einer Amplitude wird eine Größeneinheit verstanden, mittels derer sich Schwingung darstellen lässt. Es existieren keine genormten Maßeinheiten, somit wird für diese Ausarbeitung angenommen, dass es sich um positive Integer- bzw. Floatwerte, wie im *linear Pulse Code Modulation (PCM)* Standard verwendet, handelt.
+* **Signal:** Die Audio-Datei in grafischer bzw. programatischer Representation. Hierunter fällt die Darstellung innerhalb eines Diagramms, als Array von diskreten Werten. Im Wesentlichen handelt es sich hierbei um die An **NOTE: Hier ist etwas abgeschnitten!**.
+* **Sample:** Beschreibt einen Messpunkt innerhalb eines Signals. Im programatischen typischerweise ein Integer oder Float Wert, welcher den Amplituden-Ausschlag beschreibt.
+* **Samplerate:** Auch Abtastrate. Beschreibt die Anzahl der erstellten Samples pro Sekunde.
+* **Fourier Transformation:** Wandelt das Signal in die spektrale Darstellung. In der spektralen Darstellung an Stelle von Amplituden werden Frequenzen dargestellt die als Magnitude beschrieben werden.
+* **Magnitude:** Beschreibt den Amplituden ähnlichen Ausschlag eines Signal, jedoch zu einer bestimmten Frequenz, typischerweise in Hertz (Hz) gemessen.
+* **Bin:** Beschreibt einen Eintrag des Fourier-Outputs. Ein Bin umfasst einen Frequenzbereich, die ausgegebenen Frequenzbereiche sind untereinander Harmonisch.
+* **Mapping:** Im Rahmen dieser Ausarbeitung steht Mapping für das Überführen von einem Frequenzbereich in einen anderen.
+* **Strategien:** Als Strategie wird im Rahmen dieser Ausarbeitung die Implementierung eines Mapping-Ansatzes bzw. eines Filters oder sonstiger Signalverarbeitung verstanden, um eine Anpassung des Klangraumes and die Klangwahrnehmung zu ermöglichen.
 
 ### Auditive Wahrnehmung
+
 Unter auditiver Wahrnehmung wird die Sinneswahrnehmung von auditiven, also akustischen Reizen verstanden. Um diese auditive Reize aufnehmen zu können, entwickelte sich im Laufe der Evolution das Ohr.
 
-Das Ohr übersetzt Schall über ein komplexes System bestehend aus dem äußerden Gehörgang, der zu einer Membrane führt, auch »**Trommelfell**« genannt wird. Das Trommelfell überträgt die Schwindung der Luft auf den einen Knochen, welcher »**Hammer**« genannt wird. Die hieraus resultierende Bewegung wird über den »**Amboss**« genannten Knochen weiter an den »**Steigbügel**« geleitet. Dieser Überträgt das Signal an die »**Bogengänge**« und die »**Hörschnecke**«, die für die Wahrnehmung des Schalls zuständig sind. Einfach erläutert sorgt eine Flüssigkeit innerhalb der Schnecke dafür, dass die Schallwellen innerhalb der Flüssigkeit übertragen werden und kleine Haare innerhalb der Hörschnecke reizen. Dabei gilt, je weiter das Haar gegen Ende des "Schneckenhauses", desto höher der Ton und desto feiner das Haar. Die Nervenreize, die durch die Bewegung des Haars hervorgerufen werden, gehen dann über den Hörnerv an das Gehirn, welches die Ergebnisse dann interpretiert.
+Das Ohr übersetzt Schall über ein komplexes System bestehend aus dem äußerden Gehörgang, der zu einer Membrane führt, auch »**Trommelfell**« genannt. Das Trommelfell überträgt die Schwindung der Luft auf den einen Knochen, welcher »**Hammer**« genannt wird. Die hieraus resultierende Bewegung wird über den »**Amboss**« genannten Knochen weiter an den »**Steigbügel**« geleitet. Dieser Überträgt das Signal an die »**Bogengänge**« und die »**Hörschnecke**«, die für die Wahrnehmung des Schalls zuständig sind. Einfach erläutert sorgt eine Flüssigkeit innerhalb der Schnecke dafür, dass die Schallwellen innerhalb der Flüssigkeit übertragen werden und dabei kleine Haare innerhalb der Hörschnecke reizen. Dabei gilt, je weiter das Haar gegen Ende des "Schneckenhauses", desto höher der Ton und desto feiner das Haar. Die Nervenreize, die durch die Bewegung des Haars hervorgerufen werden, gehen dann über den Hörnerv an das Gehirn, welches die Ergebnisse interpretiert.
 
 Es ist nicht schwer zu erkennen, dass dieser Vorgang viel Spiel und Interpretationsspielraum zulässt. Außerdem ist es nicht unwahrscheinlich, dass die Haare, die für höhere Frequenzen zuständig sind, nicht mehr wie gewohnt reagieren bzw. ausfallen. Dies führt im Laufe der Zeit zu einem Hörverlust in den höheren Frequenzbereichen. Aber auch ein Hörverlust in den niederen Frequenzen ist durchaus denkbar. Dieser Umstand erschwert die Beschreibung der Wahrnehmung. Jedoch wird aus diesem Grund auch erst einiges Möglich, so ist das Gehirn darauf fokusiert diese Reize zu interpretieren, was ein ständiges Lernen vorraussetzt.
 
-Um, wie in diesem Projekt angestrebt, die auditive Wahrnehmung zu verbessern, wurde sich im Rahmen dieser Ausarbeitung vor allem mit dem Übertragen von Frequenzen auf einen "kleineren" Frequenzbereich beschäftigt. Dies kann durchaus für eine subjektive Verschlechterung sorgen, jedoch gilt zu bedenken, dass so Informationen wieder an das Gehirn weitergeleitet werden, die vorher einfach verloren gegangen wären. Da das Gehirn diese Reize interpretiert soll an dieser Stelle die Behauptung aufgestellt werden, dass so in angemessener Zeit erlernt werden kann, was diese neuen Reize bedeuten sollen und somit wieder auf diese Informationen reagiert werden kann.
+Um, wie in diesem Projekt angestrebt, die auditive Wahrnehmung zu verbessern, wurde sich im Rahmen dieser Ausarbeitung vor allem mit dem Übertragen von Frequenzen auf einen anderen Frequenzbereich beschäftigt. Dies kann durchaus für eine subjektive Verschlechterung sorgen, weil sich bestimmte Singnale plötzlich anders und je nach Implementierung auch leiser oder lauter anhören. Jedoch gilt zu bedenken, dass so Informationen wieder an das Gehirn weitergeleitet werden, die vorher einfach verloren gegangen wären. Da das Gehirn diese Reize interpretiert, soll an dieser Stelle die These aufgestellt werden, dass so in angemessener Zeit erlernt werden kann, was diese neuen Reize bedeuten sollen und somit wieder auf diese Informationen reagiert werden kann.
 
-Wir fassen zusammen, unter auditiver Wahrnehmung wird in dieser Ausarbeitung der Wahrnehmungsprozess des Menschen verstanden, was die Interpretation durch das menschliche Gehirn einbezieht. Unter der Verbesserung der auditiven Wahrnehmung soll, gerade in dieser Ausarbeitung, die Anpassung der Audioaufnahme an das Hörvermögen des Benutzers verstanden werden.
+Zusammengefasst lässt sich sagen, dass in dieser Ausarbeitung unter auditiver Wahrnehmung der Wahrnehmungsprozess des Menschen verstanden wird, welcher die Interpretation durch das menschliche Gehirn einbezieht. Unter der Verbesserung der auditiven Wahrnehmung soll, gerade in dieser Ausarbeitung, die Anpassung (Klangmanagement) der Audioaufnahme an das Hörvermögen (Klangwahrnehmung) des Benutzers verstanden werden.
 
 ### Digitale Signalverarbeitung
-Die digitale Signalverarbeitung (engl. Digital Signal Processing (DSP)) ist ein weitreichendes Themengebiet, so umfasst die digitale Signalverarbeitung unter anderem die Verarbeitung von Spannungen in Stromnetzen, die verarbeitung von digitalen Bildern oder von digitalen Audioformaten, wie z.B. dem linear PCM Format. Im Rahmen dieser Dokumentation soll der Begriff digitale Signalverarbeitung als Synonym für die Verarbeitung von digitalen Audioformaten dienen. Auch wenn der Begriff Audioverarbeitung augenscheinlich eindeutiger wäre, benutzen wir an dieser Stelle die digitale Signalverarbeitung, da so der zusammenhang der Algorithmen deutlicher wird.
 
-Insbesondere soll in dieser Dokumentation auf die Fouriertransformation eingegangen werden, die ein Signal in dessen Spektrum zerlegt. Dieser Vorgang lässt sich am besten durch die Metapher des Prisma erläutern. Die Fouriertransformation – in diesem Projekt durch die Fast-Fourier-Transformation realisiert – zerlegt ein Signal, ähnlich einem Prisma auf das Licht fällt, in die einzelnen Spektren – beim Licht die Farben die bei einem Regenbogen sichtbar sind. Durch diese Transformation lassen sich im Rahmen der Audioverarbeitung verschiedene Frequenzen analysieren, da auf diese Weise erst die Möglichkeit besteht diese aus der Audioaufnahme zu extrahieren.
+Die digitale Signalverarbeitung (engl. Digital Signal Processing (DSP)) ist ein weitreichendes Themengebiet. So umfasst die digitale Signalverarbeitung unter anderem die Verarbeitung von Spannungen in Stromnetzen, die Verarbeitung von digitalen Bildern oder von digitalen Audioformaten, wie z.B. dem linearen PCM Format. Im Rahmen dieser Ausarbeitung soll der Begriff digitale Signalverarbeitung als Synonym für die Verarbeitung von digitalen Audioformaten dienen. Auch wenn der Begriff Audioverarbeitung augenscheinlich eindeutiger wäre, wird an dieser Stelle die digitale Signalverarbeitung verwendet, da so der zusammenhang der Algorithmen deutlicher wird.
 
-Weitere Techniken, die innerhalb dieses Projektes Verwendung finden sind High-Pass-Filter und Mapping Strategien. Die High-Pass-Filter werden benötigt, um Störgeräusche aus der Audiodatei zu entfernen. Ein High-Pass-Filter lässt nur Signale oberhalb eines Thresholds durch, wird dieser der Signal-To-Noise-Ratio angepasst, also dem Wert der ein brauchbares Signal von einem Rauschen oder sonstigen Störgeräusch abgrenzt, können diese Störgeräusche einfach herausgefiltert werden.
+Insbesondere soll in dieser Ausarbeitung auf die Fourier-Transformation eingegangen werden, die ein Signal in dessen Spektrum zerlegt und eine zeitbasierte Darstellung (Liste von Samples) in eine frequenzbasierte Darstellung (Liste von Phasen) überführt. Dieser Vorgang lässt sich am besten durch die Metapher des Prisma erläutern. Die Fourier-Transformation, in diesem Projekt durch die Fast-Fourier-Transformation realisiert, zerlegt ein Signal, ähnlich einem Prisma auf das Licht fällt, in die einzelnen Spektren, welche beim Licht die Farben sind, die bei einem Regenbogen sichtbar werden. Durch diese Transformation lassen sich im Rahmen der Audioverarbeitung verschiedene Frequenzen analysieren, da auf diese Weise erst die Möglichkeit besteht, diese aus der Audioaufnahme zu extrahieren.
 
-**NOTE: Das sollte eher zu den Mapping Strategien, das ist hier etwas zu sehr vorweggegriffen**
-Die Mapping Strategien werden benötigt, um die Informationen des Signals mit möglichst wenig Verlust auf einen kleineren Frequenzbereich abbilden zu können. Um dies zu realisieren, wurde die bestehende Aufnahme zuerst mittels linearer Interpolation auf einen höheren Samplingwert gesetzt. Bei diesem Verfahren werden neue Samples zwischen zwei bestehenden Samples mittels »linear Regression« errechnet und hinzugefügt. Nachdem die Aufnahme nun mehr Samples besitzt, in unserem fall soviele, dass es einen größten gemeinsamen Teiler(ggt) gibt, kann mittels downsampling auf die gewünschte Samplerate – bzw. in unserem Fall die »FFT Bins« – herunter gerechnet werden. Durch das upsampling und downsampling soll der Verlust beim Umrechnen minimiert werden, da zu beginn des downsamplings mehr Informationen zur Verfügung stehen, mehr zu diesem Ansatz im nächsten Kapitel.
+Weitere Techniken, die innerhalb dieses Projektes Verwendung finden, sind High-Pass-Filter und Mapping-Strategien. Die High-Pass-Filter werden benötigt, um Störgeräusche aus der Audiodatei zu entfernen. Ein High-Pass-Filter lässt nur Signale oberhalb eines Thresholds durch, wird dieser der Signal-To-Noise-Ratio angepasst, also dem Wert der ein brauchbares Signal von einem Rauschen oder sonstigen Störgeräusch abgrenzt, können diese Störgeräusche einfach herausgefiltert werden. Die Mapping Strategien werden benötigt, um die Informationen des Signals mit möglichst wenig Verlust auf einen kleineren Frequenzbereich abbilden zu können. Diese werden in einem späteren Kapitel detaillierter erläutert.
+
+**NOTE: Das sollte eher zu den Mapping Strategien, das ist hier etwas zu sehr vorweggegriffen. DAS HABE ICH DURCH DEN SATZ HIERVOR EINGEFÜHRT**
+Die Mapping Strategien werden benötigt, um die Informationen des Signals mit möglichst wenig Verlust auf einen kleineren Frequenzbereich abbilden zu können. Um dies zu realisieren, wurde die bestehende Aufnahme zuerst mittels linearer Interpolation auf einen höheren Samplingwert gesetzt. Bei diesem Verfahren werden neue Samples zwischen zwei bestehenden Samples mittels *linear Regression* errechnet und hinzugefügt. Nachdem die Aufnahme nun mehr Samples besitzt, in unserem fall soviele, dass es einen größten gemeinsamen Teiler gibt, kann mittels Downsampling auf die gewünschte Samplerate, bzw. in unserem Fall die *FFT Bins*, herunter gerechnet werden. Durch das Upsampling und Downsampling soll der Verlust beim Umrechnen minimiert werden, da zu Beginn des Downsamplings mehr Informationen zur Verfügung stehen. **mehr zu diesem Ansatz im nächsten Kapitel. NOTE: DAS DANN WEITERFÜHREN**
 
 ## Theoretische Überlegungen, Konzeption und Umsetzung
 
@@ -119,7 +143,7 @@ Im Folgenden werden die einzelnen Schritte detailiert erklärt, begründet, impl
 
 ### Hörtest
 
-Um das Audio-Signal in einen für den Benutzer hörbaren Frequenzbereich anzupassen, muss zunächst der hörbare Frequenzbereich des Benutzers erfasst werden. Hierfür soll ein Hörtest implementiert werden, welcher das für den Mensch hörbaren Frequenzspektrum von 0 bis 22000 Hz mit einem akustischen Signal durchläuft. Sobald der Benutzer das Signal perzipiert drückt er auf eine dafür vorhergesehene Fläche und hält solange gedrückt, bis das Signal nicht mehr zu hören ist. Auf diese Weise erfasst und speichert das System die untere und obere Grenze an hörbaren Frequenzen. Die folgende Abbildung zeigt den Hörtest wie er in der iOS-Anwendung zu sehen ist:
+Um das Audio-Signal in einen für den Benutzer hörbaren Frequenzbereich anzupassen, muss zunächst der hörbare Frequenzbereich des Benutzers erfasst werden. Hierfür soll ein Hörtest implementiert werden, welcher das für den Menschen hörbaren Frequenzspektrum von 0 bis 22000 Hz mit einem akustischen Signal durchläuft. Sobald der Benutzer das Signal perzipiert, drückt er auf eine dafür vorhergesehene Fläche und hält solange gedrückt, bis das Signal nicht mehr zu hören ist. Auf diese Weise erfasst und speichert das System die untere und obere Grenze an hörbaren Frequenzen. Die folgende Abbildung zeigt den Hörtest wie er in der iOS-Anwendung zu sehen ist:
 
 ![Hearing Test](hearingtest.png)
 
@@ -137,9 +161,10 @@ Im Folgenden wird eine gekürzte Implementierung des *HearingTestViewController*
         static let numInstruments = 1
         static let frequencyScale: Float = 22000
     }
+
 In dem folgenden Abschnitt sollen die Grundlagen geklärt werden. Zu diesem Zweck werden zuerst einige Begriffe geklärt, die in der weiteren Ausarbeitung Verwendung finden sollen.
 
-Theoretisch lässt sich die Anzahl der ToneWidgets mit *numInstruments* steuern, um einen dedizierten Hörtest für beide Ohren durchzuführen. Aus diesem Grund wurde ein Array von ToneWidget angelegt. Des Weiteren lässt sich die Amplitude über *amplitude* ansteuern. In der *viewDidLoad* Funktion werden ToneWidget und SoundGenerator angelegt. Die *start* Funktion lässt den Hörtest solange laufen, wie der Benutzer auf das ToneWidget drückt. Erst wenn kein Ton mehr zu hören ist, lässt der Benutezr los, wodurch die *stop* Funktion aufgerufen wird. Da die Gesten im ToneWidget implementiert sind, ruf das Widget über das Notification-Pattern die *onStartAndStop* Funktion aus. Diese speichert die übergebene min- und max Frequenz. Diese beiden Schranken geben den vom Benutzer hörbaren Frequenzbereich an.
+Theoretisch lässt sich die Anzahl der *ToneWidgets* mit *numInstruments* steuern, um einen dedizierten Hörtest für beide Ohren durchzuführen. Aus diesem Grund wurde ein Array von ToneWidget angelegt. Des Weiteren lässt sich die Amplitude über *amplitude* ansteuern. In der *viewDidLoad* Funktion werden ToneWidget und SoundGenerator angelegt. Die *start* Funktion lässt den Hörtest solange laufen, wie der Benutzer auf das ToneWidget drückt. Erst wenn kein Ton mehr zu hören ist, lässt der Benutezr los, wodurch die *stop* Funktion aufgerufen wird. Da die Gesten im ToneWidget implementiert sind, ruf das Widget über das Notification-Pattern die *onStartAndStop* Funktion aus. Diese speichert die übergebene min- und max Frequenz. Diese beiden Schranken geben den vom Benutzer hörbaren Frequenzbereich an.
 
     class HearingTestViewController: UIViewController {
         
@@ -193,23 +218,30 @@ Theoretisch lässt sich die Anzahl der ToneWidgets mit *numInstruments* steuern,
        
 Im Rahmen des Prototypen wurde lediglich der Hörtest ohne Berücksichtung von Stereo implementiert. Des Weiteren wird zwar das Regulieren der Amplitude ermöglicht, allerdings nicht in Relation zur Frequenz erfasst. Für die Validierung des Konzeptes wird lediglich der vom Benutzer hörbare Frequenzbereich benötigt. Die Granularität hat keine Auswirkung auf das Vorgehen. Die oben gezeigte Implementierung liefert hierfür dennoch die notwendigen Schnittstellen.
 
+### Extrahieren von Samples aus einer Audio-Datei in Mono und Stereo
+
+**Das musst du machen.**
+
+### Padding, Windowing und Splitting
+
+**Hierfür müssen wir uns absprechen.**
+
 ### Manipulation der Samples mithilfe der FFT
 
 Der Kern der Anwendung befasst sich mit der FFT. Die Implementierung muss in der Lage sein, eingehende Samples von einer zeitbasierten Darstellung in eine frequenzbasierte Darstellung zu überführen. In der frequenzbasierten Darstellung liegen die Daten als komplexe Zahlen vor. Die Anwendung muss ebenfalls in der Lage sein, aus den komplexen Zahlen reale Zahlen oder Polarkoordinaten zu extrahieren. Mithilfe dieser Operationen wird das Signal bearbeitet. Anschließend muss eine inverse FFT implementiert werden, welche die komplexen Zahlen in Samples überführt. Das Manipulieren des Signals sollte modular implementiert werden, sodass man nachträglich Audio-Algorithmen hinzufügen und zur Laufzeit austauschen kann.
 
-Die API zum Umgang mit der FFT sollte die oben genannten Anforderungen erfüllen. Im Kontext von iOS bietet Apple selbst eine API zur digitalen Signalverarbeitung namens [vDSP](https://developer.apple.com/library/prerelease/ios/documentation/Accelerate/Reference/vDSPRef/index.html) an. vDSP nutzt das [Accelerate Framework](https://developer.apple.com/library/prerelease/tvos/documentation/Accelerate/Reference/AccelerateFWRef/index.html#other), welches eine C-API zum Verarbeiten von Vektoren, Matrizen, digitalen Signalen, Bildern usw. anbietet. Einen leichtgewichtigen Wrapper um die *low-level* APIs gibt es nicht, vor allem nicht für Swift. Aus diesem Grund kommt eine weitere Herausforderung hinzu: die Nutzung von C-artigen, adress- und pointerbasierten Funktionen in einer modernen Programmiersprache, die aus der Intention heraus entwickelt wurde, seinen C-Balast abzuwerfen. Unabhängig davon, fällt die Wahl auf vDSP und dem Accelerate Framework, da beide APIs von Apple für iOS Systeme angeboten werden, um digitale Signalverarbeitung zu vermöglichen. Des weiteren scheint die Benutzung beider APIs eher mit Swift zu harmonieren, als eine andere reine C oder C++ API. Das wichtige Kriterium ist jedoch, dass beide APIs laut dem [vDSP Reference Guide](https://developer.apple.com/library/prerelease/tvos/documentation/Accelerate/Reference/vDSPRef/index.html#//apple_ref/doc/uid/TP40009464) die oben genannten Anforderungen erfüllen.
+Die API zum Umgang mit der FFT sollte die oben genannten Anforderungen erfüllen. Im Kontext von iOS bietet Apple selbst eine API zur digitalen Signalverarbeitung namens [vDSP](https://developer.apple.com/library/prerelease/ios/documentation/Accelerate/Reference/vDSPRef/index.html) an. vDSP nutzt das [Accelerate Framework](https://developer.apple.com/library/prerelease/tvos/documentation/Accelerate/Reference/AccelerateFWRef/index.html#other), welches eine C-API zum Verarbeiten von Vektoren, Matrizen, digitalen Signalen, Bildern usw. anbietet. Einen leichtgewichtigen Wrapper um die *low-level* APIs gibt es nicht, vor allem nicht für Swift. Aus diesem Grund kommt eine weitere Herausforderung hinzu: die Nutzung von C-artigen, adress- und pointerbasierten Funktionen in einer modernen Programmiersprache, die aus der Intention heraus entwickelt wurde, seinen C-Balast abzuwerfen. Unabhängig davon, fällt die Wahl auf vDSP und dem Accelerate Framework, da beide APIs von Apple für iOS Systeme angeboten werden, um digitale Signalverarbeitung zu ermöglichen. Des Weiteren scheint die Benutzung beider APIs eher mit Swift zu harmonieren, als eine andere reine C oder C++ API. Das wichtige Kriterium ist jedoch, dass beide APIs laut dem [vDSP Reference Guide](https://developer.apple.com/library/prerelease/tvos/documentation/Accelerate/Reference/vDSPRef/index.html#//apple_ref/doc/uid/TP40009464) die oben genannten Anforderungen erfüllen.
 
 #### FFT Datenstrukturen
 
 Die Implementierung der FFT-Komponente beginnt mit den Datenstrukturen. Die Funktionen der vDSP API sind so aufgebaut, dass sie, neben primitiven Parametern wie *Int* und *Double*, *UsafePointer* und *UnsafeMutablePointer* entgegennehmen oder zurückgeben:
-
 
     import Accelerate
 
     func vDSP_zvmags(__A: UnsafePointer<DSPSplitComplex>, _ __IA: vDSP_Stride, _ __C: UnsafeMutablePointer<Float>, _ __IC: vDSP_Stride, _ __N: vDSP_Length) {}
     func vDSP_mmul(__A: UnsafePointer<Float>, _ __IA: vDSP_Stride, _ __B: UnsafePointer<Float>, _ __IB: vDSP_Stride, _ __C: UnsafeMutablePointer<Float>, _ __IC: vDSP_Stride, _ __M: vDSP_Length, _ __N: vDSP_Length, _ __P: vDSP_Length) {}
 
-Die erste Funktion extrahiert die *Magnitudes* aus einer komplexen Zahl. Die zweite Funktion multipliziert zwei Arrays, die wiederum Magnitudes sein können. UsafePointer und UnsafeMutablePointer werden benutzt, um mit den Adressen der Variablen zu arbeiten (Pointer). Alle vDSP Funktionen sind c-artig implementiert. Sie nehmen die Adresse einer Variable entgegen, manipulieren den Wert und geben *keinen* Wert zurück (*side effect*).
+Die erste Funktion extrahiert die *Magnitudes* aus einer komplexen Zahl. Die zweite Funktion multipliziert zwei Arrays, die wiederum Magnitudes sein können. UsafePointer und UnsafeMutablePointer werden benutzt, um mit den Adressen der Variablen zu arbeiten (Pointer). Alle vDSP Funktionen sind C-artig implementiert. Sie nehmen die Adresse einer Variable entgegen, manipulieren den Wert und geben somit *keinen* Wert zurück (*side effect*).
 
 Um im Kontext einer modernen, multiparadigmen Programmiersprache mit solch einer Art von Funktionen zu arbeiten, wird die Benutzung der vDSP API mithilfe von geeigneten Datenstrukturen und Funktionen abstrahiert. Zunächst werden die Datenstrukturen vorgestellt. Im übernächsten Kapitel (Operationen auf komplexen Zahlen) werden die Funktionen vorgestellt.
 
@@ -239,11 +271,11 @@ Um im Kontext einer modernen, multiparadigmen Programmiersprache mit solch einer
         var count: Int { return real.count }
     }
 
-Als erstes wird die Struktur einer komplexen Zahl beschrieben, welche aus einer realen und einer imaginären Zahl besteht. Der Typ *T* kann wahlweise *Double* oder *Float* sein. Ein *SplitComplexVector* beschreibt eine Menge von komplexen Zahlen, wobei der reale und imaginäre Anteile getrennt betrachtet werden. Des Weiteren wird der Zugriff auf den SplitComplexVector mithilfe des Subscripts vereinfacht:
-*/
+Als erstes wird die Struktur einer komplexen Zahl beschrieben, welche aus einer realen und einer imaginären Zahl besteht. Der Typ *T* kann wahlweise *Double* oder *Float* sein. Ein *SplitComplexVector* beschreibt eine Menge von komplexen Zahlen, wobei der reale und imaginäre Anteil getrennt betrachtet werden. Des Weiteren wird der Zugriff auf den SplitComplexVector mithilfe des Array-Subscripts vereinfacht: */
 let vector = SplitComplexVector<Float>(count: 10, repeatedValue: Complex<Float>(real: 0, imag: 0))
 let first = vector[0] // subscript, element an der Stelle 0
 /*:
+
 #### Die FFT Klasse
 
 Gemäß den oben genannten Anforderungen muss die FFT Implementierung eine Hin- und Rücktransformation ermöglichen:
@@ -255,9 +287,9 @@ Gemäß den oben genannten Anforderungen muss die FFT Implementierung eine Hin- 
         func inverse(x: SplitComplexVector<Float>) -> [Float]
     }
 
-Das Protocol definiert die Transformationen von **real -> forward -> complex -> inverse -> real**. Der Eingabeparameter (real) sind die Samples als Array vom Typ Float. Die Forward-Funktion gibt einen SplitComplexVector vom Typ Float zurück, welcher als Eingabeparameter für die Inverse-Funktion verwendet wird, welche wiederum Samples als Float Array zurückgibt. Die komplexen Zahlen zwischen Forward und Inverse werden für Manipulationen am Signal verwendet, welches im übernächsten Kapitel (Strategien zum Manipulieren der Magnitudes) beschrieben wird.
+Das Protocol definiert die Transformationen von **real -> forward -> complex -> inverse -> real**. Der Eingabeparameter (real) sind die Samples als Array vom Typ Float, welcher aber hier nicht übergeben, sondern als Instanzvariable bezogen wird. Die Forward-Funktion gibt einen SplitComplexVector vom Typ Float zurück, welcher als Eingabeparameter für die Inverse-Funktion verwendet wird, welche wiederum Samples als Float Array zurückgibt. Die komplexen Zahlen zwischen Forward und Inverse werden für Manipulationen am Signal verwendet, welches im übernächsten Kapitel (Strategien zum Manipulieren der Magnitudes) beschrieben wird.
 
-Die [vDSP API](https://developer.apple.com/library/mac/documentation/Performance/Conceptual/vDSP_Programming_Guide/UsingFourierTransforms/UsingFourierTransforms.html#//apple_ref/doc/uid/TP40005147-CH3-SW1) von Apple benötigt für die FFT ein FFT-Setup und einige Konstanten. Die notwendigen Parameter werden für die aufrufende Instanz über den Konstruktor abstrahiert. Der Konstruktor selbst benötigt lediglich die Samples als Float Array:
+Die [vDSP API](https://developer.apple.com/library/mac/documentation/Performance/Conceptual/vDSP_Programming_Guide/UsingFourierTransforms/UsingFourierTransforms.html#//apple_ref/doc/uid/TP40005147-CH3-SW1) von Apple benötigt für die FFT ein *FFT-Setup* und einige weiteren Konstanten. Die notwendigen Parameter werden für die aufrufende Instanz über den Konstruktor abstrahiert. Der Konstruktor selbst benötigt lediglich die Samples als Float Array:
 
     class FFT {
         
@@ -276,7 +308,7 @@ Die [vDSP API](https://developer.apple.com/library/mac/documentation/Performance
         }
     }
 
-Die beiden Transformationsfunktionen werden implementiert, indem die Klasse FFT um das Transformation-Protocol erweitert wird :
+Die beiden Transformationsfunktionen werden implementiert, indem die Klasse FFT um das obige *Transformation*-Protocol erweitert wird :
 
     extension FFT: Transformation {
         
@@ -322,17 +354,20 @@ private func sin(x: [Float]) -> [Float] {
     return results
 }
 
+// parameters
 let count = 64
 let frequency: Float = 4.0
 let amplitude: Float = 3.0
 
+// build sine function
 let sineValues = (0..<count).map { Float(2.0 * M_PI) / Float(count) * Float($0) * frequency }
 let samples: [Float] = sin(sineValues)
 
+// plot sine function
 samples.map{ $0 }
-/*:
-Mithilfe der Map-Funktion wird eine Sinus-Funktion mit 64 Samples erzeugt und anschließend gezeichnet. Die Samples sollen nun als Basis für die FFT-Forward-Funktion verwendet werden. Das Ergebnis wird ebenfalls gezeichnet:
-*/
+/*: 
+
+Mithilfe der Map-Funktion wird eine Sinus-Funktion mit 64 Samples erzeugt und anschließend gezeichnet. Die Samples sollen nun als Basis für die FFT-Forward-Funktion verwendet werden. Das Ergebnis wird ebenfalls gezeichnet: */
 private func magnitudes( var x: SplitComplexVector<Float> ) -> [Float] {
     var magnitudes = [Float]( count: x.count, repeatedValue: 0 )
     
@@ -345,20 +380,27 @@ private func magnitudes( var x: SplitComplexVector<Float> ) -> [Float] {
     return magnitudes
 }
 
+// perform forward
 let fft = FFT(initWithSamples: samples)
 let forward = fft.forward()
 
+// plot magnitudes 
 magnitudes(forward).map{ $0 }
-/*:
-Die Funktion *magnitudes<A, B>(A) -> B* ist eine Hilfsfunktion, die erst im nächsten Unterkapitel besprochen werden. Sie wird benötigt, um die Magnitudes aus den komplexen Zahlen zu extrahieren, die anschließend gezeichnet wurden. Im Folgenden sollen die komplexen Zahlen mithilfe der Inverse-Funktion wieder in das Ausgangssignal zurückgerechnet und anschließend gezeichnet werden: */
+/*: 
+
+Die Funktion *magnitudes<A, B>(A) -> B* ist eine Hilfsfunktion, die erst im nächsten Unterkapitel besprochen werden. Sie wird benötigt, um die Magnitudes aus den komplexen Zahlen zu extrahieren, die anschließend gezeichnet werden. Im Folgenden sollen die komplexen Zahlen mithilfe der Inverse-Funktion wieder in das Ausgangssignal zurückgerechnet und ebenfalls gezeichnet werden: */
+// perform inverse
 let inverse = fft.inverse(forward)
 
+// plot inverse
 inverse.map{ $0 }
-/*:
-#### Operationen auf komplexen Zahlen
-Wie die Magnitudes-Funktion gezeigt hat, werden einige weitere Funktionen benötigt, welche auf den Daten der FFT operieren. Da die meisten dieser Funktionen intern die Funktionen der vDSP API verwenden, um beispielsweise aus komplexen Zahlen (DSPSplitComplex) Polarkorrdinaten zu extrahieren, wurden die Funktionen wiederum in Swift Funktionen gewrapped. Die Swift Funktionen haben meistens eine Signatur von *func<A>(SplitComplexVector<A>) -> Array<A>*, um erneut nicht von der vDSP API abhängig zu sein. Auch hier kann die Bibliothek für die digitale Signalverarbeitung ausgetauscht werden, ohne das Änderungen bei der aufrufenden Instanz durchgeführt werden müssen.
+/*: 
 
-Neben der Magnitudes-Funktion werden noch einge wichtige Funktionen vorgestellt: */
+#### Operationen auf komplexen Zahlen
+
+Wie die Magnitudes-Funktion gezeigt hat, werden einige weitere Funktionen benötigt, welche auf den Daten der FFT operieren. Da die meisten dieser Funktionen intern die Funktionen der vDSP API verwenden, um beispielsweise aus komplexen Zahlen (DSPSplitComplex) die Polarkorrdinaten zu extrahieren, wurden die Funktionen wiederum in Swift Funktionen gewrapped. Die Swift Funktionen haben meistens eine Signatur von *func<A>(SplitComplexVector<A>) -> Array<A>*, um erneut nicht von der vDSP API abhängig zu sein. Auch hier kann die Bibliothek für die digitale Signalverarbeitung ausgetauscht werden, ohne das Änderungen bei der aufrufenden Instanz durchgeführt werden müssen.
+
+Neben der Magnitudes-Funktion werden noch die Folgenden wichtigen Funktionen vorgestellt: */
 func normalizedMagnitudes(var x: SplitComplexVector<Float>) -> [Float] {
     var dspSplitComplex = DSPSplitComplex( realp: &x.real, imagp: &x.imag )
     
@@ -392,7 +434,10 @@ func polarCoordinates(var x: SplitComplexVector<Float>) -> (mag: [Float], phase:
     return (magnitudes, phase)
 }
 
+// perform polar
 let polar = polarCoordinates(forward)
+
+// plot magnitudes and phase
 polar.mag.map{ $0 }
 polar.phase.map{ $0 }
 
@@ -406,9 +451,11 @@ func maxHz(samples: [Float], rate: Int) -> Float {
     return (Float(maxIndex) / Float(length)) * (Float(rate) / 2)
 }
 
+// perform and show frequency
 maxHz(samples, rate: count)
-/*:
-Die erste Funktion, *normalizedMagnitudes<A, b>(A) -> B*, berechnet die Magnitudes einer komplexen Zahl *A* mithilfe der *vDSP_zvmagsD*-Funktion, im Gegensatz zur bereits vorgestellten *magnitudes<A, B>(A) -> B*-Funktion, welche ohne die vDSP API auskommt. Des Weiteren werden die Magnitudes normalisiert, weil *vDSP_zvmags* die quadrierten Magnitudes des komplexen Vektors zurückgibt. Auch die Funktion *abs<A, B>(A) -> B* macht letztlich das Gleiche wie *magnitudes* und *normalizedMagnitudes*, außer das Normalisieren. Eine neue Funktion ist *polarCoordinates<A, B>(A) -> (B, B)*, welche die Polarkoordinaten als Tupel zurückgibt. Hierbei beschreiben Magnitudes den Abstand zu 0 und Phase den Winkel zur Koordinate. Zuletzt sei noch die Funktion *maxHz<A, B, C>(A, B) -> C* erwähnt, welche die Frequenz der übergebenen Samples *A* unter Berücksichtigung der Samplingrate *B* mithilfe der *vDSP_maxvi*-Funktion berechnet. Die Funktion wird am Beispiel der Sinus-Funktion aufgerufen und gibt die Frequenz 4 zurück. Angesichts der Zeile *let frequency: Float = 4.0* stimmt das Ergebnis.
+/*: 
+
+Die erste Funktion, *normalizedMagnitudes<A, B>(A) -> B*, berechnet die Magnitudes einer komplexen Zahl *A* mithilfe der *vDSP_zvmagsD*-Funktion, im Gegensatz zur bereits vorgestellten *magnitudes<A, B>(A) -> B*-Funktion, welche ohne die vDSP API auskommt. Des Weiteren werden die Magnitudes normalisiert, weil *vDSP_zvmags* die quadrierten Magnitudes des komplexen Vektors zurückgibt. Auch die Funktion *abs<A, B>(A) -> B* macht letztlich das Gleiche wie *magnitudes* und *normalizedMagnitudes*, außer das Normalisieren. Eine neue Funktion ist *polarCoordinates<A, B>(A) -> (B, B)*, welche die Polarkoordinaten als Tupel zurückgibt. Hierbei beschreiben Magnitudes den Abstand zu 0 und Phase den Winkel zur Koordinate. Zuletzt sei noch die Funktion *maxHz<A, B, C>(A, B) -> C* erwähnt, welche die Frequenz der übergebenen Samples *A* unter Berücksichtigung der Samplingrate *B* mithilfe der *vDSP_maxvi*-Funktion berechnet. Die Funktion wird am Beispiel der Sinus-Funktion aufgerufen und gibt die Frequenz 4 zurück. Angesichts der Zeile *let frequency: Float = 4.0* stimmt das Ergebnis.
 
 #### Strategien zum Manipulieren der Magnitudes
 
@@ -436,7 +483,7 @@ Um mehrere Strategien für das Manipulieren von Daten zu ermöglichen und diese 
         }
     }
 
-Über einen weiteren Konstruktur wird ein Array von *FilterStrategy* übergeben. Als nächstes folgt die Implementierung der Funktion, welche die Magnitudes auf den komplexen Zahlen extrahiert und die *apply-Funktion* aller Filter-Strategies komponiert. Die Funktion setzt bei *complex* zwischen *forward -> complex* und *complex -> inverse* an und hat demnach eine Signatur von *A -> A* wobei A ein SplitComplexVector vom Typ Float ist.
+Über einen weiteren Konstruktur wird ein Array von *FilterStrategy* übergeben. Als nächstes folgt die Implementierung der Funktion, welche die Magnitudes aus den komplexen Zahlen extrahiert und die *apply-Funktion* aller Filter-Strategies komponiert. Die Funktion setzt bei **complex** zwischen **forward -> complex** und **complex -> inverse** an und hat demnach eine Signatur von *A -> A* wobei A ein SplitComplexVector vom Typ Float ist. Die Implementierung dieser Funktion erfolgt, indem die FFT-Klasse erweitert wird.
 
     extension FFT {
         
@@ -450,7 +497,9 @@ Um mehrere Strategien für das Manipulieren von Daten zu ermöglichen und diese 
                 vDSP_ztoc(&dspSplitComplex, 1, resultAsComplex, 2, vDSP_Length(splitComplex.count))
             }
             
-            let applied = strategy.reduce(result) { $1.apply($0) } // composing strategies
+            let applied = strategy.reduce(result) { values, strategy in // composing strategies
+                return strategy.apply(values)
+            }
             
             applied.withUnsafeBufferPointer { (xPointer: UnsafeBufferPointer<Float>) -> Void in
                 let xAsComplex = UnsafePointer<DSPComplex>( xPointer.baseAddress )
@@ -461,7 +510,7 @@ Um mehrere Strategien für das Manipulieren von Daten zu ermöglichen und diese 
         }
     }
 
-Vor und nach dem Anwenden der Strategien müssen die komplexen Zahlen, ähnlich wie bei der Forward- und Inverse-Funktion, zunächst mithilfe der *withUnsafeBufferPointer*-Funktion extrahiert, aufbereitet und als *DSPSplitComplex* zurückgegeben werden. Das eigentliche Anwenden der Strategien erfolgt mithilfe der funktionalen Reduce-Funktion. Diese wird (über Umwegen) mit den Werten des Übergabeparameters *x*, den Magnitudes der komplexen Zahlen aus der Forward-Funktion, intialisiert. Basierend auf diesem Startwert wird für jede Strategy *$1* die *apply* Funktion mit dem Ergebnis des vorherigen Durchlaufs *$0* aufgerufen. Auf diese Weise werden alle Strategien komponiert und das Ergebnis mithilfe der *withUnsafeBufferPointer*-Funktion als *SplitComplexVector* vom Typ Float zurückgegeben.
+Vor und nach dem Anwenden der Strategien müssen die komplexen Zahlen, ähnlich wie bei der Forward- und Inverse-Funktion, zunächst mithilfe der *withUnsafeBufferPointer*-Funktion extrahiert, aufbereitet und als *DSPSplitComplex* zurückgegeben werden. Das eigentliche Anwenden der Strategien erfolgt mithilfe der funktionalen Reduce-Funktion. Diese wird (über Umwegen) mit den Werten des Übergabeparameters *x*, den Magnitudes der komplexen Zahlen aus der Forward-Funktion, intialisiert. Basierend auf diesem Startwert wird für jede Strategy *strategy* die *apply*-Funktion mit dem Ergebnis des vorherigen Durchlaufs *values* aufgerufen. Auf diese Weise werden alle Strategien komponiert und das Ergebnis mithilfe der *withUnsafeBufferPointer*-Funktion als *SplitComplexVector* vom Typ Float zurückgegeben.
 
 Im Folgenden wird ein Workflow für das Manipulieren des oben definierten Sinus-Signals beschrieben. Hierfür wird eine Double-, Tripple und eine No-Strategy als Implementierung von FilterStrategy verwendet, um die Komposition der Strategien zu testen. 
 
@@ -482,24 +531,31 @@ Im Folgenden wird ein Workflow für das Manipulieren des oben definierten Sinus-
             return x.map { $0 * 3 }
         }
     }
-
 */
+// setup
 let withStrategies = FFT(initWithSamples: samples, andStrategy: [DoubleStrategy(), NoStrategy(), TrippleStrategy()])
+
+// perform fft-stack
 let forardWithS = withStrategies.forward()
 let applied = withStrategies.applyStrategy(forardWithS)
 let inverseWithS = withStrategies.inverse(applied)
 
-inverseWithS.map{$0}
-max(samples)
-max(inverseWithS)
-/*: Auch wenn die oben gezeichnete modifizierte Sinus-Funktion sich opisch nicht von der am Anfang gezeigten Sinus-Funktion unterscheidet, ist das Entscheidende der *max*-Funktion zu entnehmen. Während der höchste Wert der originalen Sinus-Samples 1 beträgt, ist es bei dem modifizierten Signal eine 6, weil 1 (original) * 2 (DoubleStrategy) * 3 (TrippleStrategy) = 6 ergibt. 
+// plot inverse
+inverseWithS.map{ $0 }
 
-Um den Aufruf von *forward -> apply -> inverse* etwas angenehmer zu gestalten, wurde ein überladener inflix Operator *-->* eingeführt, welcher das Ergebnis von *Left* als Übergabeparameter von *Right* komponiert. Demnach können die folgenden zwei Signaturen aufreten
+// compare compused results
+max(samples) 
+max(inverseWithS)
+/*: 
+
+Auch wenn die oben gezeichnete modifizierte Sinus-Funktion sich opisch nicht von der am Anfang gezeigten Sinus-Funktion unterscheidet, ist das Entscheidende der *max*-Funktion zu entnehmen. Während der höchste Wert der originalen Sinus-Samples 1 beträgt, ist es bei dem modifizierten Signal eine 6, weil 1 (original) * 2 (DoubleStrategy) * 3 (TrippleStrategy) = 6 ergibt.
+
+Um den Aufruf von **forward -> apply -> inverse** etwas angenehmer zu gestalten, wurde ein überladener Infix Operator *-->* eingeführt, welcher das Ergebnis von *Left* als Übergabeparameter von *Right* komponiert. Demnach können die folgenden zwei Signaturen
 
 * --><A, B>(A, A -> B) -> B und 
 * --><A>(A, A -> A) -> A
 
-auftreten, weil die Überführung entweder von *Array<Float>* zu *Array<Float>*, *SplitComplexVector<Float>* zu *SplitComplexVector<Float>* oder von *SplitComplexVector<Float>* zu *Array<Float>* erfolgt. Intern wird das Ergebnis von Links der Funktion von Rechts übergeben und dessen Ergebnis als nächstes Links zurückgegeben: 
+auftreten, weil die Überführung entweder von *Array<Float>* zu *Array<Float>*, *SplitComplexVector<Float>* zu *SplitComplexVector<Float>* oder von *SplitComplexVector<Float>* zu *Array<Float>* erfolgt. Intern wird das Ergebnis der linken Funktion der rechten Funktion übergeben und dessen Ergebnis als nächstes *Links* zurückgegeben: 
 
     infix operator --> { associativity left }
 
@@ -511,12 +567,17 @@ auftreten, weil die Überführung entweder von *Array<Float>* zu *Array<Float>*,
         return right(left)
     }
 */
-
+// setup
 let overload = FFT(initWithSamples: samples, andStrategy: [DoubleStrategy(), NoStrategy(), TrippleStrategy()])
+
+// compose funtcions with -->
 let composed = overload.forward() --> overload.inverse
 
+// plot results
 composed.map{ $0 }
-/*: Die modulare Implementierung der FFT-Klasse und dem Strategy-Pattern erlaubt das Hinzufügen von Strategien, die von der FFT berücksichtigt werden. Im Rahmen des Prototypen wurden die Algorithmen zu den Mapping- und Noise-Reduction-Strategien aufgrund von gegebenen Ressourcen naiv implementiert. Sie führen zwar zu einem Ergebnis, allerdings sind noch einige naiven Annahmen drin, die nicht zum besten Ergebnis führen. Das intensive Auseinandersetzen mit angemessenen Audio-Algorithmen würde zu viel Zeit in Anspruch nehmen, da die theoretischen Hintergründe fundierter betrachtet werden müssen. Es lässt sich wahrscheinlich ein eigenes Guided-Project formulieren, welches einzig und allein diese Thematik behandelt. Aus diesem Grund werden lediglich die naiven Algorithmen von Noise-Reduction und Mapping-Strategien besprochen. Afugrund der modularen Implementierung der FFT-Klasse können zu einem späteren Zeitpunkt die Implementierungen erweitert und durch bessere Algorithmen ausgetauscht werden.
+/*: 
+
+Die modulare Implementierung der FFT-Klasse und dem Strategy-Pattern erlaubt das Hinzufügen von Strategien, die von der FFT berücksichtigt werden. Im Rahmen des Prototypen wurden die Algorithmen zu den Mapping- und Noise-Reduction-Strategien aufgrund von gegebenen Ressourcen naiv implementiert. Sie führen zwar zu einem Ergebnis, allerdings sind noch einige naiven Annahmen drin, die nicht zum besten Ergebnis führen. Das intensive Auseinandersetzen mit angemessenen Audio-Algorithmen würde zu viel Zeit in Anspruch nehmen, da die theoretischen Hintergründe fundierter betrachtet werden müssen. Es lässt sich wahrscheinlich ein eigenes Guided-Project formulieren, welches einzig und allein diese Thematik behandelt. Aus diesem Grund werden lediglich die naiven Algorithmen von Noise-Reduction und Mapping-Strategien besprochen. Afugrund der modularen Implementierung der FFT-Klasse können zu einem späteren Zeitpunkt die Implementierungen erweitert und durch bessere Algorithmen ausgetauscht werden.
 
 #### Noise-Reduction- und Mapping-Strategien
 
@@ -534,61 +595,86 @@ In diesem Kapitel soll die FFT-Pipeline anhand einer realen Test-Audiodatei durc
 * Manipulation der Samples mithilfe der FFT
 * Modifizierte Samples als neue Audio-Datei abspeichern
 
-Aus Gründen der Performanz werden nur die ersten 2048 Samples der Audiodatei betrachtet. Ansonsten würde das Playground zu lange rechnen, um die Ergebnisse anzuzeigen.
+Aus Gründen der Performanz des Playgrounds werden nur die ersten 2048 Samples der Audiodatei betrachtet. Ansonsten würde das Playground zu lange rechnen, um die Ergebnisse anzuzeigen, was ebenfalls das Lesen beeinschränkt.
 
 Als Erstes werden die Samples aus der Autodatei mithilfe der AudioFile-Klasse extrahiert. Außerdem werden weitere Variablen wie Samplingrate und Bin-Größe initialisiert: */
 import AVFoundation
 
+// setup
 let audioFile = AudioFile()
 let filename = "/alex.m4a"
 
+// extract samples and take the first 2048 samples
 let data = Array(audioFile.readAudioFileToFloatArray(NSBundle.mainBundle().bundlePath.stringByAppendingString(filename))![0..<(1024*2) + (800)])
 
+// proof 2048 samples
 data.count
-data.map{ $0}
 
+// plot them
+data.map{ $0 } 
+
+// define parameters
 let samplingRate = 44100
 let n = 1024
 let length = n / 2
 /*:
-Im Playground ist die Verwendung des Hörtests nicht möglicht. Deshalb werden die minimale und maximale hörbare Frequenz hartkodiert eingetragen. Allerdings handelt es sich hierbei um den tatsächlichen Frequenzbereichs von einem der beiden Projektpartnern. Der Frequenzbereich muss nun noch einen Index abgebildet werden, um die entsprechenden Frequenzen identizieren zu können: */
+
+Im Playground ist die Verwendung des Hörtests nicht möglicht. Deshalb werden die minimale und maximale hörbare Frequenz hartkodiert eingetragen. Allerdings handelt es sich hierbei um den tatsächlichen Frequenzbereichs von einem der beiden Projektpartnern. Der Frequenzbereich muss nun noch als Index abgebildet werden, um die entsprechenden Frequenzen identizieren zu können: */
+// define min and max frequencies
 let maxFrequency = 13000
 let minFrequency = 0
 
+// infer index based on length sampling rate
 let maxIndex = (length * Int(maxFrequency)) / (samplingRate / 2 )
 let minIndex = (length * Int(minFrequency)) / (samplingRate / 2 )
 /*:
-Als nächstes werden die Samples mit Nullen aufgefüllt, um ohne Verluste in *n=1024* Größe Unter-Arrays aufgeteilt zu werden. Auf diese Weise wird die FFT jeweils für 1024 Samples durchgeführt, um **HIER DEN GRUND DAFÜR**. Des Weiteren werden die Samples mithilfe einer Window-Funktion skaliert, um **HIER DEN GRUND DAFÜR**: */
+
+Als nächstes werden die Samples mit Nullen aufgefüllt, um ohne Verluste in *n=1024* Große Sub-Arrays aufgeteilt zu werden. Auf diese Weise wird die FFT jeweils für 1024 Samples durchgeführt, um **HIER DEN GRUND DAFÜR**. Des Weiteren werden die Samples mithilfe einer Window-Funktion skaliert, um **HIER DEN GRUND DAFÜR**: */
+// zero padding with plot
 let padded = addZeroPadding(data, whileModulo: n)
 padded.map{ $0 }
+
+// window function with plot
 let window: [Float] = hamming(padded.count)
 window.map{ $0 }
+
+// apply window to samples with plot
 let windowedData = window * padded
 windowedData.map{ $0 }
+
+// prepare sub arrays for fft
 let prepared = prepare(windowedData, steppingBy: n)
 /*:
-Nachdem alle Vorbereitungen getroffen worden sind, folgt die eigentlich FFT. *prepared* ist vom Typ Array<Array<Float>>, da die Samples (Array<Float>) wiederum in 1024 Sample große Unter-Arrays aufgeteilt wurden. Um an jedes Unter-Array zu gelangen, diese in eine FFT zu geben und das Ergebnis wieder zu einem einzigen Array vom Typ Float zu agregieren, wird im Folgenden eine Kombination von *flatMap* und *compose* verwendet: */
+
+Nachdem alle Vorbereitungen getroffen wurden, folgt die eigentlich FFT. *prepared* ist vom Typ Array<Array<Float>>, da die Samples (Array<Float>) wiederum in 1024 Sample große Unter-Arrays aufgeteilt wurden. Um an jedes Sub-Array zu gelangen, diese in eine FFT zu geben und das Ergebnis wieder zu einem einzigen Array vom Typ Float zu agregieren, wird im Folgenden eine Kombination von *flatMap* und *compose* verwendet: */
 let result = prepared.flatMap { samples -> [Float] in
+    // setup with composed strategies
     let fft = FFT(initWithSamples: samples, andStrategy: [
         NoiseReductionStrategy(),
         AverageMappingStrategy(minIndex: minIndex, andMaxIndex: maxIndex)]
     )
     
+    // perform forward and plot magnitues
     let f = fft.forward()
     magnitudes(f).map{ $0 }
     
+    // apply strategies and plot magnitues
     let a = f --> fft.applyStrategy
     magnitudes(a).map{ $0 }
     
     return a --> fft.inverse
 }
 
+// undo window function and plot inverse
 let unwindowed = result / window
 unwindowed.map{ $0 }
 /*:
-Durch *flatMap* ist *result* vom Typ Array<Float>, also unsere mit *NoiseReduction* und *AverageMappingStrategy* modifizierten Samples. Diese müssen nur noch als Audiodatei rekonstruiert und unter einer neuen Datei gespeichert werden: */
+
+Durch *flatMap* ist *result* vom Typ Array<Float>, also die mit *NoiseReduction* und *AverageMappingStrategy* modifizierten Samples. Diese müssen nur noch als Audiodatei rekonstruiert und unter einer neuen Datei gespeichert werden: */
+// save samples
 let path = audioFile.safeSamples(result, ToPath: NSBundle.mainBundle().bundlePath.stringByAppendingString("/blaalex.m4a"))
 /*:
+
 ## Abschluss
 
 In diesem Kapitel wird die Arbeit abgeschlossen, indem die Ergebnisse zunächst zusammengefasst werden. Danach folgt eine persönliche Einschätzung mit einer kritischen Reflexion der Autoren. Abschließend wird ein Ausblick auf potentiell anschließende Projekte gegeben, die auf den Ergebnissen und Erkenntnissen dieser Arbeit aufbauen können.
@@ -599,11 +685,11 @@ Die Arbeit wurde begonnen, indem theoretische Grundlagen rund um das Thema der a
 
 Ein Blick in die technische Implementierung der FFT und den Hilfsfunktionen, um das Signal zu bearbeiten, hat gezeigt, dass der Zugriff auf die C API über einen Swift-Wrapper implementiert werden sollte. Um ein schnelles Proof-of-Concept aufzustellen und die Nutzbarkeit der vDSP API zu überprüfen, wurde der Zugriff auf die Funktionen frühzeitig mit einem Prototyp getestet. Das Ergebnis des Prototyping sind:
 
-* Die Hilfsstrukturen SplitComplexVector<T> und Complex<T>, um die von vDSP verwendete adressbaierte Datenstuktur für komplexe Zahlen zu abstrahieren und die Nutzung von vDSP zu entkoppeln, damit die API der digitalen Signalverarbeitung bei Bedarf ausgetauscht werden kann.
+* Die Hilfsstrukturen SplitComplexVector<T> und Complex<T>, um die von vDSP verwendete adressbasierte Datenstuktur für komplexe Zahlen zu abstrahieren und die Nutzung von vDSP zu entkoppeln, damit die API der digitalen Signalverarbeitung bei Bedarf ausgetauscht werden kann.
 * Die FFT Klasse mit seinen Forward, Inverse und ApplyStrategy-Funktionen. Die Signaturen der Funktionen wurden ebenfalls so gewählt, dass Sie zwischen Array<Float> und SplitComplexVector<T> agieren, sodass die Implementierung der Funktionen ggf. auf Basis einer anderen API erfolgen kann.
 * Weiteren Hilfsfunktionen, die einen SplitComplexVector<T> entgegennehmen und aus den komplexen Zahlen Informationen extrahieren oder umwandeln (Magnitudes, Polarkoordikaten, usw.). Die Ergebnisse sind ebenfalls vom Typ Float, Array<Float> oder SplitComplexVector<T>, sodass die aufrufende Instanz von vDSP entkoppelt wird.
 
-Das Protoyping wurde mit einer einfachen Sinus-Funktion getestet und in einem Graphen gezeichnet. Die Aufrufe, Ergennisse und Graphen finden sich in Kapitel *Manipulation der Samples mithilfe der FFT*. 
+Das Protoyping wurde mit einer einfachen Sinus-Funktion getestet und in einem Graphen gezeichnet. Die Aufrufe, Erkenntnisse und Graphen finden sich in Kapitel *Manipulation der Samples mithilfe der FFT*. 
 
 Als nächstes folgte die Implementierung des Hörtests. Der Hörtest soll dabei helfen, den hörbaren Frequenzbereich des Benutzers zu erfahren, um eine individuelle und optimale Anpassung der Klangwahrnehmung zu gewährleisten. Für die Tongenerierung wurde die AudioKit API verwendet. Das Ergebnis des Hörtests sind die minimale und maximale hörbare Frequenz. Diese Informationen gehen als Parameter in die Mapping-Strategie ein.
 
@@ -614,16 +700,16 @@ Zuletzt sei noch die Implementierung erwähnt, welche aus einer Audio-Datei die 
 ### Persönliche Einschätzung und kritische Reflexion
 
 Die wohl wichtigste Erkenntniss der Arbeit ist, dass die theoretischen Grundlagen nicht trivial sind und tiefe matematische und physikalische Wurzeln haben, die durch jahrelange Forschung in diesem Gebiet geprägt wurden. Ein oberflächliches Einarbeiten reicht nicht aus, um an der digitalen Signalverarbeitung mitwirken zu können. Des Weiteren ist die Domain geprägt von vielen Fachbegriffen, um bestimmte Zustände und Objekte präzise zu beschreiben. Gerade die Fourier-Transformation bedarf an Einarbeitungszeit, um dessen Bedeutung, Relevanz und Umgang zu verstehen.
-Zudem existieren sehr viele unterschiedliche unterschiedliche Ansätze, Konzepte und damit auch Implementierungen von Audio-Algorithmen, die sehr komplex sind und in den meisten Fällen stark an Bibliotheken von Programmiersprachen und Frameworks geknüpft sind, weil dort gerade auf low-level Ebene viele Optimierungen durchgeführt werden, um eine durchaus notwendige Performanz zu gewährleisten. Das intensive Beschäftigen mit solchen Algorithmen würde ein eigenes Guided-Projekt, oder sogar ein Guided-Projekt pro Algorithmus mit sich bringen, da die Thematik und vor allem dessen theoretischer Hintergrund komplex und speziell ist. Deshalb wurde der Kern der Arbeit auf die Entwicklung eines Frameworks zum Klangmanagment, der Anpassung von Klangräumen an die individuelle Wahrnehmung des Menschen, ausgerichtet. Das Framework umfasst
+Zudem existieren sehr viele unterschiedliche Ansätze, Konzepte und damit auch Implementierungen von Audio-Algorithmen, die sehr komplex sind und in den meisten Fällen stark an Bibliotheken von Programmiersprachen und Frameworks geknüpft sind, weil dort gerade auf low-level Ebene viele Optimierungen durchgeführt werden, um eine durchaus notwendige Performanz zu gewährleisten. Das intensive Beschäftigen mit solchen Algorithmen würde ein eigenes Guided-Projekt, oder sogar ein Guided-Projekt pro Algorithmus mit sich bringen, da die Thematik und vor allem dessen theoretischer Hintergrund komplex und speziell ist. Deshalb wurde der Kern der Arbeit auf die Entwicklung eines Frameworks zum Klangmanagment, der Anpassung von Klangräumen an die individuelle Wahrnehmung des Menschen, ausgerichtet. Das Framework umfasst
 
 * einen individuellen Hörtest,
 * eine Swift Abstraktion um die Benutzung der C-artigen vDSP API inklusive Hilfsfunktionen und einer funktionalen Zugriffsart,
 * das dynamische Austauschen und Hinzufügen von Manipulations-Strategien zur Laufzeit und
 * das Einlesen, Extrahieren und Abspeichern von Audio-Dateien vor und nach der Anpassung der Klangräumen.
 
-Das Auseinandersetzen mit der vDSP API war herausfordernd, weil der Umgang mit einer adress- und pointerbasierten API in einer High Level Programmiersprache mühselig und side-effect behaftet ist. Das macht nicht nur den Quellcode unschön, sondern auch unleserlich und inkohärent. Vor allem wenn man bedenkt, dass Swift aus der Intention heraus entwickelt wurde, um den alten C Balast abzuwerfen und eine moderne Programimersprache zu sein.
+Das Auseinandersetzen mit der vDSP API war herausfordernd, weil der Umgang mit einer adress- und pointerbasierten API in einer High Level Programmiersprache mühselig und side-effect behaftet ist. Das macht den Quellcode nicht nur unschön, sondern auch unleserlich und inkohärent. Vor allem wenn man bedenkt, dass Swift aus der Intention heraus entwickelt wurde, um den alten C Balast abzuwerfen und eine moderne Programimersprache zu sein.
 
-Die Implementierung des Hörtest ist zielführend und zufriendenstellend verlaufen, auch wenn sie simpel gehalten wurde. Allerdings ist sie so gewählt, dass man ohne weiteres die Tongenerierung von 0 bis 22000 Hz dediziert für beide Ohren erzeugen kann. Dadurch kann man die Frequenzen für beide Ohren getrennt (Stereo) aufnehmen und die Klangwahrnehmung potenziell noch individueller, nämlich für beide Ohren getrennt durchführen. Des Weiteren ist die Abhängigkeit zur Amplitude bei der Tongenerierung bereits implementiert, allerdings noch nicht in aktiver Verwendung. In einer weiteren Iteration kann die Amplitude beim Mapping der Frequenzen berücksichtigt werden. Allerdings ist es noch fraglich, inwiefern diese Feature das Ergebnis optimieren würde.
+Die Implementierung des Hörtest ist zielführend und zufriendenstellend verlaufen, auch wenn sie simpel gehalten wurde. Allerdings ist sie so gewählt, dass man ohne weiteres die Tongenerierung von 0 bis 22000 Hz dediziert für beide Ohren erzeugen kann. Dadurch kann man die Frequenzen für beide Ohren getrennt (Stereo) aufnehmen und die Klangwahrnehmung potenziell noch individueller, nämlich für beide Ohren getrennt, durchführen. Des Weiteren ist die Abhängigkeit zur Amplitude bei der Tongenerierung bereits implementiert, allerdings noch nicht in aktiver Verwendung. In einer weiteren Iteration kann die Amplitude beim Mapping der Frequenzen berücksichtigt werden. Allerdings ist es noch fraglich, inwiefern diese Feature das Ergebnis optimieren würde.
 
 Die Implementierung der Audio-Algorithmen für die Strategien ist hingegen semi-zufriendenstellend verlaufen. Das Team wollte schnell Ergebnisse erzielen, um die prototypische Implementierung des FFT-Stacks nicht nur an der Sinus-Funktion, sondern auch an realen Audio-Dateien zu testen. Deshalb wurden die Algorithmen zwar konzeptionell sinnvoll geplant, jedoch simpel und unter einfachen Annahmen implementiert. Gegen Ende des Projektes blieb nicht viel Zeit, um sich intensiv mit geeigneteren Algorithmen auseinanderzusetzen und die bestehenden Algorithmen zu optimieren. Schließlich sollte das Projekt zu einem geeigneten Zeitpunkt abgeschlossen werden. Wie bereits erwähnt tritt hierbei auch die hohe Komplexität der Algorithmen in Kraft, weshalb die Zeit und der Aufwand diesbezüglich reduziert wurden. Unglücklicherweise hat das starke Auswirkungen auf das hörbare Ergebnis des Klangmanagments. Obwohl eine, wenn auch naive Noise-Reduction und eine theoretisch durchdachte Frequenz-Mapping-Strategie miteinander komponiert wurden, sind die Stimmen in der Audio-Datei mechanisch und weniger verständlich, als sie nach den Annahmen des Teams sein sollten. Das liegt unter anderem daran, dass die Noise-Reduction das Grundrauschen mithilfe eines Faktors über alle Zeiteinheiten hinweg reduziert **STIMMT DAS?!**. Somit werden unter Umständen auch Informationen wegoptimiert, die eigentlich relevant sind. Hierbei wäre es sinnvoller, die gesamte Darstellung zu analysieren und mithilfe geeigneter und anerkannter Noise-Reduction Verfahren das Grundrauschen pro Block (beispielsweise 128 Samples) dediziert zu reduzieren. Damit sollte die Destruktionsrate geringer sein, was zu einem besseren Ergebnis führen könnte **STIMMT DAS?!**. Des Weiteren können die beiden Frequenz-Mapping-Strategien eleganter implementiert werden. Das Mappen zwischen mehreren Samples könnte zusätzlich unter Berücksichtigung der Magnitudes erfolgen. Dabei könnte man sich auch die Magnitudes vor und nach dem Interpolationsblock anschauen und unter Zunahme der Frequenz berechnen, was für eine Art von Signal die aktuellen Samples darstellen. Die genaue Kategorie, ob laute Stimmen, leise Stimmen, eine Pause oder Mitten in einem Satz, könnte die Mapping Strategie durchaus beieinflussen **STIMMT DAS?!**.
 
