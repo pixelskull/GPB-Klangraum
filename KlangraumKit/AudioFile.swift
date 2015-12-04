@@ -26,7 +26,6 @@ public class AudioFile {
     */
     func readAudioFile(path:String) -> Failable<AVAudioPCMBuffer> {
         // setup variables
-//        let url = NSURL(fileURLWithPath: path)
         let url = NSURL(string: path)
         print(url!.scheme)
         do {
@@ -34,10 +33,9 @@ public class AudioFile {
             let audioFileFormat = audioFile.processingFormat
             let audioFileFrameCount = UInt32(audioFile.length)
             let pcmBuffer = AVAudioPCMBuffer(PCMFormat: audioFileFormat, frameCapacity: audioFileFrameCount)
-            //        var error:NSError?
             // read audiofiles in buffer
             do {
-                try audioFile.readIntoBuffer(pcmBuffer) //.readIntoBuffer(pcmBuffer)
+                try audioFile.readIntoBuffer(pcmBuffer)
             } catch let error as NSError {
                 return Failable.Failure("readAudioFile()::: Error while read File to Buffer (Error: \(error))")
             }
@@ -46,7 +44,6 @@ public class AudioFile {
         catch let error {
             return Failable.Failure("readAudioFile()::: Error with URL (Error: \(error)")
         }
-
     }
 
 
@@ -201,14 +198,9 @@ public class AudioFile {
         buffer.mBuffers.mData = samplePointer
         // split path
         let url = NSURL(string: path)!
-//        print("safeSamples -> url: \(url.debugDescription)")
         let fileName = url.URLByDeletingPathExtension?.URLByAppendingPathExtension("caf").lastPathComponent
-//        print("safeSamples -> filename: \(fileName)")
-//        let name = path.lastPathComponent.stringByDeletingPathExtension + ".caf"
         let tmpPath = url.URLByDeletingLastPathComponent
         let clearPath = tmpPath!.path!
-//        print("safeSamples -> clearPath: \(clearPath.debugDescription)")
-//        let clearPath = path.stringByDeletingLastPathComponent + "/"
         // create AudioStreamBasicDescription for PCM
         let desc = self.createBasicPCMDescription()
         // safe file and return path
@@ -219,7 +211,6 @@ public class AudioFile {
             let junkName = "trash.caf"
             return self.saveFileAtPath(defaultPath, withName: junkName, Content: buffer, andDescription: desc).dematerialize()
         }
-        
     }
 
 

@@ -94,7 +94,7 @@ Zuerst soll sich an dieser Stelle jedoch der allgemeinen Begriffsdefinition gewi
 Nachdem die übergeordneten Begriffe geklärt wurden, werden nun die technischeren Begriffen betrachtet. Hierunter fallen die nachfolgend aufgelisteten.
 
 * **Amplitude:** Unter einer Amplitude wird eine Größeneinheit verstanden, mittels derer sich Schwingung darstellen lässt. Es existieren keine genormten Maßeinheiten, somit wird für diese Ausarbeitung angenommen, dass es sich um positive Integer- bzw. Floatwerte, wie im *linear Pulse Code Modulation (PCM)* Standard verwendet, handelt.
-* **Signal:** Die Audio-Datei in grafischer bzw. programatischer Representation. Hierunter fällt die Darstellung innerhalb eines Diagramms, als Array von diskreten Werten. Im Wesentlichen handelt es sich hierbei um die An **NOTE: Hier ist etwas abgeschnitten!**.
+* **Signal:** Die Audio-Datei in grafischer bzw. programatischer Representation. Hierunter fällt die Darstellung innerhalb eines Diagramms oder als Array von diskreten Werten – wie Integer oder Float-Werten. Im Prinzip ist das Signal eine Darstellungsform, die die Stärke der Schallwellen beschreibt und die an einen Lautsprecher – bzw. eine Audioqueue – weiter gegeben werden kann.
 * **Sample:** Beschreibt einen Messpunkt innerhalb eines Signals. Im programatischen typischerweise ein Integer oder Float Wert, welcher den Amplituden-Ausschlag beschreibt.
 * **Samplerate:** Auch Abtastrate. Beschreibt die Anzahl der erstellten Samples pro Sekunde.
 * **Fourier Transformation:** Wandelt das Signal in die spektrale Darstellung. In der spektralen Darstellung an Stelle von Amplituden werden Frequenzen dargestellt die als Magnitude beschrieben werden.
@@ -123,8 +123,6 @@ Insbesondere soll in dieser Ausarbeitung auf die Fourier-Transformation eingegan
 
 Weitere Techniken, die innerhalb dieses Projektes Verwendung finden, sind High-Pass-Filter und Mapping-Strategien. Die High-Pass-Filter werden benötigt, um Störgeräusche aus der Audiodatei zu entfernen. Ein High-Pass-Filter lässt nur Signale oberhalb eines Thresholds durch, wird dieser der Signal-To-Noise-Ratio angepasst, also dem Wert der ein brauchbares Signal von einem Rauschen oder sonstigen Störgeräusch abgrenzt, können diese Störgeräusche einfach herausgefiltert werden. Die Mapping Strategien werden benötigt, um die Informationen des Signals mit möglichst wenig Verlust auf einen kleineren Frequenzbereich abbilden zu können. Diese werden in einem späteren Kapitel detaillierter erläutert.
 
-**NOTE: Das sollte eher zu den Mapping Strategien, das ist hier etwas zu sehr vorweggegriffen. DAS HABE ICH DURCH DEN SATZ HIERVOR EINGEFÜHRT**
-Die Mapping Strategien werden benötigt, um die Informationen des Signals mit möglichst wenig Verlust auf einen kleineren Frequenzbereich abbilden zu können. Um dies zu realisieren, wurde die bestehende Aufnahme zuerst mittels linearer Interpolation auf einen höheren Samplingwert gesetzt. Bei diesem Verfahren werden neue Samples zwischen zwei bestehenden Samples mittels *linear Regression* errechnet und hinzugefügt. Nachdem die Aufnahme nun mehr Samples besitzt, in unserem fall soviele, dass es einen größten gemeinsamen Teiler gibt, kann mittels Downsampling auf die gewünschte Samplerate, bzw. in unserem Fall die *FFT Bins*, herunter gerechnet werden. Durch das Upsampling und Downsampling soll der Verlust beim Umrechnen minimiert werden, da zu Beginn des Downsamplings mehr Informationen zur Verfügung stehen. **mehr zu diesem Ansatz im nächsten Kapitel. NOTE: DAS DANN WEITERFÜHREN**
 
 ## Theoretische Überlegungen, Konzeption und Umsetzung
 
@@ -219,8 +217,102 @@ Theoretisch lässt sich die Anzahl der *ToneWidgets* mit *numInstruments* steuer
 Im Rahmen des Prototypen wurde lediglich der Hörtest ohne Berücksichtung von Stereo implementiert. Des Weiteren wird zwar das Regulieren der Amplitude ermöglicht, allerdings nicht in Relation zur Frequenz erfasst. Für die Validierung des Konzeptes wird lediglich der vom Benutzer hörbare Frequenzbereich benötigt. Die Granularität hat keine Auswirkung auf das Vorgehen. Die oben gezeigte Implementierung liefert hierfür dennoch die notwendigen Schnittstellen.
 
 ### Extrahieren von Samples aus einer Audio-Datei in Mono und Stereo
+Im Rahmen des Projektes wurde innerhalb des KlangraumKit-Frameworks die Klasse AudioFile angelegt, diese ist als Helferklasse für das lesen und schreiben von Audio-Dateien zu verstehen. Die Funktionen innerhalb dieser Klasse wurden mittels des funktionalen-Paradigmas umgesetzt und bieten ein Error-Handling, dass das Debugging erleichtert. 
 
-**Das musst du machen.**
+Zum lesen einer Audio-Datei dient die Funktion `readAudioFile`, die nachfolgend aufgeführt ist. Um eine Audio-Datei zu lesen muss dieser Funktion nur der Pfad zu der gewünschten Datei übergeben werden. Durch die Verwendung des `AVFoundation`-Frameworks können alle nativ von iOS Unterstützten Dateiformate gelesen werden.
+
+    func readAudioFile(path:String) -> Failable<AVAudioPCMBuffer> {
+        // setup variables
+        let url = NSURL(string: path)
+        do {
+            let audioFile = try AVAudioFile(forReading: url!)
+            let audioFileFormat = audioFile.processingFormat
+            let audioFileFrameCount = UInt32(audioFile.length)
+            let pcmBuffer = AVAudioPCMBuffer(PCMFormat: audioFileFormat, frameCapacity: audioFileFrameCount)
+            // read audiofiles in buffer
+            do {
+                try audioFile.readIntoBuffer(pcmBuffer)
+            } catch let error as NSError {
+                return Failable.Failure("readAudioFile()::: Error while read File to Buffer (Error: \(error))")
+            }
+            return Failable.Success(Box(pcmBuffer))
+        }
+        catch let error {
+            return Failable.Failure("readAudioFile()::: Error with URL (Error: \(error)")
+        }
+    }
+
+Im Wesentlichen führt die Funktion vier wichtige Schritte aus. Erstens wird der Pfad in eine URL umgewandelt, zweitens wird die Audio-Datei aus dem File-System geladen, worauf hin – drittens – dann ein `AVAudioPCMBuffer` angelegt wird, der darauf hin dann den Inhalt der Datei aufnehmen soll. Die Klasse `AVAudioPCMBuffer` stellt eine spezielle Form des `AudioBuffer` dar und konvertiert automatisch den Inhalt einer Audio-Datei in das linearPCM Format. 
+
+Wie weiter oben genannt ist die Klasse `AudioFile` mit einem Error-Handling zu besseren Debug-Zwecken ausgestattet, diese wurde mittels Failable implementiert. Failable ist eine Klasse, die mittels einer Monade das vorhergehende Result evaluieren kann und bei Erfolg an eine weiter Funktion mittels des dafür definierten `-->` Operators weitergeben kann. Falls die Funktion nicht wie geplant läuft, wird durch den `Failure`-Case die weitere Ausführung unterbrochen und die Fehlermeldung weiter gereicht. Die Implementierung dieses Konstruktes wird nachfolgend gezeigt. 
+
+
+    public enum Failable<T> {
+
+        case Success(Box<T>)
+        case Failure(String)
+
+        ...
+
+        public func dematerialize() -> T? {
+            switch self {
+            case .Success(let box):
+                return box.value
+            case .Failure(let error):
+                return nil
+            }
+        }
+    }
+
+
+    infix operator --> { associativity left }
+    public func --><In, Out>(left: Failable<In>, fn: In -> Failable<Out>) -> Failable<Out> {
+        switch left {
+        case .Success(let box):
+            return fn(box.value)
+        case .Failure(let error):
+            return .Failure(error)
+        }
+    }
+
+Die Funktion dematerialize wird zum auslesen des Wertes benötigt, wie in der Implementierung zu sehen handelt es sich bei dem Return-Value um einen `Optional` das bedeutet, dass mittels der in Swift eingebauten `if let`-Statements die Ergebnisse einfach evaluiert werden können. Aus diesem Grund und da im Erfolgsfall einfach der Wert zurück gegeben wird macht die Einbindung des `Failable`-Enums in andere Projekte kaum Aufwand und verbessert – nach Meinung der Authoren – die Lesbarkeit und verbessert das Verhalten im Fehlerfall. 
+
+Zurück zu der `ReadAudioFile` Funktion, die im erwarteten Fall unserer Anwendung einen `Failable` mit dem `AudioBuffer` als Inhalt liefert. Da die weitere Anwendung die Daten im Float-Format erwartet, muss dieser nun in ein Array aus Floats umgewandelt werden. Die Funktion, die sich um diese Aufgabe kümmert ist ebenfalls in `AudioFile` implementiert und ist nachfolgend kurz aufgezeigt. 
+
+    func convertToFloatSamples(pcmBuffer:AVAudioPCMBuffer) -> Failable<[Float]> {
+        // generate
+        let samples:[Float] = (0 ..< Int(pcmBuffer.frameLength)).map{ pcmBuffer.floatChannelData.memory[$0] }
+        if samples.isEmpty {
+            return Failable.Failure("convertToFloatSamples()::: Error while converting to float samples")
+        } else {
+            return Failable.Success(Box(samples))
+        }
+    }
+
+Durch den `map` Befehl werden die Werte in ein Array umgewandelt, dies geschieht durch den direkten Zugriff auf den Speicherbereich in dem sich die Float-Daten befinden – deutlich zu erkennen durch den Befehl `pcmBuffer.floatChannelData.memory[$0]`. Dieser etwas komplizierte Zugriff ist auf die nachträglich hinzugefügte Kompatibilität von Swift und C zurückzuführen. Wenn das Mapping erfolgreich verlief und die im Buffer vorhandenen Daten in ein Array Überführt wurden können die Samples einfach per Zugriff auf das Array gelesen und manipuliert werden. 
+
+Im Rahmen des Projektes wurde auch eine Mögliche Stereo Kompatibilität implementiert, zu diesem Zweck kann die Funktion `splitToInterleaved` verwendet werden, die nachfolgend aufgezeigt und erläutert wird.
+
+    func splitToInterleaved(samples1D:[Float]) -> Failable<[String:[Float]]> {
+        // initialize two arrays for left and right audiosamples append left an right samples to arrays (scheme left, right)
+        let left:[Float] = 0.stride(through: samples1D.count-1, by: 2).map { samples1D[$0] }
+        let right:[Float] = 1.stride(through: samples1D.count-1, by: 2).map { samples1D[$0] }
+
+        if left.isEmpty || right.isEmpty {
+            return Failable.Failure("splitToInterleaved():::could not seperate left and right Samples")
+        } else {
+            return Failable.Success( Box(["left":left, "right":right]) )
+        }
+    }
+
+Bei Stereo Audio werden die Samples Interleaved repräsentiert. Bei einer Interleaved-Repräsentation werden die Samples – wie bei der Mono Darstellung – in einem eindimensionalen Array gespeichert und dargestellt, jedoch wird der linke und der rechte Audiokanal durch die geraden bzw. ungerade Indizes dargestellt. Wie in der vorhergehenden Implementierung zu sehen, wird das Ursprüngliche Signal in zwei Arrays aufgeteilt, eins für die linke Tonspur und eins für die rechte. Dies geschieht mittels des `stride` Befehls, der wie ein Iterator – bei dem man die Schrittweite einer Interation angeben kann – funktioniert. Die Transformation in ein Array erfolgt wie bei `convertToFloatSamples` mittels der `map` Funktion. Bei der weiteren Verarbeitung eines Stereo-Signals gilt zu beachten, dass bei richtiger Ausführung ein Dictionary erstellt wird, auf die jeweiligen Audiospuren kann mittels der Keys »left« oder »right« zugegriffen werden. 
+
+Zur Verdeutlichung des Ablaufes soll nachfolgender Code demonstrieren, wie Audio Samples gelesen werden können. 
+
+    let interleavedSamples = (self.readAudioFile(path) --> self.convertToFloatSamples --> self.splitToInterleaved).dematerialize()
+
+Wie hier zu sehen, wird erst eine Audio-Datei gelesen, diese wird dann in ein Array aus Float konvertiert und mittels `splitToInterleaved` in das oben bereits beschriebene Dictionary umgewandelt. Nach Vollendung der Funktionen kann mittels `dematerialize()` auf das Dictionary zugegriffen werden. 
+
 
 ### Padding, Windowing und Splitting
 
@@ -579,13 +671,200 @@ composed.map{ $0 }
 
 Die modulare Implementierung der FFT-Klasse und dem Strategy-Pattern erlaubt das Hinzufügen von Strategien, die von der FFT berücksichtigt werden. Im Rahmen des Prototypen wurden die Algorithmen zu den Mapping- und Noise-Reduction-Strategien aufgrund von gegebenen Ressourcen naiv implementiert. Sie führen zwar zu einem Ergebnis, allerdings sind noch einige naiven Annahmen drin, die nicht zum besten Ergebnis führen. Das intensive Auseinandersetzen mit angemessenen Audio-Algorithmen würde zu viel Zeit in Anspruch nehmen, da die theoretischen Hintergründe fundierter betrachtet werden müssen. Es lässt sich wahrscheinlich ein eigenes Guided-Project formulieren, welches einzig und allein diese Thematik behandelt. Aus diesem Grund werden lediglich die naiven Algorithmen von Noise-Reduction und Mapping-Strategien besprochen. Afugrund der modularen Implementierung der FFT-Klasse können zu einem späteren Zeitpunkt die Implementierungen erweitert und durch bessere Algorithmen ausgetauscht werden.
 
-#### Noise-Reduction- und Mapping-Strategien
 
-**NOTE: Das musst du wahrscheinlich machen, oder wir zusammen. Hier müssen auch unsere Herleitungen, Überlegungen und Gedanken usw. rein.**
+
+#### Mapping-Strategien
+Wie Eingangs – im Kapitel »Auditive Wahrnehmung« bereits beschreiben, ist die Wahrnehmung von Schall für jeden Menschen individuell. Gerade durch das ausfallen der Tasthaare im inneren der Höhrschnecke, können die höheren Frequenzen mit höherem Alter, aber auch in jungen Jahren – wenn das Gehör zu lauten Geräuschen ausgesetzt war – nicht mehr wahrgenommen werden. Um diesem Effekt entgegen zu wirken, wurde im Rahmen dieses Projektes die Überlegung angestellt, dass die fehlenden Frequenzen zu Beginn gemessen werden und dann mittels einer Mapping-Methode wieder auf den Höhrbaren Bereich überführt werden. In diesem Abschnitt werden wir genauer auf die Eigenheiten der während des Projektes angewendeten Mapping-Strategien eingehen.
+
+
+Die Mapping Strategien werden benötigt, um die Informationen des Signals mit möglichst wenig Verlust auf einen kleineren Frequenzbereich abbilden zu können. Um dies zu realisieren, wurde die bestehende Aufnahme zuerst mittels linearer Interpolation auf einen höheren Samplingwert gesetzt. Bei diesem Verfahren werden neue Samples zwischen zwei bestehenden Samples mittels *linear Regression* errechnet und hinzugefügt. Nachdem die Aufnahme nun mehr Samples besitzt, in unserem fall soviele, dass es einen größten gemeinsamen Teiler gibt, kann mittels Downsampling auf die gewünschte Samplerate, bzw. in unserem Fall die *FFT Bins*, herunter gerechnet werden. Durch das Upsampling und Downsampling soll der Verlust beim Umrechnen minimiert werden, da zu Beginn des Downsamplings mehr Informationen zur Verfügung stehen. **mehr zu diesem Ansatz im nächsten Kapitel.
+
+
+Zu beginn des Projektes stand eine naive Lösung im Raum, dieser Lösungsweg besagte, dass das Audio-Signal durch einfaches »zusammendrücken« in den höhrbaren Frequenzbereich überführt werden solle. Diese Strategie ist jedoch aus mehreren Gründen nicht optimal, im Rahmen dieser Ausarbeitung soll jedoch der Hauptgrund als Begründung ausreichen, da dieser in der späteren Lösung umgangen wurde. Beim einfachen zusammen schieben der Frequenzen kommt es zu einem Informationsverlust, da die Mapping-Strategien innerhalb dieser Ausarbeitung auf den Output-Daten der FFT basieren, ist es nicht möglich mehr »FFT-Bins« für einen bestimmten Frequenzbereich zu erstellen. So muss das Signal von bspw. vorher 1024 Bins auf die noch höhrbaren 500 Bins überführt, dieses Beispiel zeigt auf, dass der Informationsverlust mitunter sehr hoch ausfallen kann. Dies stellt bei kleinen Frequenzverlusten kein Problem dar, führt aber auch nicht zu dem gewünschten Ergebnis.
+
+Um dieses Problem zu umgehen, wurde im Rahmen dieses Projektes zuerst einmal ein Up-Sampling der bestehenden Audio-Datei durchgeführt. Die Up-Sampling-Rate begründet sich aus dem »größten gemeinsamen Teiler« des Audio-Samples und der beabsichtigten Zielsamplegröße. Das Up-Sampling wurde in diesem Fall mittels »linear Regression« vorgenommen. Der folgende Source-Code zeigt die implementierung des Up-Samplings oder auch Interpolation genannten Verfahrens.
+
+    private func interpolate(values:[Float], upsamplingSize lcm:Int) -> [Float] {
+        var result = [Float](count: lcm, repeatedValue: 0.0)
+        let stepSize = lcm / values.count
+
+        guard stepSize > 0 else {
+            return values
+        }
+
+        var f:Float = 1.1
+
+        for i in 0.stride(through: result.count-1, by: stepSize) {
+            result[i] = values[i/stepSize]
+        }
+
+        for i in 0..<result.count {
+            if i%(stepSize) == 0 {
+                if i < result.count - stepSize {
+                    var higher = i+stepSize
+                    if higher == result.count {
+                        higher -= 1
+                    }
+                    f = (result[higher] - result[i]) / Float(stepSize)
+                }
+            }else {
+                if i > 0 { result[i] = result[i-1] + f }
+            }
+        }
+        return result
+    }
+
+Nachdem das Audio-Signal mittels Interpolation auf die gewünschte Größe hochgerechnet wurde, bestehen mehr Informationen als vorher, auch wenn diese nur durch das Verfahren angenähert wurden. Dies führt uns zum zweiten Schritt der Mapping-Strategie, dem Desampling.
+
+Das verringern der Samplings kann nun auf zwei Arten erfolgen – beide wurden im Rahmen des Projektes umgesetzt und getestet. Zum einen wäre da die `MaxMappingStrategie`, bei der ein Bereich begutachtet wird und der Maximalwert als repräsentant gewählt wird. Bei dieser Strategie stellte sich jedoch schnell das Problem dar, dass die Sprache nicht nur auf den Maximalwerten aufbaut und somit das AudioSignal nicht optimal repräsentiert wird. Der andere Weg die Mapping-Strategie umzusetzen ist die `AverageMappingStrategie`, wie im nachfolgenden Code zu sehen.
+
+    public class AverageMappingStrategy: MappingStrategy {
+
+        public let minIndex: Int
+        public let maxIndex: Int
+
+        public init(minIndex: Int, andMaxIndex maxIndex: Int) {
+            self.minIndex = minIndex
+            self.maxIndex = maxIndex
+        }
+
+        public func conflictResolver(x: [Float]) -> Float {
+            return sum(x) / Float(x.count)
+        }
+    }
+
+Die hier dargestellte Implementierung ist nach dem Strategie-Pattern implementiert. Die Methode `conflictResolver` summiert wir zu sehen das übergebene Teil-Array und teilt es über die länge, somit bekommen wir einen Durchschnittswert der dem Output-Array hinzugefügt wird. Mittels dieser – einfachen Strategie – erzeugte Samples repräsentieren die Orginale Audiofile besser als die Ergebnisse der `MaxMappingStrategie` weshalb die `AverageMappingStrategie` im Rahmen dieses Projektes verwendet wurde. Als Proof-of-Concept reichen die Ergebnisse, jedoch sollte für den Produktiv-Einsatz auf eine bessere Mapping-Strategie gewechselt werden.
+
+#### Noise-Reduction-Strategien
+Damit unnötige Informationen durch die Mapping-Strategie nicht höher priorisiert werden – was sowohl durch das Average-Mapping als auch das Max-Mapping passieren könnte – muss eine Art der Noise-Reduction implementiert werden.
+
+Eine der evaluierten Methoden um Nebengeräusche aus einem Audio-Signal zu entfernen ist die Signal-to-Noise-Ratio(SNR). Bei dem hier überlegten Ansatz wurde die SNR als threshold verwendet. Dies führt jedoch zu einem Problem bei dem das Audio-Signal ein klingelndes Geräusch aufweist – dieser Effekt wird auch »ringing Artifakts« genannt – dieses klingeln entsteht durch einen sogenannten »overshoot« der durch das abruptes abbrechen des Signals und der weiter schwingenden Membrane des Lautsprechers auftritt. Dieser Effekt macht die Qualität des Audiosignals nicht besserverständlich, weshalb wir eine noch einfachere Lösung für die prototypische Umsetzung gewählt haben. Nachfolgend nocheinmal der Source-Code für diesen ersten Ansatz.
+
+    public class NoiseCancelationStrategy: FilterStrategy {
+
+        public init() {}
+
+        public func apply(x:[Float]) -> [Float] {
+            var result:[Float] = [Float]()
+
+            let amdf = averageMagnitudeDifferenceFunction(x)
+
+            for value in x {
+                if value >= amdf {
+                    result.append(value)
+                } else {
+                    result.append(0.0)
+                }
+            }
+            return result
+        }
+
+        func averageMagnitudeDifferenceFunction(x:[Float]) -> Float {
+            var tmp:Float = 0.0
+            for i in 0..<x.count-1 {
+                tmp += abs(x[i] - x[i+1])
+            }
+            return tmp / Float(x.count)
+        }
+    }
+
+Diese Variante der Noise-Reduction berechnet die Signal-to-Noise-Ratio mittels der `averageMagnitudeDifferendeFunction`. Wenn nun das orginal Signal über dem threshold liegt werden die Werte weiter verwendet, liegt das Signal jedoch unter diesem Schwellwert, so wird das ursprüngliche FFT-Wert genullt. Wie bereits weiter oben beschrieben führt genau dieses Vorgehen jedoch zu den ringing-Artifacts, die nicht zu einer Verbesserung der Audioqualität führt. Aus diesem Grund wird diese Noise-Reduction in diesem Projekt nicht verwendet.
+
+Die zweite Möglichkeit das Rauschen etwas zu unterdrücken ist simpler und auch nicht ganz so vielversprechen wie die verwendung der SNR. Sie wurde jedoch im Rahmen dieses Projektes um die Vorteile einer Noise-Reduction nutzen zu können. Im Nachfolgenden Quelltext ist die Implementierung zu sehen.
+
+    class AverageNoiseMagnitude {
+        static let sharedInstance = AverageNoiseMagnitude()
+
+        var anm:Float = 0.0
+
+        private init() {}
+    }
+
+    public class NoiseReductionStrategy: FilterStrategy {
+
+        public init() {}
+
+        public func apply(x: [Float]) -> [Float] {
+            var result = [Float]()
+
+            let noise = averageNoiseMagnitudes(x)
+
+            for value in x {
+                result.append(abs(value - noise.anm))
+            }
+
+            return result
+        }
+
+        func averageNoiseMagnitudes(x:[Float]) -> AverageNoiseMagnitude {
+            let noise = AverageNoiseMagnitude.sharedInstance
+            noise.anm = (sum(x) / Float(x.count))
+            return noise
+        }
+    }
+
+Wie hier zu sehen, wird zuerst mittels Singleton-Pattern ein Schwellwert ermitteln. Dieser wird mittels des Durchschnittswertes eines Teil-Arrays berechnet und kann dann vom vom Ursprungswert subtrahiert werden. Da hierdurch ungewünschte negative Werte entstehen können wird mittels `abs` das ergebnis in den positiven Zahlenraum überführt.
+
+Im Rahmen dieser Ausarbeitung wurde die Noise-Reduction sehr naive umgesetzt, dies kann in zukünftigen Projekten weiter ausgeführt werden. Zum Demonstrieren der Funktionsweise soll dieser einfache Ansatz jedoch genügen.
 
 ### Modifizierte Samples als Audio-Datei abspielen
+Nachdem die Mapping- und die Noise-Reduction-Strategien auf das Orginal Signal angewendet wurden kann das Signal durch Anwendung der inversen Fouriertransformation wieder in Samples umgerechnet werden. Um die Audio-Daten abspielen zu können, können die Samples mittels der Klasse AudioFile wieder in eine Datei geschrieben werden. Dies geschieht mittels der nachfolgend aufgezeigten Funktion `saveSamples`. 
 
-**NOTE: Das musst du machen**
+    public func safeSamples(samples:[Float], ToPath path:String) -> String? {
+        // convert array to UnsafeMutablePointer
+        let samplePointer = UnsafeMutablePointer<Void>(samples)
+        
+        // create AudioBufferList
+        var buffer:AudioBufferList = AudioBufferList()
+        buffer.mNumberBuffers = 1
+        buffer.mBuffers.mNumberChannels = 1
+        buffer.mBuffers.mDataByteSize = UInt32(samples.count)
+        buffer.mBuffers.mData = samplePointer
+        
+        // split path
+        let url = NSURL(string: path)!
+        let fileName = url.URLByDeletingPathExtension?.URLByAppendingPathExtension("caf").lastPathComponent
+        let tmpPath = url.URLByDeletingLastPathComponent
+        let clearPath = tmpPath!.path!
+        
+        // create AudioStreamBasicDescription for PCM
+        let desc = self.createBasicPCMDescription()
+        
+        // safe file and return path
+        if let name = fileName {
+            return self.saveFileAtPath(clearPath, withName: name, Content: buffer, andDescription: desc).dematerialize()
+        } else {
+            let defaultPath = NSBundle.mainBundle().resourcePath!
+            let junkName = "trash.caf"
+            return self.saveFileAtPath(defaultPath, withName: junkName, Content: buffer, andDescription: desc).dematerialize()
+        }
+    }
+
+In dem vorhergehenden Quelltext wird die Speicherung der Audio-Samples – in Float Repräsentation – vorgenommen. Dazu wird zuerst eine neue Instanz von `AudioBufferList` angelegt, diese wird in unserem Beispiel mit einem Channel konfiguriert. Ein Channel besagt, dass es sich hierbei um eine Mono-Aufnahme handelt. Das schreiben der Samples ist ein wenig komplizierter, da hier die Unabhängigkeit Swifts von der Programmiersprache C im Weg steht, damit das Swift Array durch die C-API verarbeitet werden kann muss es zuerst in einen `UnsafeMutablePointer` verwandelt werden. 
+
+Nachdem wir die Daten in eine `AudioBufferList` geschrieben haben, muss nur der Pfad in eine URL umgewandelt werden, mittels dieser Informationen, und der `AudioStreamBasicPCMDescription` kann die Datei nun einfach im Datei-System der App angelegt werden – im Rahmen des Projektes wurde das linearPCM Format für die Audio-Dateien gewählt und in ein »**Core Audio File (CAF)**« gespeichert.
+
+Desweiteren wurde eine Wrapper-Funktion erstellt, mittels der auch das auf Stereo ausgesplittete Signal – in Form eines zweidimensionalen Arrays – gespeichert werden kann, dies soll an dieser Stelle jedoch nicht wieter erläutert werden.
+
+
+Die so gespeicherten Daten können nun vom iOS Standart-Audioplayer (`AVAudioPlayer`) als Datei gelesen werden. Das einlesen einer Audio-Datei mittels AVAudioPlayer ist im nachfolgenden Quelltext-Beispiel gut zu erkennen. 
+
+    func prepareAudioPlayer(audioPath:String) {
+        if let url = NSURL(string: audioPath) {
+            do {
+                self.player = try AVAudioPlayer(contentsOfURL: url)
+            } catch let error as NSError {
+                print("error occurred while preparing AudioPlayer \(error)")
+                return
+            }
+            self.player.delegate = self
+            self.player.prepareToPlay()
+        }
+    }
+
+Nachdem die Datei erfolgreich geladen wurde, kann die Wiedergabe mittesl `self.player.play()` bzw. `self.player.pause()` abgespielt oder angehalten werden.
+
+
 
 ## Beispiel anhand eines Anwendungsfalls
 
@@ -629,7 +908,8 @@ let maxIndex = (length * Int(maxFrequency)) / (samplingRate / 2 )
 let minIndex = (length * Int(minFrequency)) / (samplingRate / 2 )
 /*:
 
-Als nächstes werden die Samples mit Nullen aufgefüllt, um ohne Verluste in *n=1024* Große Sub-Arrays aufgeteilt zu werden. Auf diese Weise wird die FFT jeweils für 1024 Samples durchgeführt, um **HIER DEN GRUND DAFÜR**. Des Weiteren werden die Samples mithilfe einer Window-Funktion skaliert, um **HIER DEN GRUND DAFÜR**: */
+Als nächstes werden die Samples mit Nullen aufgefüllt, um ohne Verluste in *n=1024* Große Sub-Arrays aufgeteilt zu werden. Auf diese Weise wird die FFT jeweils für 1024 Samples durchgeführt. Die Sampleanzahl ergibt sich aus dem Informationsgewinn bezüglich der spektralen Darstellung, um noch genauere Spektren mit hilfe der FFT zu bekommen können auch 2048 Samples gewählt werden – diese Verlangsamen die Berechnung allerding und bieten für den in diesem Projekt verwendeten Einsatzzweck der Sprachverarbeitung keinen Mehrwert. Des Weiteren werden die Samples mithilfe einer Window-Funktion skaliert. Da die FFT zur Zerlegung von Harmonischen Frequenzen gedacht wurde, werden diese Windowfunktionen benötigt um das Signal für die Transformation zu optimieren. Andernfalls würde die Fouriertransformation eine höhere »Auflösung« – also mehr Input Samples – benötigen würde um das selbe Ergebnis zu erzielen. 
+*/
 // zero padding with plot
 let padded = addZeroPadding(data, whileModulo: n)
 padded.map{ $0 }
@@ -646,7 +926,8 @@ windowedData.map{ $0 }
 let prepared = prepare(windowedData, steppingBy: n)
 /*:
 
-Nachdem alle Vorbereitungen getroffen wurden, folgt die eigentlich FFT. *prepared* ist vom Typ Array<Array<Float>>, da die Samples (Array<Float>) wiederum in 1024 Sample große Unter-Arrays aufgeteilt wurden. Um an jedes Sub-Array zu gelangen, diese in eine FFT zu geben und das Ergebnis wieder zu einem einzigen Array vom Typ Float zu agregieren, wird im Folgenden eine Kombination von *flatMap* und *compose* verwendet: */
+Nachdem alle Vorbereitungen getroffen wurden, folgt die eigentlich FFT. *prepared* ist vom Typ Array<Array<Float>>, da die Samples (Array<Float>) wiederum in 1024 Sample große Unter-Arrays aufgeteilt wurden. Um an jedes Sub-Array zu gelangen, diese in eine FFT zu geben und das Ergebnis wieder zu einem einzigen Array vom Typ Float zu agregieren, wird im Folgenden eine Kombination von *flatMap* und *compose* verwendet: 
+*/
 let result = prepared.flatMap { samples -> [Float] in
     // setup with composed strategies
     let fft = FFT(initWithSamples: samples, andStrategy: [
@@ -711,18 +992,18 @@ Das Auseinandersetzen mit der vDSP API war herausfordernd, weil der Umgang mit e
 
 Die Implementierung des Hörtest ist zielführend und zufriendenstellend verlaufen, auch wenn sie simpel gehalten wurde. Allerdings ist sie so gewählt, dass man ohne weiteres die Tongenerierung von 0 bis 22000 Hz dediziert für beide Ohren erzeugen kann. Dadurch kann man die Frequenzen für beide Ohren getrennt (Stereo) aufnehmen und die Klangwahrnehmung potenziell noch individueller, nämlich für beide Ohren getrennt, durchführen. Des Weiteren ist die Abhängigkeit zur Amplitude bei der Tongenerierung bereits implementiert, allerdings noch nicht in aktiver Verwendung. In einer weiteren Iteration kann die Amplitude beim Mapping der Frequenzen berücksichtigt werden. Allerdings ist es noch fraglich, inwiefern diese Feature das Ergebnis optimieren würde.
 
-Die Implementierung der Audio-Algorithmen für die Strategien ist hingegen semi-zufriendenstellend verlaufen. Das Team wollte schnell Ergebnisse erzielen, um die prototypische Implementierung des FFT-Stacks nicht nur an der Sinus-Funktion, sondern auch an realen Audio-Dateien zu testen. Deshalb wurden die Algorithmen zwar konzeptionell sinnvoll geplant, jedoch simpel und unter einfachen Annahmen implementiert. Gegen Ende des Projektes blieb nicht viel Zeit, um sich intensiv mit geeigneteren Algorithmen auseinanderzusetzen und die bestehenden Algorithmen zu optimieren. Schließlich sollte das Projekt zu einem geeigneten Zeitpunkt abgeschlossen werden. Wie bereits erwähnt tritt hierbei auch die hohe Komplexität der Algorithmen in Kraft, weshalb die Zeit und der Aufwand diesbezüglich reduziert wurden. Unglücklicherweise hat das starke Auswirkungen auf das hörbare Ergebnis des Klangmanagments. Obwohl eine, wenn auch naive Noise-Reduction und eine theoretisch durchdachte Frequenz-Mapping-Strategie miteinander komponiert wurden, sind die Stimmen in der Audio-Datei mechanisch und weniger verständlich, als sie nach den Annahmen des Teams sein sollten. Das liegt unter anderem daran, dass die Noise-Reduction das Grundrauschen mithilfe eines Faktors über alle Zeiteinheiten hinweg reduziert **STIMMT DAS?!**. Somit werden unter Umständen auch Informationen wegoptimiert, die eigentlich relevant sind. Hierbei wäre es sinnvoller, die gesamte Darstellung zu analysieren und mithilfe geeigneter und anerkannter Noise-Reduction Verfahren das Grundrauschen pro Block (beispielsweise 128 Samples) dediziert zu reduzieren. Damit sollte die Destruktionsrate geringer sein, was zu einem besseren Ergebnis führen könnte **STIMMT DAS?!**. Des Weiteren können die beiden Frequenz-Mapping-Strategien eleganter implementiert werden. Das Mappen zwischen mehreren Samples könnte zusätzlich unter Berücksichtigung der Magnitudes erfolgen. Dabei könnte man sich auch die Magnitudes vor und nach dem Interpolationsblock anschauen und unter Zunahme der Frequenz berechnen, was für eine Art von Signal die aktuellen Samples darstellen. Die genaue Kategorie, ob laute Stimmen, leise Stimmen, eine Pause oder Mitten in einem Satz, könnte die Mapping Strategie durchaus beieinflussen **STIMMT DAS?!**.
+Die Implementierung der Audio-Algorithmen für die Strategien ist hingegen semi-zufriendenstellend verlaufen. Das Team wollte schnell Ergebnisse erzielen, um die prototypische Implementierung des FFT-Stacks nicht nur an der Sinus-Funktion, sondern auch an realen Audio-Dateien zu testen. Deshalb wurden die Algorithmen zwar konzeptionell sinnvoll geplant, jedoch simpel und unter einfachen Annahmen implementiert. Gegen Ende des Projektes blieb nicht viel Zeit, um sich intensiv mit geeigneteren Algorithmen auseinanderzusetzen und die bestehenden Algorithmen zu optimieren. Schließlich sollte das Projekt zu einem geeigneten Zeitpunkt abgeschlossen werden. Wie bereits erwähnt tritt hierbei auch die hohe Komplexität der Algorithmen in Kraft, weshalb die Zeit und der Aufwand diesbezüglich reduziert wurden. Unglücklicherweise hat das starke Auswirkungen auf das hörbare Ergebnis des Klangmanagments. Obwohl eine, wenn auch naive Noise-Reduction und eine theoretisch durchdachte Frequenz-Mapping-Strategie miteinander komponiert wurden, sind die Stimmen in der Audio-Datei mechanisch und weniger verständlich, als sie nach den Annahmen des Teams sein sollten. Das liegt unter anderem daran, dass die Noise-Reduction das Grundrauschen mithilfe eines Faktors über alle Zeiteinheiten hinweg reduziert. Somit werden unter Umständen auch Informationen wegoptimiert, die eigentlich relevant sind. Hierbei wäre es sinnvoller, die gesamte Darstellung zu analysieren und mithilfe geeigneter und anerkannter Noise-Reduction Verfahren das Grundrauschen pro Block (beispielsweise 128 Samples) dediziert zu reduzieren, außerdem wäre es denkbar mithilfe eines Silent-Detection-Algorithmus das Rauschen besser zu bestimmen, so dass nicht mehr von einer allgemeinen Signal-to-Noise-Ratio ausgegangen werden muss. Damit sollte die Destruktionsrate geringer sein, was zu einem besseren Ergebnis führen könnte. Des Weiteren können die beiden Frequenz-Mapping-Strategien eleganter implementiert werden – Beispielsweise mit einer besseren Werte Aproximation. Das Mappen zwischen mehreren Samples könnte zusätzlich unter Berücksichtigung der Magnitudes erfolgen. Dabei könnte man sich auch die Magnitudes vor und nach dem Interpolationsblock anschauen und unter Zunahme der Frequenz berechnen, was für eine Art von Signal die aktuellen Samples darstellen. Losgelöst von den Mapping Strategien kann auch die genaue Kategorie, ob laute Stimmen, leise Stimmen, eine Pause oder Mitten in einem Satz, zur Verbesserung der Audio Spur dienen, Beispielsweise können Stimmen aus dem Hintergrund an die Lautstärke des im Vordergrund befindlichen Sprechers angepasst werden. Dies wurde jedoch im Rahmen dieses Projektes nur theoretisch bearbeitet, da die Umsetzung wie weiter oben beschrieben nicht in der gewählten Projektart möglich war.
 
 Nichts­des­to­trotz bildet die iOS App den Workflow bzw. den FFT-Stack dahingehend ab, dass ein Klangmanagement mit der individuellen Anpassung von Klangräumen an die menschliche Wahrnehmung stattfindet. Der Hörtest liefert ein Frequenzprofil, welches in die digitale Signalverarbeitung eingeht. Bei einer geeigneten Parallelisierung der FFT könnten die 1024 Große Sample Blöcke auf mehrere Kerne aufgeteilt und anschließend wieder zu einem gesamten Block zusammengesetzt werden. Mit dem *Grand Central Dispatch (GCD)* von Apple und der hohen Performanz aktueller iOS Geräte (iPad Pro, iPhone 6s und 6s+) könnte die Implementierung die Verarbeitung in Echteit annähern. Außerdem wurde darauf geachtet, dass die Implementierung der FFT-Klasse Objektorientierung mit funktionalen Aspekten kombiniert, um zum einen flexibel eingesetzt zu werden und zum anderen den FFT-Kontext in sich geschlossen zu tragen. Zudem lässt sich dadurch eine Parallelisierung relativ unkompliziert einführen, da die Funktionen *forward*, *applyStrategy* und *inverse* pure Funktionen sind und keine Abhängigkeiten haben. Die einzige Ausnahme ist das Setup des FFT-Kontextes, welches ohnehin in das FFT-Objekt eingeschlossen ist (Objektorientierung).
 
-Im Großen und Ganzen ist die Bearbeitung der Aufgabenstellung gelungen. Die Simple Behandlung der Algorithmen ist zwar unbefriedigend, allerdings liefert die modulare Implementierung des Frameworks zum Klangmanagement ein hohes Maß and Entwicklungspotenzial. Das Konzept des Klangmanagement zur individuellen Anpassung der Klangräume an die menschliche Klangwahrnehmung hat durchaus seine Berechtigung und findet beispielsweise seine Relevanz in Hardware Produkten, wie beispielsweise **HIER DER LINK ZUM HARDWARE PRODUKT**. In dem vorliegenden Projekt wurde eine softwarebasierte Lösung als iOS App realisiert.
+Im Großen und Ganzen ist die Bearbeitung der Aufgabenstellung gelungen. Die Simple Behandlung der Algorithmen ist zwar unbefriedigend, allerdings liefert die modulare Implementierung des Frameworks zum Klangmanagement ein hohes Maß and Entwicklungspotenzial. Das Konzept des Klangmanagement zur individuellen Anpassung der Klangräume an die menschliche Klangwahrnehmung hat durchaus seine Berechtigung und findet beispielsweise seine Relevanz in Hardware Produkten, wie beispielsweise [AMP](https://www.ampaudio.com). In dem vorliegenden Projekt wurde eine softwarebasierte Lösung als iOS App realisiert.
 
 ### Ausblick
 
 Die Implementierung des Strategy-Pattern für Filter-Strategien lässt zu, dass neue Audio-Algorithmen dem bestehenden FFT-Stack hinzugefügt werden können, sofern sie dem FilterStrategy-Protocol entsprechen. Demnach kann das Projekt als Basis verwendet werden, um sich intensiv und fundiert mit anerkannten Best-Practise Algorithmen für digitale Signalverarbeitung auseinander zu setzen und diese in die Anwendung zu implementieren bzw. die bestehenden Algorithmen zu optimieren. Die Implementierungen können anschließend instanziert, an die FFT-Klasse übergeben und mit anderen Strategien komponiert werden. Hierbei ist es interessant zu untersuchen, ob die Algorithmen zu einem besseren Ergebnis führen.
 
-Neben den Algorithmen lässt sich der Hörtest erweitern. Hierbei kann der Frequenztest defiziert für beide Ohren erfolgen. Außerdem kann die Amplitude in der weiteren Verarbeitung mit Berücksichtigt werden. Die Daten fallen bereits jetzt schon an, werden allerdings nicht weiter verwendet. Auch hier wäre es interessant zu untersuchen, inwiefern das Ergebnis optimiert werden könnte.
+Auch die Tatsache, das während des Projektes an Stereo Audio gedacht wurde – vorallem in der Implementierung der Klasse `AudioFile` – ermöglicht es die Algorithem auch für Mehrspuriges Audio anzupassen. So kann mit relaativ wenig Aufwand auf »mehrdimensionales« Audio wie 5.1 Surround angepasst, da auch hier ein Interleaved Signal verwendet wird. Ein Beispiel für die Anpassung von Algorithmen auf Mehrspur Audio könnte die Anpassung des Schalls auf die Raumbelegung sein, so könnten dynamisch Lautstärken der einzelnen Lautsprecher angepasst werden.
 
-**WEITERE IDEEN FÜR DEN AUSBLICK?**
+Neben den Algorithmen lässt sich der Hörtest erweitern. Hierbei kann der Frequenztest defiziert für beide Ohren erfolgen wie zum Beispiel bei [Mimi Hörtest](https://itunes.apple.com/de/app/mimi-hortest/id932496645?mt=8). Außerdem kann die Amplitude in der weiteren Verarbeitung mit Berücksichtigt werden. Die Daten fallen bereits jetzt schon an, werden allerdings nicht weiter verwendet. Auch hier wäre es interessant zu untersuchen, inwiefern das Ergebnis optimiert werden könnte.
 
 */
