@@ -24,7 +24,7 @@ public class AudioFile {
     
     :returns: Failable<AVAudioPCMBuffer> -> formated PCM Buffer or error String
     */
-    func readAudioFile(path:String) -> Failable<AVAudioPCMBuffer> {
+    public func readAudioFile(path:String) -> Failable<AVAudioPCMBuffer> {
         // setup variables
         let url = NSURL(string: path)
         print(url!.scheme)
@@ -54,7 +54,7 @@ public class AudioFile {
     
     :returns: Failable<[Float]> -> Float formated samples or error String
     */
-    func convertToFloatSamples(pcmBuffer:AVAudioPCMBuffer) -> Failable<[Float]> {
+    public func convertToFloatSamples(pcmBuffer:AVAudioPCMBuffer) -> Failable<[Float]> {
         // generate
         let samples:[Float] = (0 ..< Int(pcmBuffer.frameLength)).map{ pcmBuffer.floatChannelData.memory[$0] }
         if samples.isEmpty {
@@ -72,7 +72,7 @@ public class AudioFile {
     
     :returns: Failable<[String:[Float]]> -> dictionary with the left and right channel seperated or error String
     */
-    func splitToInterleaved(samples1D:[Float]) -> Failable<[String:[Float]]> {
+    public func splitToInterleaved(samples1D:[Float]) -> Failable<[String:[Float]]> {
         // initialize two arrays for left and right audiosamples append left an right samples to arrays (scheme left, right)
         let left:[Float] = 0.stride(through: samples1D.count-1, by: 2).map { samples1D[$0] }
         let right:[Float] = 1.stride(through: samples1D.count-1, by: 2).map { samples1D[$0] }
