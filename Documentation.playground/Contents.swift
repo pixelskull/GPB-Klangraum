@@ -325,17 +325,81 @@ Wie hier zu sehen, wird erst eine Audio-Datei gelesen, diese wird dann in ein Ar
 ### Padding, Windowing und Splitting
 Nachdem nun die Samples aus einer Audio-Datei extrahiert werden können, soll in diesem Abschnitt etwas genauer auf die Hintergründe der FFT unterstützenden Techniken eingegangen werden, um im nächsten Kapitel auf die Implementierung der FFT-Klasse einzugehen. Zu diesem Zweck wird hier genauer auf die folgenden drei Themen **Padding**, **Windowing** und **Splitting** eingegangen. Um den logischen Ablauf zu wahren, wird zuerst das Splitting betrachtet, darauf folgend das Padding und zu zuletzt das Windowing.
 
-Beim Splitting geht es um die Aufteilung der Samples die mittels der Fast-Fourier-Transformation in die spektrale Darstellung aufgeteilt werden sollen. Der erste naive Ansatz lässt Entwickler dazu verleiten, die gesamten Samples in die FFT zu übergeben, allerdings gehen so die zeitlichen Informationen verloren. Im Rahmen der spektralen Analyse sind vorallem die Spektren und deren Veränderung im Laufe der Zeit von Interesse. Da die FFT als Resultat die Verteilung der Schallwellen in bestimmten Frequenzbereichen darstellt, würde die Übergabe aller Samples nur die in der Audioaufnahme vorhandenen Frequenzen aufzeigen. Wie aus dieser Erläuterung zu sehen, sollten die Samples in kleinere Sub-Arrays aufgeteilt werden, was auf das einzelne Array auch einen Performance Vorteil hat, die Größe dieser Arrays ist Abhängig vom Verwendungszweck. Des Weiteren können diese Sub-Arrays Paralellisiert werden, da die FFT zunächst keine Abhängigkeiten zu den anderen Sub-Arrays hat. Das Zusammensetzen ist alerdings schwieriger, weil die Reihenfolge der Samples wichtig ist. Bei einfachen Audioaufnahmen, wie beispielsweise Radiosendungen ohne Musik, reicht eine Arraygröße von ca. 1024 Samples, also einem Zeitfenster von etwa 43 Millisekunden der orginalen Audio-Datei. Bei komplexeren Audiospuren wie Musik sollte ein solches Sub-Array eine Größe von 2048 Samples haben. Wie zu Beginn des Absatzes erwähnt können mittels dieser Technik die spektralen Veränderungen über einen Zeitraum verglichen werden. Dies geschieht durch einfaches vergleichen von nebeneinander liegenden Sub-Arrays.
+Beim Splitting geht es um die Aufteilung der Samples die mittels der Fast-Fourier-Transformation in die spektrale Darstellung aufgeteilt werden sollen. Der erste naive Ansatz lässt Entwickler dazu verleiten, die gesamten Samples in die FFT zu übergeben, allerdings gehen so die zeitlichen Informationen verloren. Im Rahmen der spektralen Analyse sind vorallem die Spektren und deren Veränderung im Laufe der Zeit von Interesse. Da die FFT als Resultat die Verteilung der Schallwellen in bestimmten Frequenzbereichen darstellt, würde die Übergabe aller Samples nur die in der Audioaufnahme vorhandenen Frequenzen aufzeigen. Wie aus dieser Erläuterung zu sehen, sollten die Samples in kleinere Sub-Arrays aufgeteilt werden, was auf das einzelne Array auch einen Performance Vorteil hat, die Größe dieser Arrays ist Abhängig vom Verwendungszweck. Des Weiteren können diese Sub-Arrays Paralellisiert werden, da die FFT zunächst keine Abhängigkeiten zu den anderen Sub-Arrays hat. Das Zusammensetzen ist alerdings schwieriger, weil die Reihenfolge der Samples wichtig ist. Bei einfachen Audioaufnahmen, wie beispielsweise Radiosendungen ohne Musik, reicht eine Arraygröße von ca. 1024 Samples, also einem Zeitfenster von etwa 43 Millisekunden der orginalen Audio-Datei. Bei komplexeren Audiospuren wie Musik sollte ein solches Sub-Array eine Größe von 2048 Samples haben. Wie zu Beginn des Absatzes erwähnt können mittels dieser Technik die spektralen Veränderungen über einen Zeitraum verglichen werden. Dies geschieht durch einfaches vergleichen von nebeneinander liegenden Sub-Arrays. Im Folgenden soll die Implementierung des Splitting gezeigt werden.
 
-**HIER VIELLEICHT NOCH DIE IMPLEMENTIERUNG UND KURZ DRAUF EINEGEHN? UND DANN NOCH EIN CODEBEISPIEL, WIE MAN DAS BENUTZT**
+    func prepare(samples: [Float], steppingBy steps: Int) -> [[Float]] {
+        var tmp = samples
 
-Padding ist im Wesentlichen das Auffüllen der oben beschreibenen Sub-Arrays, da die Fourier Transformation eine definierte Länge benötigt um zufriedenstellende Ergebnisse zu liefern. Dies kann von nöten sein, da die Audioaufnahmen nicht zwingend eine Vielzahl von 1024 bzw. 2048 sein muss. Um die Fouriertransformation trotzdem weiter durchführen zu können und alle Daten die potenziell relevant sind zu erfassen, kann bei dem letzten Sub-Array ein *Zero-Padding* vorgenommen werden. Dieses Padding verändert nicht die Spektralen Informationen, da die Null bei der Sample-Repräsentation für die Abwesenheit von Amplituden-Ausschlägen steht und somit die Frequenzen nicht verändert. Dadurch entspricht *splitting.count % 1024* immer gleich *0*.
+        let count = tmp.count
+        let length = count / steps
 
-**HIER VIELLEICHT NOCH DIE IMPLEMENTIERUNG UND KURZ DRAUF EINEGEHN? UND DANN NOCH EIN CODEBEISPIEL, WIE MAN DAS BENUTZT**
+        var splitSamples = [[Float]](count: length, repeatedValue: [0.0])
+        var j = 0
 
-Zum Abschluss dieses Abchnittes soll noch kurz auf die Verwendung von *Windowing* Methoden eingegangen werden. Der Grund für das Windowing liegt in der Eigenschaft der Fourier-Transformation, die ein Signal ähnlich einem Prisma in die harmonischen Spektren zerlegt. Harmonisch deutet bereits darauf hin, dass nicht sämtliche Frequenzen abgebildet werden können. Frequenzen die sich zwischen Harminien befinden, könnnen ggf. vernachlässigt werden. Um diesem Effekt entgegenzuwirken, soll eine Window-Funktion auf das Audiosignal angewendet werden, bevor es mithife der FFT transformiert wird. Windowing sorgt für eine geringe Veränderung bzw. Überschneidung der Frequenzen. Diese Veränderung hat vorallem den Vorteil, dass sie wieder leicht aus dem Signal herausgerechnet werden kann. Durch diese Manipulation ist es möglich, mehr harmonische Frequenzen mittels der FFT zu erfassen, da die Zusammensetzung innerhalb der Windows besser zueinander passen. Innerhalb dieses Projektes wurden sowohl das *Hamming*- als auch das *Hanning*-Windowing implementiert und ausprobiert. Zusammenfassend erhöht das Windowing die Brauchbarkeit der FFT-Ergebnisse.
+        for i in 0..<splitSamples.count {
+            let first = j * steps
+            let last = first + (steps - 1)
+            splitSamples[i] = Array(tmp[first...last])
+            j++
+        }
 
-**HIER VIELLEICHT NOCH DIE IMPLEMENTIERUNG UND KURZ DRAUF EINEGEHN? INK DER IMPLEMENTIERUNg VON WINDOW-FUNKTIONS. UND DANN NOCH EIN CODEBEISPIEL, WIE MAN DAS BENUTZT**
+        return splitSamples
+    }
+
+Die Funktion hat eine Signatur von *prepare([Float], Int) -> [[Float]]*, wobei das Float-Array die Samples sind und die Int Variable die Größe der Sub-Arrays definiert. Das Ergebnis der Funktion ist ein Array von Float-Arrays, bei dem die internen Arrays so groß sind, wie es der Int Parameter vorschreibt. Das Rekonstruieren des ursprünglichen Arrays aus den vielen Sub-Arrays kann mithilfe der *flatten*-Funktion erfolgen: */
+// setup
+let steps = 1024
+let s = (0...steps * 2).map{ Float($0) }
+
+// split
+let splitted = prepare(s, steppingBy: steps)
+
+// use
+splitted.flatMap { subArray in
+    // do something with subArray
+    return subArray
+}
+
+// flat to origin
+let flatted = Array(splitted.flatten())
+/*:
+
+Padding ist im Wesentlichen das Auffüllen der oben beschreibenen Sub-Arrays, da die Fourier Transformation eine definierte Länge benötigt um zufriedenstellende Ergebnisse zu liefern. Dies kann von nöten sein, da die Audioaufnahmen nicht zwingend eine Vielzahl von 1024 bzw. 2048 sein muss. Um die Fouriertransformation trotzdem weiter durchführen zu können und alle Daten die potenziell relevant sind zu erfassen, kann bei dem letzten Sub-Array ein *Zero-Padding* vorgenommen werden. Dieses Padding verändert nicht die Spektralen Informationen, da die Null bei der Sample-Repräsentation für die Abwesenheit von Amplituden-Ausschlägen steht und somit die Frequenzen nicht verändert. Dadurch entspricht *splitting.count % 1024* immer gleich *0*. Im Folgenden die Implementierung der *addZeroPadding([Float], Int) -> [Float]*-Funktion, welche die Samples als Float-Array und den aufzufüllenden Faktor als Int entgegennimmt und das aufgefüllte Float-Array zurückgibt. 
+
+    func addZeroPadding(a:[Float], whileModulo mod: Int) -> [Float] {
+        var tmp = a
+
+        while tmp.count % mod != 0 {
+            tmp.append(0.0)
+        }
+
+        return tmp
+    }
+
+Zum Abschluss dieses Abchnittes soll noch kurz auf die Verwendung von *Windowing* Methoden eingegangen werden. Der Grund für das Windowing liegt in der Eigenschaft der Fourier-Transformation, die ein Signal ähnlich einem Prisma in die harmonischen Spektren zerlegt. Harmonisch deutet bereits darauf hin, dass nicht sämtliche Frequenzen abgebildet werden können. Frequenzen die sich zwischen Harminien befinden, könnnen ggf. vernachlässigt werden. Um diesem Effekt entgegenzuwirken, soll eine Window-Funktion auf das Audiosignal angewendet werden, bevor es mithife der FFT transformiert wird. Windowing sorgt für eine geringe Veränderung bzw. Überschneidung der Frequenzen. Diese Veränderung hat vorallem den Vorteil, dass sie wieder leicht aus dem Signal herausgerechnet werden kann. Durch diese Manipulation ist es möglich, mehr harmonische Frequenzen mittels der FFT zu erfassen, da die Zusammensetzung innerhalb der Windows besser zueinander passen. Innerhalb dieses Projektes wurden sowohl das *Hamming*- als auch das *Hanning*-Windowing implementiert und ausprobiert. Zusammenfassend erhöht das Windowing die Brauchbarkeit der FFT-Ergebnisse. Die Implementierung Hamming- und Hanning-Window-Funktion mithilfe der vDSP-API und das Anwenden und Zurückrechnen der einer der beiden Funktionen sieht folgendermaßen aus: 
+
+    import Accelerate
+
+    func hanning(length: Int) -> [Float] {
+        var window = [Float](count: length, repeatedValue: 0)
+        vDSP_hann_window( &window, vDSP_Length(window.count), 0 )
+        return window
+    }
+
+    func hamming(length: Int) -> [Float] {
+        var window = [Float](count: length, repeatedValue: 0)
+        vDSP_hamm_window( &window, vDSP_Length(window.count), 0 )
+        return window
+    } */
+// window function
+let windowedHanning: [Float] = hanning(s.count)
+
+// apply window function on samples
+let appliedHanning = s * windowedHanning
+
+// unwindow
+let unwindowedHanning = appliedHanning / windowedHanning
+/*:
 
 ### Manipulation der Samples mithilfe der FFT
 
@@ -655,8 +719,8 @@ let inverseWithS = withStrategies.inverse(applied)
 inverseWithS.map{ $0 }
 
 // compare compused results
-max(samples) 
-max(inverseWithS)
+maxOf(samples)
+maxOf(inverseWithS)
 /*: 
 
 Auch wenn die oben gezeichnete modifizierte Sinus-Funktion sich opisch nicht von der am Anfang gezeigten Sinus-Funktion unterscheidet, ist das Entscheidende der *max*-Funktion zu entnehmen. Während der höchste Wert der originalen Sinus-Samples 1 beträgt, ist es bei dem modifizierten Signal eine 6, weil 1 (original) * 2 (DoubleStrategy) * 3 (TrippleStrategy) = 6 ergibt.
@@ -749,9 +813,29 @@ Das verringern der Samplings kann nun auf zwei Arten erfolgen. Beide Möglichkei
         }
     }
 
-Die hier dargestellte Implementierung ist nach dem Strategie-Pattern implementiert. Die Methode *conflictResolver([Float]) -> Float* summiert das übergebene Teil-Array und teilt es über die Länge, wodurch der Durchschnittswert dem Output-Array hinzugefügt wird. Die mit dieser einfachen Strategie erzeugten Samples repräsentieren die orginale Audiodatei besser als die Ergebnisse der *Max-Mapping-Strategie*, weshalb die *Average-Mapping-Strategie* im Rahmen dieses Projektes als primäre Mapping-Strategie verwendet wurde. Als Proof-of-Concept reichen die Ergebnisse, jedoch sollte für den Produktiv-Einsatz auf eine bessere Mapping-Strategie gewechselt werden.
+Die hier dargestellte Implementierung ist nach dem Strategie-Pattern implementiert. Die Methode *conflictResolver([Float]) -> Float* summiert das übergebene Teil-Array und teilt es über die Länge, wodurch der Durchschnittswert dem Output-Array hinzugefügt wird. Die mit dieser einfachen Strategie erzeugten Samples repräsentieren die orginale Audiodatei besser als die Ergebnisse der *Max-Mapping-Strategie*, weshalb die *Average-Mapping-Strategie* im Rahmen dieses Projektes als primäre Mapping-Strategie verwendet wurde. Als Proof-of-Concept reichen die Ergebnisse, jedoch sollte für den Produktiv-Einsatz auf eine bessere Mapping-Strategie gewechselt werden. Im Folgenden ist der Plot beider Mapping-Strategien angewendet auf den zuvor extrahierten *interleavedSamples* zu sehen. */
+// setup
+let min = (512 * Int(200)) / (44100 / 2 )
+let max = (512 * Int(18000)) / (44100 / 2 )
+let sv = Array(interleavedSamples!["left"]![0..<1024])
 
-**VIELLEICHT DIE ERGEBNISSE BEIDER MAPPING STRATEGIE PLOTTEN?**
+// plot origin signal for comparison
+sv.map{ $0 }
+
+// setup fft with average mapping strategy
+let fft1 = FFT(initWithSamples: sv, andStrategy: [AverageMappingStrategy(minIndex: min, andMaxIndex: max)])
+
+// plot avarage mapping results
+(fft1.forward() --> fft1.applyStrategy --> fft1.inverse).map{ $0 }
+
+// setup fft with max mapping strategy
+let fft2 = FFT(initWithSamples: sv, andStrategy: [MaxMappingStrategy(minIndex: min, andmaxIndex: max)])
+
+// plot max mapping results
+(fft2.forward() --> fft2.applyStrategy --> fft2.inverse).map{ $0 }
+/*:
+
+Der Vergleich zwischen dem Plot des originalen, mutierten Avarage- und Max-Signales zeigt, dass die Max-Strategy zu viel Informationen wegoptimiert. Rein optisch scheint das Avarage-Signal seine Arbeit angemessener zu vollrichten.
 
 #### Noise-Reduction-Strategien
 
@@ -868,8 +952,6 @@ Nachdem die Daten in eine *AudioBufferList* geschrieben wurden, muss nur der Pfa
 
 Des Weiteren wurde eine Wrapper-Funktion erstellt, mittels der auch das auf Stereo ausgesplittete Signal in Form eines zweidimensionalen Arrays gespeichert werden kann. Dies soll an dieser Stelle jedoch nicht wieter erläutert werden.
 
-**HIER EIN BEISPIEL DES SPEICHERNS**
-
 Die gespeicherten Daten können nun vom standardmäßigem iOS Audioplayer namens *AVAudioPlayer* gelesen werden. Das Einlesen einer Audio-Datei mittels *AVAudioPlayer* ist der Folgenden Implementierung zu entnehmen.
 
     func prepareAudioPlayer(audioPath: String) {
@@ -887,8 +969,6 @@ Die gespeicherten Daten können nun vom standardmäßigem iOS Audioplayer namens
     }
 
 Nachdem die Datei erfolgreich geladen wurde, kann die Wiedergabe mit dem Aufruf *self.player.play()* bzw. *self.player.pause()* abgespielt oder pausiert werden.
-
-**HIER EIN BEISPIEL VON SPIELEN UND PAUSE**
 
 ## Beispiel anhand eines Anwendungsfalls
 
