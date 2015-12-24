@@ -86,7 +86,7 @@ class PlayerViewController: UIViewController, AVAudioPlayerDelegate {
                 
                 if self.activityIndicator.isAnimating() { self.activityIndicator?.stopAnimating() }
                 
-                let alert = UIAlertController.alertControllerWithTitle("Fertig", message: "Wir haben krassen shit gemacht!")
+                let alert = UIAlertController.alertControllerWithTitle("Fertig", message: "Das Klangmanagement wurde erfolgreich angewendet!")
                 self.presentViewController(alert, animated: true, completion: nil)
 
                 let mappedFilePath = audioFile.safeSamples(self.mappedSamples!, ToPath: NSBundle.mainBundle().resourcePath! + "/mappedFile.caf")
