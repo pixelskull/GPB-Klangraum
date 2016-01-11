@@ -87,4 +87,9 @@ public func lcm(a:Int, b:Int) -> Int {
     return (a * b) / gcd(a, n: b)
 }
 
-
+public func maxOf(x: [Float]) -> Float {
+    var result: Float = 0.0
+    vDSP_maxv(x, 1, &result, vDSP_Length(x.count))
+    
+    return result
+}
